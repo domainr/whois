@@ -33,10 +33,3 @@ func Whois(query string) (string, error) {
 
 	return string(buffer[:]), nil
 }
-
-//type Fetcher func(string) (*Record, error)
-
-// func Fetch(query string) (*Record, error) {
-// 	fetcher = selectFetcher(query)
-// 	return fetcher()
-// }
