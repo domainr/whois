@@ -1,4 +1,3 @@
-go-whois
-========
+# go-whois
 
 Go whois library
