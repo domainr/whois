@@ -1,17 +1,16 @@
 package whois
 
-import (
-	"time"
-)
+import "time"
 
 // Response represents a whois response from a server
 type Response struct {
-	Query string
-	URL string
-	FetchedAt time.Time
+	Query       string
+	URL         string
+	Err         error
+	FetchedAt   time.Time
 	ContentType string
-	Encoding string
-	Body []byte
+	Encoding    string
+	Body        []byte
 }
 
 func (response *Response) String() string {

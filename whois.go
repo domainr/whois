@@ -1,37 +1,27 @@
 package whois
 
 import (
-	"fmt"
-	"io/ioutil"
-	"net"
 	"strings"
 	"time"
 )
 
 const (
+	CRLF    = "\r\n"
 	timeout = 2000 * time.Millisecond
 )
 
-func Whois(query string) (string, error) {
+func Whois(query string) (Record, error) {
 	labels := strings.Split(query, ".")
+
+	// FIXME: use TLD suffix database, if that would be more correct
 	tld := labels[len(labels)-1]
+
+	// Ref for determining hostname http://en.wikipedia.org/wiki/Whois
 	host := tld + ".whois-servers.net:43"
-	c, err := net.DialTimeout("tcp", host, timeout)
-	if err != nil {
-		return "", err
-	}
 
-	c.SetDeadline(time.Now().Add(timeout))
-	if _, err = fmt.Fprint(c, query, "\r\n"); err != nil {
-		return "", err
-	}
+	rec := Record{Response: Response{Query: query, URL: host}}
 
-	buffer, err := ioutil.ReadAll(c)
-	if err != nil {
-		return "", err
-	}
-
-	return string(buffer[:]), nil
+	return rec, rec.Fetch()
 }
 
 //type Fetcher func(string) (*Record, error)
