@@ -11,8 +11,8 @@ import (
 func Whois(query string) (string, error) {
 	labels := strings.Split(query, ".")
 	tld := labels[len(labels)-1]
-	host := tld + ".whois-servers.net:43"
-	c, err := net.Dial("tcp", host)
+	addr := tld + ".whois-servers.net:43"
+	c, err := net.Dial("tcp", addr)
 	if err != nil {
 		return "", err
 	}
