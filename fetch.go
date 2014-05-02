@@ -30,7 +30,7 @@ func Fetch(rawurl string) (*Response, error) {
 }
 
 func fetchWhois(u url.URL) (*Response, error) {
-	response = &Response{Query: query, FetchedAt: time.Now()}
+	response = &Response{Query: u.Path, URL: u.String(), FetchedAt: time.Now()}
 
 	labels := strings.Split(query, ".")
 	tld := labels[len(labels)-1]
