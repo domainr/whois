@@ -28,10 +28,3 @@ func Whois(query string) (string, error) {
 
 	return string(buffer[:]), nil
 }
-
-func Fetch(query string) (*Response, error) {
-	if fetcher, err := selectAdapter(query); err != nil {
-		return nil, err
-	}
-	return adapter.fetch(query)
-}
