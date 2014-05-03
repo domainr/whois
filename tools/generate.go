@@ -6,8 +6,11 @@ import (
 	"flag"
 	"fmt"
 	"io"
+	"io/ioutil"
+	"net"
 	"net/http"
 	"os"
+	"regexp"
 	"sort"
 	"strings"
 
@@ -18,6 +21,9 @@ var (
 	url = flag.String("url",
 		"http://www.internic.net/domain/root.zone",
 		"URL of the IANA root zone file. If empty, read from stdin")
+	whois = flag.String("whois",
+		"whois.iana.org",
+		"Address of the root whois server to query")
 	v = flag.Bool("v", false, "verbose output (to stderr)")
 )
 
@@ -74,9 +80,49 @@ func main1() error {
 	}
 	sort.Strings(zones)
 
+	re := regexp.MustCompile("whois:\\s+([a-z0-9\\-\\.]+)")
+
 	for _, zone := range zones {
-		fmt.Println(zone)
+		if *v {
+			fmt.Fprintf(os.Stderr, "whois -h %s %s", *whois, zone)
+		}
+
+		res, err := querySocket(*whois, zone)
+		if err != nil {
+			return err
+		}
+
+		matches := re.FindStringSubmatch(res)
+		if matches == nil {
+			if *v {
+				fmt.Fprintf(os.Stderr, "\n")
+			}
+			continue
+		}
+		if *v {
+			fmt.Fprintf(os.Stderr, "\t\t# %s\n", matches[1])
+		}
+		zoneMap[zone] = matches[1]
 	}
 
 	return nil
+}
+
+func querySocket(addr, query string) (string, error) {
+	if !strings.Contains(addr, ":") {
+		addr = addr + ":43"
+	}
+	c, err := net.Dial("tcp", addr)
+	if err != nil {
+		return "", err
+	}
+	defer c.Close()
+	if _, err = fmt.Fprint(c, query, "\r\n"); err != nil {
+		return "", err
+	}
+	res, err := ioutil.ReadAll(c)
+	if err != nil {
+		return "", err
+	}
+	return string(res), nil
 }
