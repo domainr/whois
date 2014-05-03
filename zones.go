@@ -2,8 +2,13 @@
 
 package whois
 
+import (
+	"strings"
+)
+
 var zones = map[string]string{
-	"com": "whois.verisign-grs.com",
-	"org": "whois.pir.org",
+	"com": "whois://whois.verisign-grs.com/={{query}}",
 	"ga":  "whois.dot.ga",
+	"nr":  "http://cenpac.net.nr/dns/whois.html?subdomain={{subdomain}}&tld=nr",
+	"org": "whois.pir.org",
 }
