@@ -5,8 +5,8 @@ package main
 import (
 	"flag"
 	"fmt"
-	"net/http"
 	"io"
+	"net/http"
 	"os"
 	"sort"
 	"strings"
@@ -18,6 +18,7 @@ var (
 	url = flag.String("url",
 		"http://www.internic.net/domain/root.zone",
 		"URL of the IANA root zone file. If empty, read from stdin")
+	v = flag.Bool("v", false, "verbose output (to stderr)")
 )
 
 func main() {
@@ -33,6 +34,9 @@ func main1() error {
 	var input io.Reader = os.Stdin
 
 	if *url != "" {
+		if *v {
+			fmt.Fprintf(os.Stderr, "Fetching %s\n", *url)
+		}
 		res, err := http.Get(*url)
 		if err != nil {
 			return err
@@ -46,6 +50,9 @@ func main1() error {
 
 	zoneMap := make(map[string]string)
 
+	if *v {
+		fmt.Fprintf(os.Stderr, "Parsing root.zone\n")
+	}
 	for token := range dns.ParseZone(input, "", "") {
 		if token.Error != nil {
 			return token.Error
@@ -64,7 +71,6 @@ func main1() error {
 	zones := make([]string, 0, len(zoneMap))
 	for zone, _ := range zoneMap {
 		zones = append(zones, zone)
-		//fmt.Println(zone)
 	}
 	sort.Strings(zones)
 
