@@ -33,7 +33,7 @@ var (
 type ZoneWhois struct {
 	zone  string
 	whois string
-	log   string
+	msg   string
 }
 
 func main() {
@@ -49,9 +49,7 @@ func main1() error {
 	var input io.Reader = os.Stdin
 
 	if *url != "" {
-		if *v {
-			fmt.Fprintf(os.Stderr, "Fetching %s\n", *url)
-		}
+		fmt.Fprintf(os.Stderr, "Fetching %s\n", *url)
 		res, err := http.Get(*url)
 		if err != nil {
 			return err
@@ -65,9 +63,7 @@ func main1() error {
 
 	zoneMap := make(map[string]string)
 
-	if *v {
-		fmt.Fprintf(os.Stderr, "Parsing root.zone\n")
-	}
+	fmt.Fprintf(os.Stderr, "Parsing root.zone\n")
 	for token := range dns.ParseZone(input, "", "") {
 		if token.Error != nil {
 			return token.Error
@@ -94,24 +90,18 @@ func main1() error {
 	re := regexp.MustCompile("whois:\\s+([a-z0-9\\-\\.]+)")
 	c := make(chan ZoneWhois, len(zones))
 
-	if *v {
-		fmt.Fprintf(os.Stderr, "Querying whois servers\n")
-	}
+	fmt.Fprintf(os.Stderr, "Querying whois and DNS for %d zones\n", len(zones))
 
 	// Create 1 goroutine for each zone
 	for i, zone := range zones {
 		go func(zone string, i int) {
-			zw := ZoneWhois{
-				zone,
-				"",
-				fmt.Sprintf("NO MATCH FOR %s", zone),
-			}
-			
+			zw := ZoneWhois{zone, "", ""}
+			defer func() { c <- zw }()
+
 			time.Sleep(time.Duration(i*100) * time.Millisecond) // Try not to hammer IANA
 
 			res, err := querySocket(*whois, zone)
 			if err != nil {
-				c <- zw
 				return
 			}
 
@@ -119,8 +109,7 @@ func main1() error {
 			matches := re.FindStringSubmatch(res)
 			if matches != nil {
 				zw.whois = matches[1]
-				zw.log = fmt.Sprintf("whois -h %s %s\t\t%s", *whois, zw.zone, zw.whois)
-				c <- zw
+				zw.msg = fmt.Sprintf("whois -h %s %s\t\t%s", *whois, zw.zone, zw.whois)
 				return
 			}
 
@@ -128,13 +117,11 @@ func main1() error {
 			host := zone + ".whois-servers.net"
 			cname, err := queryCNAME(host)
 			if cname == "" || err != nil {
-				c <- zw
 				return
 			}
 
 			zw.whois = cname
-			zw.log = fmt.Sprintf("dig %s CNAME\t\t%s", host, zw.whois)
-			c <- zw
+			zw.msg = fmt.Sprintf("dig %s CNAME\t\t%s", host, zw.whois)
 		}(zone, i)
 	}
 
@@ -142,8 +129,10 @@ func main1() error {
 	for i := 0; i < len(zones); i++ {
 		select {
 		case zw := <-c:
-			if *v {
-				fmt.Fprintf(os.Stderr, "%s\n", zw.log)
+			if zw.msg == "" {
+				fmt.Fprintf(os.Stderr, "No match for %s\n", zw.zone)
+			} else if *v && zw.msg != "" {
+				fmt.Fprintf(os.Stderr, "%s\n", zw.msg)
 			}
 		}
 	}
