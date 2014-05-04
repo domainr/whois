@@ -6,7 +6,7 @@ import (
 
 // Response represents a whois response from a server
 type Response struct {
-	Request
+	URL string
 	FetchedAt time.Time
 	ContentType string
 	Encoding string

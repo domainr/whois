@@ -12,12 +12,13 @@ import (
 
 var Timeout = 2000 * time.Millisecond
 
-func Fetch(rawurl string) (*Response, error) {
-	if u, err := url.Parse(rawurl); err != nil {
+func Fetch(u string) (*Response, error) {
+	p, err := url.Parse(u)
+	if err != nil {
 		return nil, err
 	}
 
-	switch u.Scheme {
+	switch p.Scheme {
 	case "whois":
 		return fetchWhois(u)
 	case "http":
@@ -26,17 +27,25 @@ func Fetch(rawurl string) (*Response, error) {
 		return fetchHTTP(u)
 	}
 
-	return nil, errors.New("Unknown URL scheme: " + u.Scheme)
+	return nil, errors.New("Unknown URL scheme: " + p.Scheme)
 }
 
-func fetchWhois(u url.URL) (*Response, error) {
-	response = &Response{Query: u.Path, URL: u.String(), FetchedAt: time.Now()}
+func fetchWhois(u string) (*Response, error) {
+	response := &Response{URL: u, FetchedAt: time.Now()}
 
-	labels := strings.Split(query, ".")
-	tld := labels[len(labels)-1]
-	host := tld + ".whois-servers.net:43"
+	p, err := url.Parse(u)
+	if err != nil {
+		return nil, err
+	}
 
-	if c, err := net.DialTimeout("tcp", host, Timeout); err != nil {
+	host := p.Host
+	if !strings.Contains(host, ":") {
+		host = host + ":43"
+	}
+	query := p.Path[1:]
+
+	c, err := net.DialTimeout("tcp", host, Timeout)
+	if err != nil {
 		return nil, err
 	}
 	defer c.Close()
@@ -49,4 +58,8 @@ func fetchWhois(u url.URL) (*Response, error) {
 	}
 
 	return response, nil
+}
+
+func fetchHTTP(u string) (*Response, error) {
+	return &Response{}, nil
 }
