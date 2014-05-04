@@ -6,7 +6,8 @@ import ()
 type Status int
 
 const (
-	Available Status = iota
+	Unknown Status = iota
+	Available
 	Registered
 	Invalid
 )
