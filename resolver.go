@@ -2,17 +2,19 @@ package whois
 
 import (
 	"errors"
-	"fmt"
 	"strings"
 )
 
-func Resolve(query string) (string, error) {
-	labels := strings.Split(query, ".")
+func Resolve(q string) (string, error) {
+	labels := strings.Split(q, ".")
 	zone := labels[len(labels)-1]
-	server, ok := zones[zone]
+	h, ok := zones[zone]
 	if !ok {
-		return "", errors.New("No whois server found for " + query)
+		return "", errors.New("No whois server found for " + q)
 	}
-	u := fmt.Sprintf("whois://%s/%s", server, query)
-	return u, nil
+	srv, ok := servers[h]
+	if !ok {
+		srv = servers["default"]
+	}
+	return srv.URL(h, q)
 }
