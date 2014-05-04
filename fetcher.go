@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-var Timeout = 2000 * time.Millisecond
+var Timeout = 3000 * time.Millisecond
 
 func Fetch(u string) (*Response, error) {
 	p, err := url.Parse(u)
