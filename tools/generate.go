@@ -31,9 +31,10 @@ var (
 )
 
 type ZoneWhois struct {
-	zone  string
-	whois string
-	msg   string
+	zone   string
+	server string
+	msg    string
+	viaDNS bool
 }
 
 func main() {
@@ -61,7 +62,7 @@ func main1() error {
 		defer res.Body.Close()
 	}
 
-	zoneMap := make(map[string]string)
+	zoneMap := make(map[string]ZoneWhois)
 
 	fmt.Fprintf(os.Stderr, "Parsing root.zone\n")
 	for token := range dns.ParseZone(input, "", "") {
@@ -76,7 +77,7 @@ func main1() error {
 		if domain == "" {
 			continue
 		}
-		zoneMap[domain] = domain
+		zoneMap[domain] = ZoneWhois{}
 	}
 
 	// Sort zones
@@ -95,7 +96,7 @@ func main1() error {
 	// Create 1 goroutine for each zone
 	for i, zone := range zones {
 		go func(zone string, i int) {
-			zw := ZoneWhois{zone, "", ""}
+			zw := ZoneWhois{zone, "", "", false}
 			defer func() { c <- zw }()
 
 			time.Sleep(time.Duration(i*100) * time.Millisecond) // Try not to hammer IANA
@@ -108,22 +109,24 @@ func main1() error {
 			// Look for whois: string
 			matches := re.FindStringSubmatch(res)
 			if matches != nil {
-				zw.whois = matches[1]
-				zw.msg = fmt.Sprintf("whois -h %s %s\t\t%s", *whois, zw.zone, zw.whois)
+				zw.server = matches[1]
+				zw.msg = fmt.Sprintf("whois -h %s %s\t\t%s", *whois, zw.zone, zw.server)
 				return
 			}
 
 			// Check whois-servers.net
 			host := zone + ".whois-servers.net"
-			cname, err := queryCNAME(host)
-			if cname == "" || err != nil {
+			zw.server, err = queryCNAME(host)
+			if zw.server == "" || err != nil {
 				return
 			}
 
-			zw.whois = cname
-			zw.msg = fmt.Sprintf("dig %s CNAME\t\t%s", host, zw.whois)
+			zw.msg = fmt.Sprintf("dig %s CNAME\t\t%s", host, zw.server)
+			zw.viaDNS = true
 		}(zone, i)
 	}
+
+	numMissing, numDNS := 0, 0
 
 	// Collect from goroutines
 	for i := 0; i < len(zones); i++ {
@@ -134,8 +137,25 @@ func main1() error {
 			} else if *v && zw.msg != "" {
 				fmt.Fprintf(os.Stderr, "%s\n", zw.msg)
 			}
+
+			zoneMap[zw.zone] = zw
+
+			if zw.server == "" {
+				numMissing++
+			}
+			if zw.viaDNS {
+				numDNS++
+			}
 		}
 	}
+
+	// Print stats
+	fmt.Fprintf(os.Stderr, "Zones with whois servers:    %d (%d via DNS)\n",
+		len(zones)-numMissing, numDNS)
+	fmt.Fprintf(os.Stderr, "Zones without whois servers: %d (%.0f%%)\n",
+		numMissing, float32(numMissing)/float32(len(zones))*float32(100))
+	fmt.Fprintf(os.Stderr, "Total number of zones:       %d\n",
+		len(zones))
 
 	return nil
 }
