@@ -13,6 +13,7 @@ import (
 	"regexp"
 	"sort"
 	"strings"
+	"time"
 
 	"github.com/miekg/dns"
 )
@@ -26,6 +27,11 @@ var (
 		"Address of the root whois server to query")
 	v = flag.Bool("v", false, "verbose output (to stderr)")
 )
+
+type ZoneWhois struct {
+	zone  string
+	whois string
+}
 
 func main() {
 	if err := main1(); err != nil {
@@ -74,35 +80,50 @@ func main1() error {
 		zoneMap[domain] = domain
 	}
 
+	// Sort zones
 	zones := make([]string, 0, len(zoneMap))
 	for zone, _ := range zoneMap {
 		zones = append(zones, zone)
 	}
 	sort.Strings(zones)
 
+	// Get whois servers for each zone
 	re := regexp.MustCompile("whois:\\s+([a-z0-9\\-\\.]+)")
+	c := make(chan ZoneWhois, len(zones))
 
-	for _, zone := range zones {
-		if *v {
-			fmt.Fprintf(os.Stderr, "whois -h %s %s", *whois, zone)
-		}
+	if *v {
+		fmt.Fprintf(os.Stderr, "Querying whois servers\n")
+	}
 
-		res, err := querySocket(*whois, zone)
-		if err != nil {
-			return err
-		}
+	// Create 1 goroutine for each zone
+	for i, zone := range zones {
+		go func(zone string, i int) {
+			time.Sleep(time.Duration(i * 100) * time.Millisecond) // Try not to hammer IANA
 
-		matches := re.FindStringSubmatch(res)
-		if matches == nil {
-			if *v {
-				fmt.Fprintf(os.Stderr, "\n")
+			res, err := querySocket(*whois, zone)
+			if err != nil {
+				c <- ZoneWhois{zone, ""}
+				return
 			}
-			continue
+
+			matches := re.FindStringSubmatch(res)
+			if matches == nil {
+				c <- ZoneWhois{zone, ""}
+				return
+			}
+			c <- ZoneWhois{zone, matches[1]}
+		}(zone, i)
+	}
+
+	// Collect from goroutines
+	for i := 0; i < len(zones); i++ {
+		select {
+		case zw := <-c:
+			if *v {
+				fmt.Fprintf(os.Stderr, "whois -h %s %s\t\t%s\n", *whois, zw.zone, zw.whois)
+			}
+
 		}
-		if *v {
-			fmt.Fprintf(os.Stderr, "\t\t# %s\n", matches[1])
-		}
-		zoneMap[zone] = matches[1]
 	}
 
 	return nil
