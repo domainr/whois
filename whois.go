@@ -1,10 +1,7 @@
 package whois
 
-import (
-)
-
-func Whois(query string) (string, error) {
-	u, err := Resolve(query)
+func Whois(q string) (string, error) {
+	u, err := Resolve(q)
 	if err != nil {
 		return "", err
 	}
