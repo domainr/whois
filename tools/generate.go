@@ -26,11 +26,14 @@ var (
 		"whois.iana.org",
 		"Address of the root whois server to query")
 	v = flag.Bool("v", false, "verbose output (to stderr)")
+
+	dnsClient *dns.Client
 )
 
 type ZoneWhois struct {
 	zone  string
 	whois string
+	log   string
 }
 
 func main() {
@@ -98,20 +101,40 @@ func main1() error {
 	// Create 1 goroutine for each zone
 	for i, zone := range zones {
 		go func(zone string, i int) {
-			time.Sleep(time.Duration(i * 100) * time.Millisecond) // Try not to hammer IANA
+			zw := ZoneWhois{
+				zone,
+				"",
+				fmt.Sprintf("NO MATCH FOR %s", zone),
+			}
+			
+			time.Sleep(time.Duration(i*100) * time.Millisecond) // Try not to hammer IANA
 
 			res, err := querySocket(*whois, zone)
 			if err != nil {
-				c <- ZoneWhois{zone, ""}
+				c <- zw
 				return
 			}
 
+			// Look for whois: string
 			matches := re.FindStringSubmatch(res)
-			if matches == nil {
-				c <- ZoneWhois{zone, ""}
+			if matches != nil {
+				zw.whois = matches[1]
+				zw.log = fmt.Sprintf("whois -h %s %s\t\t%s", *whois, zw.zone, zw.whois)
+				c <- zw
 				return
 			}
-			c <- ZoneWhois{zone, matches[1]}
+
+			// Check whois-servers.net
+			host := zone + ".whois-servers.net"
+			cname, err := queryCNAME(host)
+			if cname == "" || err != nil {
+				c <- zw
+				return
+			}
+
+			zw.whois = cname
+			zw.log = fmt.Sprintf("dig %s CNAME\t\t%s", host, zw.whois)
+			c <- zw
 		}(zone, i)
 	}
 
@@ -120,9 +143,8 @@ func main1() error {
 		select {
 		case zw := <-c:
 			if *v {
-				fmt.Fprintf(os.Stderr, "whois -h %s %s\t\t%s\n", *whois, zw.zone, zw.whois)
+				fmt.Fprintf(os.Stderr, "%s\n", zw.log)
 			}
-
 		}
 	}
 
@@ -146,4 +168,19 @@ func querySocket(addr, query string) (string, error) {
 		return "", err
 	}
 	return string(res), nil
+}
+
+func queryCNAME(host string) (string, error) {
+	m := new(dns.Msg)
+	m.RecursionDesired = true
+	fqdn := dns.Fqdn(host)
+	m.SetQuestion(fqdn, dns.TypeCNAME)
+	dnsClient = new(dns.Client)
+	r, _, err := dnsClient.Exchange(m, "8.8.8.8:53")
+	if err != nil {
+		return "", err
+	} else if r.Rcode == dns.RcodeSuccess && r.Answer != nil && len(r.Answer) >= 1 {
+		return r.Answer[0].Header().Name, nil
+	}
+	return "", nil
 }
