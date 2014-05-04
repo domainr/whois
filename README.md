@@ -4,6 +4,7 @@ Go whois library
 
 ## Design Doc
 
+```
 func whois.Whois(query string) whois.Record             // fetches and returns a fully-parsed whois.Record
 
 func whois.Resolve(query string) string                 // returns a whois URL, suitable for Fetch
@@ -12,9 +13,11 @@ func whois.Parse(response whois.Response) whois.Record  // parses a Response str
 
 whois.Response — intermediate record, raw response from a whois server for a given query
 whois.Record — parsed whois response; structured data
+```
 
 ### Logic
 
+```
 query := "domai.nr"
 url := whois.Resolve(query)
 response := whois.Fetch(url)
@@ -28,3 +31,4 @@ type Server struct {
 }
 
 var Servers map[string]Server
+```
