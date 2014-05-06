@@ -6,7 +6,6 @@ import (
 	"io/ioutil"
 	"net"
 	"net/url"
-	"strings"
 	"time"
 )
 
@@ -39,17 +38,7 @@ func (req *Request) Fetch() (*Response, error) {
 func (req *Request) fetchWhois() (*Response, error) {
 	response := &Response{Request: req, FetchedAt: time.Now()}
 
-	p, err := url.Parse(req.URL)
-	if err != nil {
-		return nil, err
-	}
-
-	host := p.Host
-	if !strings.Contains(host, ":") {
-		host = host + ":43"
-	}
-
-	c, err := net.DialTimeout("tcp", host, req.Timeout)
+	c, err := net.DialTimeout("tcp", req.Host+":43", req.Timeout)
 	if err != nil {
 		return nil, err
 	}
