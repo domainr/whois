@@ -1,11 +1,9 @@
 package whois
 
 import (
-	"errors"
 	"fmt"
 	"io/ioutil"
 	"net"
-	"net/url"
 	"time"
 )
 
@@ -19,20 +17,10 @@ type Request struct {
 }
 
 func (req *Request) Fetch() (*Response, error) {
-	p, err := url.Parse(req.URL)
-	if err != nil {
-		return nil, err
-	}
-
-	switch p.Scheme {
-	case "whois":
-		return req.fetchWhois()
-	case "http":
-	case "https":
+	if req.URL != "" {
 		return req.fetchHTTP()
 	}
-
-	return nil, errors.New("Unknown URL scheme: " + p.Scheme)
+	return req.fetchWhois()
 }
 
 func (req *Request) fetchWhois() (*Response, error) {
