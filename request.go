@@ -17,10 +17,10 @@ type Request struct {
 }
 
 func (req *Request) Fetch() (*Response, error) {
-	if req.URL != "" {
-		return req.fetchHTTP()
+	if req.URL == "" {
+		return req.fetchWhois()
 	}
-	return req.fetchWhois()
+	return req.fetchHTTP()
 }
 
 func (req *Request) fetchWhois() (*Response, error) {
