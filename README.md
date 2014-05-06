@@ -8,9 +8,10 @@ Go whois library
 func whois.Whois(query string) whois.Record             // fetches and returns a fully-parsed whois.Record
 
 req = whois.Resolve(query)                              // returns a whois.Request
-res = req.Perform()                                     // performs the request, returns a whois.Response
+res = req.Fetch()                                       // fetches the request, returns a whois.Response
 rec = res.Parse()                                       // parses the response, returns a whois.Record
 
+whois.Request — represents a qualified whois request, including server, URL, and request body
 whois.Response — intermediate record, raw response from a whois server for a given query
 whois.Record — parsed whois response; structured data
 ```
