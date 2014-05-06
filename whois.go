@@ -20,7 +20,7 @@ func Whois(q string) (string, error) {
 }
 
 func Resolve(q string) (*Request, error) {
-	req := &Request{Query: q}
+	req := NewRequest(q)
 
 	labels := strings.Split(q, ".")
 	zone := labels[len(labels)-1]

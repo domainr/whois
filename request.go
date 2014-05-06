@@ -1,11 +1,13 @@
 package whois
 
 import (
-	"fmt"
+	"io"
 	"io/ioutil"
 	"net"
 	"time"
 )
+
+var Timeout = 10 * time.Second
 
 // Request represents a whois request
 type Request struct {
@@ -14,6 +16,10 @@ type Request struct {
 	URL     string
 	Body    string
 	Timeout time.Duration
+}
+
+func NewRequest(q string) *Request {
+	return &Request{Query: q, Timeout: Timeout}
 }
 
 func (req *Request) Fetch() (*Response, error) {
@@ -32,7 +38,7 @@ func (req *Request) fetchWhois() (*Response, error) {
 	}
 	defer c.Close()
 	c.SetDeadline(time.Now().Add(req.Timeout))
-	if _, err = fmt.Print(c, req.Body); err != nil {
+	if _, err = io.WriteString(c, req.Body); err != nil {
 		return nil, err
 	}
 	if response.Body, err = ioutil.ReadAll(c); err != nil {
