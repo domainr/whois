@@ -10,14 +10,13 @@ import (
 	"time"
 )
 
-var Timeout = 3000 * time.Millisecond
-
 // Request represents a whois request
 type Request struct {
-	Query string
-	Host  string
-	URL   string
-	Body  string
+	Query   string
+	Host    string
+	URL     string
+	Body    string
+	Timeout time.Duration
 }
 
 func (req *Request) Fetch() (*Response, error) {
@@ -50,12 +49,12 @@ func (req *Request) fetchWhois() (*Response, error) {
 		host = host + ":43"
 	}
 
-	c, err := net.DialTimeout("tcp", host, Timeout)
+	c, err := net.DialTimeout("tcp", host, req.Timeout)
 	if err != nil {
 		return nil, err
 	}
 	defer c.Close()
-	c.SetDeadline(time.Now().Add(Timeout))
+	c.SetDeadline(time.Now().Add(req.Timeout))
 	if _, err = fmt.Print(c, req.Body); err != nil {
 		return nil, err
 	}
