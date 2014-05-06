@@ -6,11 +6,11 @@ import (
 
 // Response represents a whois response from a server
 type Response struct {
-	URL string
-	FetchedAt time.Time
+	*Request
+	FetchedAt   time.Time
 	ContentType string
-	Encoding string
-	Body []byte
+	Encoding    string
+	Body        []byte
 }
 
 func (response *Response) String() string {
