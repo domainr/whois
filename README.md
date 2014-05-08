@@ -1,6 +1,6 @@
 # go-whois
 
-Go whois library
+Go whois library, heavily inspired by [Ruby Whois](https://github.com/weppos/whois). WIP.
 
 ## Design Doc
 
@@ -20,16 +20,9 @@ whois.Record — parsed whois response; structured data
 
 ```
 query := "domai.nr"
-url := whois.Resolve(query)
-response := whois.Fetch(url)
-for response.Refer != "" {
-  response = whois.Fetch(response.refer)
+req := whois.Resolve(query)
+res := whois.Fetch(req)
+for res.Refer != "" {
+  res = res.FetchRefer()
 }
-
-type Server struct {
-  // URL (string template)
-  // request body (string template)
-}
-
-var Servers map[string]Server
 ```
