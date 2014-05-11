@@ -10,4 +10,6 @@ var Default = Server{
 		req.Body = fmt.Sprintf("%s\r\n", req.Query)
 		return nil
 	},
-}
+}.register(
+	"default",
+)

@@ -10,4 +10,9 @@ var Verisign = Server{
 		req.Body = fmt.Sprintf("=%s\r\n", req.Query)
 		return nil
 	},
-}
+}.register(
+	"whois.verisign-grs.com",
+	"bzwhois.verisign-grs.com",
+	"ccwhois.verisign-grs.com",
+	"jobswhois.verisign-grs.com",
+)

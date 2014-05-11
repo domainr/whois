@@ -1,6 +1,7 @@
 package whois
 
 import (
+	"net/http"
 	"io"
 	"io/ioutil"
 	"net"
@@ -30,7 +31,7 @@ func (req *Request) Fetch() (*Response, error) {
 }
 
 func (req *Request) fetchWhois() (*Response, error) {
-	response := &Response{Request: req, FetchedAt: time.Now()}
+	res := &Response{Request: req, FetchedAt: time.Now()}
 
 	c, err := net.DialTimeout("tcp", req.Host+":43", req.Timeout)
 	if err != nil {
@@ -41,13 +42,24 @@ func (req *Request) fetchWhois() (*Response, error) {
 	if _, err = io.WriteString(c, req.Body); err != nil {
 		return nil, err
 	}
-	if response.Body, err = ioutil.ReadAll(c); err != nil {
+	if res.Body, err = ioutil.ReadAll(c); err != nil {
 		return nil, err
 	}
 
-	return response, nil
+	return res, nil
 }
 
 func (req *Request) fetchHTTP() (*Response, error) {
-	return &Response{}, nil
+	res := &Response{Request: req, FetchedAt: time.Now()}
+	
+	hres, err := http.Get(req.URL)
+	if err != nil {
+		return nil, err
+	}
+	defer hres.Body.Close()
+	if res.Body, err = ioutil.ReadAll(hres.Body); err != nil {
+		return nil, err
+	}
+	
+	return res, nil
 }
