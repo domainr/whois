@@ -24,10 +24,10 @@ func NewRequest(q string) *Request {
 }
 
 func (req *Request) Fetch() (*Response, error) {
-	if req.URL == "" {
-		return req.fetchWhois()
+	if req.URL != "" {
+		return req.fetchURL()
 	}
-	return req.fetchHTTP()
+	return req.fetchWhois()
 }
 
 func (req *Request) fetchWhois() (*Response, error) {
@@ -49,7 +49,7 @@ func (req *Request) fetchWhois() (*Response, error) {
 	return res, nil
 }
 
-func (req *Request) fetchHTTP() (*Response, error) {
+func (req *Request) fetchURL() (*Response, error) {
 	res := &Response{Request: req, FetchedAt: time.Now()}
 	
 	hres, err := http.Get(req.URL)
