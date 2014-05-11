@@ -35,15 +35,15 @@ func (req *Request) fetchWhois() (*Response, error) {
 
 	c, err := net.DialTimeout("tcp", req.Host+":43", req.Timeout)
 	if err != nil {
-		return nil, err
+		return res, err
 	}
 	defer c.Close()
 	c.SetDeadline(time.Now().Add(req.Timeout))
 	if _, err = io.WriteString(c, req.Body); err != nil {
-		return nil, err
+		return res, err
 	}
 	if res.Body, err = ioutil.ReadAll(c); err != nil {
-		return nil, err
+		return res, err
 	}
 
 	return res, nil
@@ -54,11 +54,11 @@ func (req *Request) fetchHTTP() (*Response, error) {
 	
 	hres, err := http.Get(req.URL)
 	if err != nil {
-		return nil, err
+		return res, err
 	}
 	defer hres.Body.Close()
 	if res.Body, err = ioutil.ReadAll(hres.Body); err != nil {
-		return nil, err
+		return res, err
 	}
 	
 	return res, nil
