@@ -1,10 +1,10 @@
 package whois
 
 import (
-	"net/http"
 	"io"
 	"io/ioutil"
 	"net"
+	"net/http"
 	"time"
 )
 
@@ -46,12 +46,14 @@ func (req *Request) fetchWhois() (*Response, error) {
 		return res, err
 	}
 
+	res.ContentType = http.DetectContentType(res.Body)
+
 	return res, nil
 }
 
 func (req *Request) fetchURL() (*Response, error) {
 	res := &Response{Request: req, FetchedAt: time.Now()}
-	
+
 	hres, err := http.Get(req.URL)
 	if err != nil {
 		return res, err
@@ -60,6 +62,8 @@ func (req *Request) fetchURL() (*Response, error) {
 	if res.Body, err = ioutil.ReadAll(hres.Body); err != nil {
 		return res, err
 	}
-	
+
+	res.ContentType = http.DetectContentType(res.Body)
+
 	return res, nil
 }
