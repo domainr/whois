@@ -8,9 +8,10 @@ import (
 	"time"
 )
 
+// DefaultTimeout for whois queries.
 const DefaultTimeout = 10 * time.Second
 
-// Request represents a whois request
+// Request represents a whois request.
 type Request struct {
 	Query   string
 	Host    string
@@ -19,10 +20,12 @@ type Request struct {
 	Timeout time.Duration
 }
 
+// NewRequest returns a request ready to fetch.
 func NewRequest(q string) *Request {
 	return &Request{Query: q, Timeout: DefaultTimeout}
 }
 
+// Fetch queries a whois server via whois protocol or by HTTP if URL is set.
 func (r *Request) Fetch() (*Response, error) {
 	if r.URL != "" {
 		return r.fetchURL()

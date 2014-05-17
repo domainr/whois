@@ -1,14 +1,16 @@
 package whois
 
-type Server struct {
-	Resolve func(*Request) error
+// Resolver is the interface all whois resolvers must satisfy.
+type Resolver interface {
+	Resolve(*Request) error
 }
 
-var Servers = map[string]*Server{}
+// Resolvers holds the set of registered whois resolvers.
+var Resolvers = make(map[string]Resolver)
 
-func (server Server) register(names ...string) *Server {
+// Each whois resolver must register itself with package whois in the init function.
+func register(r Resolver, names ...string) {
 	for _, name := range names {
-		Servers[name] = &server
+		Resolvers[name] = r
 	}
-	return &server
 }
