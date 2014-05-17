@@ -13,6 +13,6 @@ type Response struct {
 	Body        []byte
 }
 
-func (response *Response) String() string {
-	return string(response.Body)
+func (r *Response) String() string {
+	return string(r.Body)
 }
