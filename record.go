@@ -1,7 +1,5 @@
 package whois
 
-import ()
-
 // Status summarizes a domain name’s RPP or EPP status
 type Status int
 
@@ -18,6 +16,6 @@ type Record struct {
 	Status
 }
 
-func (record *Record) IsRegistered() bool {
-	return record.Status != Available
+func (r *Record) IsRegistered() bool {
+	return r.Status != Available
 }

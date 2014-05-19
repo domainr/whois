@@ -15,22 +15,15 @@ import (
 	"regexp"
 	"sort"
 	"strings"
-	"time"
 
 	"github.com/miekg/dns"
 )
 
 var (
-	url = flag.String("url",
-		"http://www.internic.net/domain/root.zone",
-		"URL of the IANA root zone file. If empty, read from stdin")
-	whois = flag.String("whois",
-		"whois.iana.org",
-		"Address of the root whois server to query")
-	v = flag.Bool("v", false, "verbose output (to stderr)")
-	quick = flag.Bool("quick", false, "Only work on a subset of zones")
-
-	dnsClient *dns.Client
+	url, whois  string
+	v, quick    bool
+	concurrency int
+	dnsClient   *dns.Client
 )
 
 type ZoneWhois struct {
@@ -40,7 +33,27 @@ type ZoneWhois struct {
 	viaDNS bool
 }
 
+func init() {
+	flag.StringVar(
+		&url,
+		"url",
+		"http://www.internic.net/domain/root.zone",
+		"URL of the IANA root zone file. If empty, read from stdin",
+	)
+	flag.StringVar(
+		&whois,
+		"whois",
+		"whois.iana.org",
+		"Address of the root whois server to query",
+	)
+	flag.BoolVar(&v, "v", false, "verbose output (to stderr)")
+	flag.BoolVar(&quick, "quick", false, "Only work on a subset of zones")
+	flag.IntVar(&concurrency, "concurrency", 8, "Set maximum number of concurrrent requests")
+}
+
 func main() {
+	flag.Parse()
+
 	if err := main1(); err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
@@ -48,18 +61,16 @@ func main() {
 }
 
 func main1() error {
-	flag.Parse()
-
 	var input io.Reader = os.Stdin
 
-	if *url != "" {
-		fmt.Fprintf(os.Stderr, "Fetching %s\n", *url)
-		res, err := http.Get(*url)
+	if url != "" {
+		fmt.Fprintf(os.Stderr, "Fetching %s\n", url)
+		res, err := http.Get(url)
 		if err != nil {
 			return err
 		}
 		if res.StatusCode != http.StatusOK {
-			return fmt.Errorf("Bad GET status for %s: %d", *url, res.Status)
+			return fmt.Errorf("Bad GET status for %s: %d", url, res.Status)
 		}
 		input = res.Body
 		defer res.Body.Close()
@@ -84,32 +95,38 @@ func main1() error {
 	}
 
 	// Sort zones
-	zones := make([]string, 0, len(zoneMap))
+	i := 0
+	zones := make([]string, len(zoneMap))
 	for zone, _ := range zoneMap {
-		zones = append(zones, zone)
+		zones[i] = zone
+		i++
 	}
 	sort.Strings(zones)
-	
+
 	// Quick for debugging?
-	if *quick {
+	if quick {
 		zones = zones[0:50]
 	}
 
 	// Get whois servers for each zone
 	re := regexp.MustCompile("whois:\\s+([a-z0-9\\-\\.]+)")
 	c := make(chan ZoneWhois, len(zones))
+	limiter := make(chan struct{}, concurrency) // semaphore to limit concurrency
 
 	fmt.Fprintf(os.Stderr, "Querying whois and DNS for %d zones\n", len(zones))
 
 	// Create 1 goroutine for each zone
 	for i, zone := range zones {
 		go func(zone string, i int) {
+			limiter <- struct{}{} // acquire semaphore
+
 			zw := ZoneWhois{zone, "", "", false}
-			defer func() { c <- zw }()
+			defer func() { // send result and release semaphore
+				c <- zw
+				<-limiter
+			}()
 
-			time.Sleep(time.Duration(i*100) * time.Millisecond) // Try not to hammer IANA
-
-			res, err := querySocket(*whois, zone)
+			res, err := querySocket(whois, zone)
 			if err != nil {
 				return
 			}
@@ -118,7 +135,7 @@ func main1() error {
 			matches := re.FindStringSubmatch(res)
 			if matches != nil {
 				zw.server = matches[1]
-				zw.msg = fmt.Sprintf("whois -h %s %s", *whois, zw.zone)
+				zw.msg = fmt.Sprintf("whois -h %s %s", whois, zw.zone)
 				return
 			}
 
@@ -141,7 +158,7 @@ func main1() error {
 		case zw := <-c:
 			if zw.msg == "" {
 				fmt.Fprintf(os.Stderr, "No match for %s\n", zw.zone)
-			} else if *v && zw.msg != "" {
+			} else if v && zw.msg != "" {
 				fmt.Fprintf(os.Stderr, "%s\t\t%s\n", zw.msg, zw.server)
 			}
 
@@ -176,12 +193,12 @@ var zones = map[string]string{
 `
 	const footer = `}`
 
-	fmt.Fprint(buf, header)
+	buf.WriteString(header)
 	for _, zone := range zones {
 		zw := zoneMap[zone]
-		fmt.Fprintf(buf, "\t\"%s\": \"%s\", // %s\n", zw.zone, zw.server, zw.msg)
+		fmt.Fprintf(buf, "\t%q: %q, // %s\n", zw.zone, zw.server, zw.msg)
 	}
-	fmt.Fprint(buf, footer)
+	buf.WriteString(footer)
 
 	// Write to stdout
 	formatted, err := format.Source(buf.Bytes())
@@ -213,16 +230,16 @@ func querySocket(addr, query string) (string, error) {
 
 func queryCNAME(host string) (string, error) {
 	m := new(dns.Msg)
-	m.RecursionDesired = true
-	fqdn := dns.Fqdn(host)
-	m.SetQuestion(fqdn, dns.TypeCNAME)
+	m.RecursionDesired = true // embedded field
+	m.SetQuestion(dns.Fqdn(host), dns.TypeCNAME)
 	dnsClient = new(dns.Client)
 	r, _, err := dnsClient.Exchange(m, "8.8.8.8:53")
 	if err != nil {
 		return "", err
-	} else if r.Rcode == dns.RcodeSuccess && r.Answer != nil && len(r.Answer) >= 1 {
-		if t, ok := r.Answer[0].(*dns.CNAME); ok {
-			return t.Target, nil
+	}
+	if r.Rcode == dns.RcodeSuccess && r.Answer != nil && len(r.Answer) >= 1 {
+		if cname, ok := r.Answer[0].(*dns.CNAME); ok {
+			return cname.Target, nil
 		}
 	}
 	return "", nil

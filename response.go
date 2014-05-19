@@ -4,7 +4,7 @@ import (
 	"time"
 )
 
-// Response represents a whois response from a server
+// Response represents a whois response from a server.
 type Response struct {
 	*Request
 	FetchedAt   time.Time
@@ -13,6 +13,7 @@ type Response struct {
 	Body        []byte
 }
 
-func (response *Response) String() string {
-	return string(response.Body)
+// String returns the response body.
+func (r *Response) String() string {
+	return string(r.Body)
 }

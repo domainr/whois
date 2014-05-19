@@ -30,9 +30,9 @@ func Resolve(q string) (*Request, error) {
 		return req, errors.New("No whois server found for " + q)
 	}
 
-	srv, ok := Servers[req.Host]
-	if !ok {
-		srv = Default
+	var srv Resolver
+	if srv = Resolvers[req.Host]; srv == nil {
+		srv = &Default{}
 	}
 	srv.Resolve(req)
 
