@@ -348,7 +348,7 @@ var zones = map[string]string{
 	"nl":                     "whois.domain-registry.nl",             // whois -h whois.iana.org nl
 	"no":                     "whois.norid.no",                       // whois -h whois.iana.org no
 	"np":                     "",                                     //
-	"nr":                     "",                                     //
+	"nr":                     "cenpac.net.nr",                        // http://cenpac.net.nr/dns/
 	"nu":                     "whois.iis.nu",                         // whois -h whois.iana.org nu
 	"nyc":                    "whois.nic.nyc",                        // dig nyc.whois-servers.net CNAME
 	"nz":                     "whois.srs.net.nz",                     // whois -h whois.iana.org nz

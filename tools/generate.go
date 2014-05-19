@@ -33,6 +33,10 @@ type ZoneWhois struct {
 	viaDNS bool
 }
 
+var exceptions = map[string]ZoneWhois{
+	"nr": ZoneWhois{server: "cenpac.net.nr", msg: "http://cenpac.net.nr/dns/"},
+}
+
 func init() {
 	flag.StringVar(
 		&url,
@@ -48,7 +52,7 @@ func init() {
 	)
 	flag.BoolVar(&v, "v", false, "verbose output (to stderr)")
 	flag.BoolVar(&quick, "quick", false, "Only work on a subset of zones")
-	flag.IntVar(&concurrency, "concurrency", 8, "Set maximum number of concurrrent requests")
+	flag.IntVar(&concurrency, "concurrency", 8, "Set maximum number of concurrent requests")
 }
 
 func main() {
@@ -142,11 +146,15 @@ func main1() error {
 			// Check whois-servers.net
 			host := zone + ".whois-servers.net"
 			zw.server, err = queryCNAME(host)
-			if zw.server == "" || err != nil {
+			if zw.server != "" {
+				zw.msg = fmt.Sprintf("dig %s CNAME", host)
+				zw.viaDNS = true
 				return
 			}
-			zw.msg = fmt.Sprintf("dig %s CNAME", host)
-			zw.viaDNS = true
+
+			// Check exception list
+			zw = exceptions[zone]
+			zw.zone = zone
 		}(zone, i)
 	}
 
