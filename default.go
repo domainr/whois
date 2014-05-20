@@ -1,8 +1,7 @@
-package servers
+package whois
 
 import (
 	"fmt"
-	. "github.com/domainr/go-whois/types"
 )
 
 var Default = &Server{

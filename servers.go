@@ -1,8 +1,4 @@
-package servers
-
-import (
-	. "github.com/domainr/go-whois/types"
-)
+package whois
 
 // Servers maps hostnames to Server implementations.
 var Servers = map[string]*Server{}

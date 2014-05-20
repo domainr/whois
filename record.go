@@ -1,6 +1,6 @@
-package types
+package whois
 
-// Status summarizes a domain name’s RPP or EPP status
+// Status summarizes a domain name’s RPP or EPP status.
 type Status int
 
 const (
@@ -10,7 +10,7 @@ const (
 	Invalid
 )
 
-// Record represents a parsed whois response
+// Record represents a parsed whois response.
 type Record struct {
 	Response
 	Status
