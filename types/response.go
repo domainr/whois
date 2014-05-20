@@ -1,4 +1,4 @@
-package whois
+package types
 
 import (
 	"time"

@@ -3,6 +3,8 @@ package whois
 import (
 	"errors"
 	"strings"
+	. "github.com/domainr/go-whois/types"
+	"github.com/domainr/go-whois/servers"
 )
 
 func Whois(q string) (string, error) {
@@ -30,9 +32,9 @@ func Resolve(q string) (*Request, error) {
 		return req, errors.New("No whois server found for " + q)
 	}
 
-	srv, ok := Servers[req.Host]
+	srv, ok := servers.Servers[req.Host]
 	if !ok {
-		srv = Default
+		srv = servers.Default
 	}
 	srv.Resolve(req)
 

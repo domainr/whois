@@ -1,11 +1,12 @@
-package whois
+package servers
 
 import (
+	. "github.com/domainr/go-whois/types"
 	"net/url"
 	"strings"
 )
 
-var _ = Server{
+var Cenpac = &Server{
 	Resolve: func(req *Request) error {
 		labels := strings.SplitN(req.Query, ".", 2)
 		values := url.Values{}
@@ -16,6 +17,11 @@ var _ = Server{
 		req.Body = ""
 		return nil
 	},
-}.register(
-	"cenpac.net.nr",
-)
+}
+
+func init() {
+	register(
+		Cenpac,
+		"cenpac.net.nr",
+	)
+}
