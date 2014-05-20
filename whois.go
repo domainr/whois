@@ -3,10 +3,12 @@ package whois
 import (
 	"errors"
 	"strings"
-	. "github.com/domainr/go-whois/types"
+
 	"github.com/domainr/go-whois/servers"
+	. "github.com/domainr/go-whois/types"
 )
 
+// Whois queries a whois server for q and returns the result.
 func Whois(q string) (string, error) {
 	req, err := Resolve(q)
 	if err != nil {
@@ -21,6 +23,7 @@ func Whois(q string) (string, error) {
 	return string(res.Body), nil
 }
 
+// Resolve finds a whois server for q and prepares a Request.
 func Resolve(q string) (*Request, error) {
 	req := NewRequest(q)
 
