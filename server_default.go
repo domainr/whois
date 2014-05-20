@@ -4,7 +4,7 @@ import (
 	"fmt"
 )
 
-var Default = &Server{
+var defaultServer = &Server{
 	Resolve: func(req *Request) error {
 		req.URL = ""
 		req.Body = fmt.Sprintf("%s\r\n", req.Query)
@@ -14,7 +14,7 @@ var Default = &Server{
 
 func init() {
 	register(
-		Default,
+		defaultServer,
 		"default",
 	)
 }

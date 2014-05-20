@@ -4,9 +4,9 @@ import (
 	"fmt"
 )
 
-var Verisign = &Server{
+var verisign = &Server{
 	Resolve: func(req *Request) error {
-		Default.Resolve(req)
+		defaultServer.Resolve(req)
 		req.Body = fmt.Sprintf("=%s\r\n", req.Query)
 		return nil
 	},
@@ -14,7 +14,7 @@ var Verisign = &Server{
 
 func init() {
 	register(
-		Verisign,
+		verisign,
 		"whois.verisign-grs.com",
 		"bzwhois.verisign-grs.com",
 		"ccwhois.verisign-grs.com",
