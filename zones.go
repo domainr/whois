@@ -3,7 +3,7 @@
 
 package whois
 
-var zones = map[string]string{
+var Zones = map[string]string{
 	"ac":                     "whois.nic.ac",                         // whois -h whois.iana.org ac
 	"academy":                "whois.donuts.co",                      // whois -h whois.iana.org academy
 	"accountants":            "whois.donuts.co",                      // whois -h whois.iana.org accountants
