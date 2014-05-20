@@ -4,8 +4,7 @@ import (
 	"errors"
 	"strings"
 
-	"github.com/domainr/go-whois/servers"
-	. "github.com/domainr/go-whois/types"
+	//_ "github.com/domainr/go-whois/servers"
 )
 
 // Whois queries a whois server for q and returns the result.
@@ -35,9 +34,9 @@ func Resolve(q string) (*Request, error) {
 		return req, errors.New("No whois server found for " + q)
 	}
 
-	srv, ok := servers.Servers[req.Host]
+	srv, ok := Servers[req.Host]
 	if !ok {
-		srv = servers.Default
+		srv = Servers["default"]
 	}
 	srv.Resolve(req)
 
