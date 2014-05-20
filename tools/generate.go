@@ -197,7 +197,7 @@ func main1() error {
 
 package whois
 
-var Zones = map[string]string{
+var zones = map[string]string{
 `
 	const footer = `}`
 
