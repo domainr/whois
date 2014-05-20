@@ -14,6 +14,6 @@ type Response struct {
 }
 
 // String returns the response body.
-func (r *Response) String() string {
-	return string(r.Body)
+func (res *Response) String() string {
+	return string(res.Body)
 }

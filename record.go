@@ -18,6 +18,6 @@ type Record struct {
 }
 
 // Returns whether a domain is registered.
-func (r *Record) IsRegistered() bool {
-	return r.Status != Available
+func (rec *Record) IsRegistered() bool {
+	return rec.Status != Available
 }

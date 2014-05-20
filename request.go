@@ -26,47 +26,47 @@ func NewRequest(q string) *Request {
 }
 
 // Fetch queries a whois server via whois protocol or by HTTP if URL is set.
-func (r *Request) Fetch() (*Response, error) {
-	if r.URL != "" {
-		return r.fetchURL()
+func (req *Request) Fetch() (*Response, error) {
+	if req.URL != "" {
+		return req.fetchURL()
 	}
-	return r.fetchWhois()
+	return req.fetchWhois()
 }
 
-func (r *Request) fetchWhois() (*Response, error) {
-	resp := &Response{Request: r, FetchedAt: time.Now()}
+func (req *Request) fetchWhois() (*Response, error) {
+	res := &Response{Request: req, FetchedAt: time.Now()}
 
-	c, err := net.DialTimeout("tcp", r.Host+":43", r.Timeout)
+	c, err := net.DialTimeout("tcp", req.Host+":43", req.Timeout)
 	if err != nil {
-		return resp, err
+		return res, err
 	}
 	defer c.Close()
-	c.SetDeadline(time.Now().Add(r.Timeout))
-	if _, err = io.WriteString(c, r.Body); err != nil {
-		return resp, err
+	c.SetDeadline(time.Now().Add(req.Timeout))
+	if _, err = io.WriteString(c, req.Body); err != nil {
+		return res, err
 	}
-	if resp.Body, err = ioutil.ReadAll(c); err != nil {
-		return resp, err
+	if res.Body, err = ioutil.ReadAll(c); err != nil {
+		return res, err
 	}
 
-	resp.ContentType = http.DetectContentType(resp.Body)
+	res.ContentType = http.DetectContentType(res.Body)
 
-	return resp, nil
+	return res, nil
 }
 
-func (r *Request) fetchURL() (*Response, error) {
-	resp := &Response{Request: r, FetchedAt: time.Now()}
+func (req *Request) fetchURL() (*Response, error) {
+	res := &Response{Request: req, FetchedAt: time.Now()}
 
-	getResp, err := http.Get(r.URL)
+	getResp, err := http.Get(req.URL)
 	if err != nil {
-		return resp, err
+		return res, err
 	}
 	defer getResp.Body.Close()
-	if resp.Body, err = ioutil.ReadAll(getResp.Body); err != nil {
-		return resp, err
+	if res.Body, err = ioutil.ReadAll(getResp.Body); err != nil {
+		return res, err
 	}
 
-	resp.ContentType = http.DetectContentType(resp.Body)
+	res.ContentType = http.DetectContentType(res.Body)
 
-	return resp, nil
+	return res, nil
 }
