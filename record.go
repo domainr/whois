@@ -8,6 +8,7 @@ const (
 	Unknown Status = iota
 	Available
 	Registered
+	Reserved
 	Invalid
 )
 
@@ -15,9 +16,4 @@ const (
 type Record struct {
 	Response
 	Status
-}
-
-// Returns whether a domain is registered.
-func (rec *Record) IsRegistered() bool {
-	return rec.Status != Available
 }
