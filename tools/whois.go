@@ -6,7 +6,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
-	
+
 	"github.com/domainr/go-whois"
 )
 

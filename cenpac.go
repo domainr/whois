@@ -1,7 +1,6 @@
-package servers
+package whois
 
 import (
-	. "github.com/domainr/go-whois/types"
 	"net/url"
 	"strings"
 )
