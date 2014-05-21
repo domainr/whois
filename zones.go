@@ -43,7 +43,7 @@ var zones = map[string]string{
 	"be":                     "whois.dns.be",                         // whois -h whois.iana.org be
 	"beer":                   "whois-dub.mm-registry.com",            // whois -h whois.iana.org beer
 	"berlin":                 "whois.nic.berlin",                     // whois -h whois.iana.org berlin
-	"best":                   "whois.nic.best",                       // dig best.whois-servers.net CNAME
+	"best":                   "whois.nic.best",                       // whois -h whois.iana.org best
 	"bf":                     "",                                     //
 	"bg":                     "whois.register.bg",                    // whois -h whois.iana.org bg
 	"bh":                     "",                                     //
@@ -65,7 +65,7 @@ var zones = map[string]string{
 	"build":                  "whois.nic.build",                      // whois -h whois.iana.org build
 	"builders":               "whois.donuts.co",                      // whois -h whois.iana.org builders
 	"buzz":                   "whois.nic.buzz",                       // dig buzz.whois-servers.net CNAME
-	"bv":                     "",                                     //
+	"bv":                     "whois.norid.no",                       // http://www.norid.no/navnepolitikk.en.html#link1
 	"bw":                     "whois.nic.net.bw",                     // whois -h whois.iana.org bw
 	"by":                     "whois.cctld.by",                       // whois -h whois.iana.org by
 	"bz":                     "bzwhois.verisign-grs.com",             // dig bz.whois-servers.net CNAME
@@ -422,7 +422,7 @@ var zones = map[string]string{
 	"shoes":                  "whois.donuts.co",                      // whois -h whois.iana.org shoes
 	"si":                     "whois.arnes.si",                       // whois -h whois.iana.org si
 	"singles":                "whois.donuts.co",                      // whois -h whois.iana.org singles
-	"sj":                     "",                                     //
+	"sj":                     "whois.norid.no",                       // http://www.norid.no/navnepolitikk.en.html#link1
 	"sk":                     "whois.sk-nic.sk",                      // whois -h whois.iana.org sk
 	"sl":                     "",                                     //
 	"sm":                     "whois.nic.sm",                         // whois -h whois.iana.org sm

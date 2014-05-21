@@ -34,7 +34,9 @@ type ZoneWhois struct {
 }
 
 var exceptions = map[string]ZoneWhois{
+	"bv": ZoneWhois{server: "whois.norid.no", msg: "http://www.norid.no/navnepolitikk.en.html#link1"},
 	"nr": ZoneWhois{server: "cenpac.net.nr", msg: "http://cenpac.net.nr/dns/"},
+	"sj": ZoneWhois{server: "whois.norid.no", msg: "http://www.norid.no/navnepolitikk.en.html#link1"},
 }
 
 func init() {
