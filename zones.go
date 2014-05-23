@@ -30,6 +30,7 @@ var zones = map[string]string{
 	"at":                     "whois.nic.at",                         // whois -h whois.iana.org at
 	"au":                     "whois.audns.net.au",                   // whois -h whois.iana.org au
 	"audio":                  "whois.uniregistry.net",                // whois -h whois.iana.org audio
+	"autos":                  "whois.afilias-srs.net",                // whois -h whois.iana.org autos
 	"aw":                     "whois.nic.aw",                         // whois -h whois.iana.org aw
 	"ax":                     "whois.ax",                             // whois -h whois.iana.org ax
 	"axa":                    "whois.nic.axa",                        // dig axa.whois-servers.net CNAME
@@ -227,6 +228,7 @@ var zones = map[string]string{
 	"hn":                     "whois.nic.hn",                         // whois -h whois.iana.org hn
 	"holdings":               "whois.donuts.co",                      // whois -h whois.iana.org holdings
 	"holiday":                "whois.donuts.co",                      // whois -h whois.iana.org holiday
+	"homes":                  "whois.afilias-srs.net",                // whois -h whois.iana.org homes
 	"horse":                  "whois-dub.mm-registry.com",            // whois -h whois.iana.org horse
 	"house":                  "whois.donuts.co",                      // whois -h whois.iana.org house
 	"hr":                     "whois.dns.hr",                         // whois -h whois.iana.org hr
@@ -322,6 +324,7 @@ var zones = map[string]string{
 	"moe":                    "whois.nic.moe",                        // dig moe.whois-servers.net CNAME
 	"monash":                 "whois.nic.monash",                     // whois -h whois.iana.org monash
 	"moscow":                 "whois.nic.moscow",                     // whois -h whois.iana.org moscow
+	"motorcycles":            "whois.afilias-srs.net",                // whois -h whois.iana.org motorcycles
 	"mp":                     "whois.nic.mp",                         // whois -h whois.iana.org mp
 	"mq":                     "",                                     //
 	"mr":                     "",                                     //
@@ -391,6 +394,7 @@ var zones = map[string]string{
 	"re":                     "whois.nic.re",                         // whois -h whois.iana.org re
 	"recipes":                "whois.donuts.co",                      // whois -h whois.iana.org recipes
 	"red":                    "whois.afilias.net",                    // whois -h whois.iana.org red
+	"reise":                  "whois.reise.tld-box.at",               // whois -h whois.iana.org reise
 	"reisen":                 "whois.donuts.co",                      // whois -h whois.iana.org reisen
 	"ren":                    "whois.nic.ren",                        // dig ren.whois-servers.net CNAME
 	"rentals":                "whois.donuts.co",                      // whois -h whois.iana.org rentals
@@ -399,6 +403,7 @@ var zones = map[string]string{
 	"rest":                   "whois.centralnic.com",                 // whois -h whois.iana.org rest
 	"reviews":                "whois.unitedtld.com",                  // whois -h whois.iana.org reviews
 	"rich":                   "whois.afilias-srs.net",                // whois -h whois.iana.org rich
+	"rio":                    "whois.gtlds.nic.br",                   // whois -h whois.iana.org rio
 	"ro":                     "whois.rotld.ro",                       // whois -h whois.iana.org ro
 	"rocks":                  "whois.unitedtld.com",                  // whois -h whois.iana.org rocks
 	"rodeo":                  "whois-dub.mm-registry.com",            // whois -h whois.iana.org rodeo
@@ -490,6 +495,7 @@ var zones = map[string]string{
 	"ve":                     "whois.nic.ve",                         // whois -h whois.iana.org ve
 	"vegas":                  "whois.afilias-srs.net",                // whois -h whois.iana.org vegas
 	"ventures":               "whois.donuts.co",                      // whois -h whois.iana.org ventures
+	"versicherung":           "whois.versicherung.tld-box.at",        // whois -h whois.iana.org versicherung
 	"vg":                     "ccwhois.ksregistry.net",               // whois -h whois.iana.org vg
 	"vi":                     "",                                     //
 	"viajes":                 "whois.donuts.co",                      // whois -h whois.iana.org viajes
