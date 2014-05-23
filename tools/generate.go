@@ -16,6 +16,7 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/domainr/go-whois/tools"
 	"github.com/miekg/dns"
 )
 
@@ -25,25 +26,6 @@ var (
 	concurrency int
 	dnsClient   *dns.Client
 )
-
-type ZoneWhois struct {
-	zone   string
-	server string
-	msg    string
-	viaDNS bool
-}
-
-var exceptions = map[string]ZoneWhois{
-	"bd":            ZoneWhois{server: "www.whois.com.bd", msg: "http://www.whois.com.bd/"},
-	"bv":            ZoneWhois{server: "whois.norid.no", msg: "http://www.norid.no/navnepolitikk.en.html#link1"},
-	"gmo":           ZoneWhois{server: "whois.gmoregistry.net", msg: "http://en.wikipedia.org/wiki/.gmo"},
-	"lk":            ZoneWhois{server: "whois.nic.lk", msg: "http://nic.lk"},
-	"nr":            ZoneWhois{server: "cenpac.net.nr", msg: "http://cenpac.net.nr/dns/"},
-	"sj":            ZoneWhois{server: "whois.norid.no", msg: "http://www.norid.no/navnepolitikk.en.html#link1"},
-	"xn--90a3ac":    ZoneWhois{server: "whois.rnids.rs", msg: "http://en.wikipedia.org/wiki/.xn--90a3ac"},
-	"xn--fzc2c9e2c": ZoneWhois{server: "whois.nic.lk", msg: "http://www.iana.org/domains/root/db/.xn--fzc2c9e2c.html"},
-	"za":            ZoneWhois{server: "whois.registry.net.za", msg: "http://en.wikipedia.org/wiki/.za"},
-}
 
 func init() {
 	flag.StringVar(
@@ -88,7 +70,7 @@ func main1() error {
 		defer res.Body.Close()
 	}
 
-	zoneMap := make(map[string]ZoneWhois)
+	zoneMap := make(map[string]tools.ZoneWhois)
 
 	fmt.Fprintf(os.Stderr, "Parsing root.zone\n")
 	for token := range dns.ParseZone(input, "", "") {
@@ -103,7 +85,7 @@ func main1() error {
 		if domain == "" {
 			continue
 		}
-		zoneMap[domain] = ZoneWhois{}
+		zoneMap[domain] = tools.ZoneWhois{}
 	}
 
 	// Sort zones
@@ -122,7 +104,7 @@ func main1() error {
 
 	// Get whois servers for each zone
 	re := regexp.MustCompile("whois:\\s+([a-z0-9\\-\\.]+)")
-	c := make(chan ZoneWhois, len(zones))
+	c := make(chan tools.ZoneWhois, len(zones))
 	limiter := make(chan struct{}, concurrency) // semaphore to limit concurrency
 
 	fmt.Fprintf(os.Stderr, "Querying whois and DNS for %d zones\n", len(zones))
@@ -132,7 +114,7 @@ func main1() error {
 		go func(zone string, i int) {
 			limiter <- struct{}{} // acquire semaphore
 
-			zw := ZoneWhois{zone, "", "", false}
+			zw := tools.ZoneWhois{zone, "", "", false}
 			defer func() { // send result and release semaphore
 				c <- zw
 				<-limiter
@@ -146,23 +128,23 @@ func main1() error {
 			// Look for whois: string
 			matches := re.FindStringSubmatch(res)
 			if matches != nil {
-				zw.server = matches[1]
-				zw.msg = fmt.Sprintf("whois -h %s %s", whois, zw.zone)
+				zw.Server = matches[1]
+				zw.Msg = fmt.Sprintf("whois -h %s %s", whois, zw.Zone)
 				return
 			}
 
 			// Check whois-servers.net
 			host := zone + ".whois-servers.net"
-			zw.server, err = queryCNAME(host)
-			if zw.server != "" {
-				zw.msg = fmt.Sprintf("dig %s CNAME", host)
-				zw.viaDNS = true
+			zw.Server, err = queryCNAME(host)
+			if zw.Server != "" {
+				zw.Msg = fmt.Sprintf("dig %s CNAME", host)
+				zw.ViaDNS = true
 				return
 			}
 
 			// Check exception list
-			zw = exceptions[zone]
-			zw.zone = zone
+			zw = tools.Exceptions[zone]
+			zw.Zone = zone
 		}(zone, i)
 	}
 
@@ -172,19 +154,19 @@ func main1() error {
 	for i := 0; i < len(zones); i++ {
 		select {
 		case zw := <-c:
-			if zw.msg == "" {
-				fmt.Fprintf(os.Stderr, "No match for %s\n", zw.zone)
-			} else if v && zw.msg != "" {
-				fmt.Fprintf(os.Stderr, "%s\t\t%s\n", zw.msg, zw.server)
+			if zw.Msg == "" {
+				fmt.Fprintf(os.Stderr, "No match for %s\n", zw.Zone)
+			} else if v && zw.Msg != "" {
+				fmt.Fprintf(os.Stderr, "%s\t\t%s\n", zw.Msg, zw.Server)
 			}
 
-			zw.server = strings.TrimSuffix(strings.ToLower(zw.server), ".")
-			zoneMap[zw.zone] = zw
+			zw.Server = strings.TrimSuffix(strings.ToLower(zw.Server), ".")
+			zoneMap[zw.Zone] = zw
 
-			if zw.server == "" {
+			if zw.Server == "" {
 				numMissing++
 			}
-			if zw.viaDNS {
+			if zw.ViaDNS {
 				numDNS++
 			}
 		}
@@ -212,7 +194,7 @@ var zones = map[string]string{
 	buf.WriteString(header)
 	for _, zone := range zones {
 		zw := zoneMap[zone]
-		fmt.Fprintf(buf, "\t%q: %q, // %s\n", zw.zone, zw.server, zw.msg)
+		fmt.Fprintf(buf, "\t%q: %q, // %s\n", zw.Zone, zw.Server, zw.Msg)
 	}
 	buf.WriteString(footer)
 
