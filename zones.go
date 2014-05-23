@@ -40,7 +40,7 @@ var zones = map[string]string{
 	"bargains":               "whois.donuts.co",                      // whois -h whois.iana.org bargains
 	"bayern":                 "whois-dub.mm-registry.com",            // whois -h whois.iana.org bayern
 	"bb":                     "",                                     //
-	"bd":                     "",                                     //
+	"bd":                     "www.whois.com.bd",                     // http://www.whois.com.bd/
 	"be":                     "whois.dns.be",                         // whois -h whois.iana.org be
 	"beer":                   "whois-dub.mm-registry.com",            // whois -h whois.iana.org beer
 	"berlin":                 "whois.nic.berlin",                     // whois -h whois.iana.org berlin
@@ -203,7 +203,7 @@ var zones = map[string]string{
 	"glass":                  "whois.donuts.co",                      // whois -h whois.iana.org glass
 	"globo":                  "whois.gtlds.nic.br",                   // whois -h whois.iana.org globo
 	"gm":                     "whois.ripe.net",                       // dig gm.whois-servers.net CNAME
-	"gmo":                    "",                                     //
+	"gmo":                    "whois.gmoregistry.net",                // http://en.wikipedia.org/wiki/.gmo
 	"gn":                     "",                                     //
 	"gop":                    "whois-cl01.mm-registry.com",           // whois -h whois.iana.org gop
 	"gov":                    "whois.dotgov.gov",                     // whois -h whois.iana.org gov
@@ -531,10 +531,11 @@ var zones = map[string]string{
 	"xn--80ao21a":            "whois.nic.kz",                         // whois -h whois.iana.org xn--80ao21a
 	"xn--80asehdb":           "whois.online.rs.corenic.net",          // whois -h whois.iana.org xn--80asehdb
 	"xn--80aswg":             "whois.site.rs.corenic.net",            // whois -h whois.iana.org xn--80aswg
-	"xn--90a3ac":             "",                                     //
+	"xn--90a3ac":             "whois.rnids.rs",                       // http://en.wikipedia.org/wiki/.xn--90a3ac
 	"xn--c1avg":              "whois.publicinterestregistry.net",     // whois -h whois.iana.org xn--c1avg
 	"xn--cg4bki":             "whois.kr",                             // whois -h whois.iana.org xn--cg4bki
 	"xn--clchc0ea0b2g2a9gcd": "whois.sgnic.sg",                       // whois -h whois.iana.org xn--clchc0ea0b2g2a9gcd
+	"xn--czr694b":            "",                                     //
 	"xn--czru2d":             "whois.gtld.knet.cn",                   // whois -h whois.iana.org xn--czru2d
 	"xn--d1acj3b":            "whois.nic.xn--d1acj3b",                // whois -h whois.iana.org xn--d1acj3b
 	"xn--fiq228c5hs":         "whois.afilias-srs.net",                // whois -h whois.iana.org xn--fiq228c5hs
@@ -542,7 +543,7 @@ var zones = map[string]string{
 	"xn--fiqs8s":             "cwhois.cnnic.cn",                      // whois -h whois.iana.org xn--fiqs8s
 	"xn--fiqz9s":             "cwhois.cnnic.cn",                      // whois -h whois.iana.org xn--fiqz9s
 	"xn--fpcrj9c3d":          "",                                     //
-	"xn--fzc2c9e2c":          "",                                     //
+	"xn--fzc2c9e2c":          "whois.nic.lk",                         // http://www.iana.org/domains/root/db/.xn--fzc2c9e2c.html
 	"xn--gecrj9c":            "",                                     //
 	"xn--h2brj9c":            "",                                     //
 	"xn--i1b6b1a6a2e":        "whois.publicinterestregistry.net",     // whois -h whois.iana.org xn--i1b6b1a6a2e
@@ -559,7 +560,7 @@ var zones = map[string]string{
 	"xn--mgbab2bd":           "whois.bazaar.coreregistry.net",        // whois -h whois.iana.org xn--mgbab2bd
 	"xn--mgbayh7gpa":         "",                                     //
 	"xn--mgbbh1a71e":         "",                                     //
-	"xn--mgbc0a9azcg":        "",                                     //
+	"xn--mgbc0a9azcg":        "whois.iam.net.ma",                     // Morocco
 	"xn--mgberp4a5d4ar":      "whois.nic.net.sa",                     // whois -h whois.iana.org xn--mgberp4a5d4ar
 	"xn--mgbx4cd0ab":         "whois.domainregistry.my",              // whois -h whois.iana.org xn--mgbx4cd0ab
 	"xn--ngbc5azd":           "whois.nic.xn--ngbc5azd",               // whois -h whois.iana.org xn--ngbc5azd
@@ -568,25 +569,26 @@ var zones = map[string]string{
 	"xn--o3cw4h":             "whois.thnic.co.th",                    // whois -h whois.iana.org xn--o3cw4h
 	"xn--ogbpf8fl":           "whois.tld.sy",                         // whois -h whois.iana.org xn--ogbpf8fl
 	"xn--p1ai":               "whois.tcinet.ru",                      // whois -h whois.iana.org xn--p1ai
-	"xn--pgbs0dh":            "",                                     //
+	"xn--pgbs0dh":            "whois.ati.tn",                         // Tunisia
 	"xn--q9jyb4c":            "domain-registry-whois.l.google.com",   // whois -h whois.iana.org xn--q9jyb4c
-	"xn--rhqv96g":            "",                                     //
+	"xn--rhqv96g":            "whois.nic.xn--rhqv96g",                // China
 	"xn--s9brj9c":            "",                                     //
-	"xn--ses554g":            "",                                     //
+	"xn--ses554g":            "whois.gtld.knet.cn",                   // China: whois -h whois.gtld.knet.cn nic.xn--ses554g
 	"xn--unup4y":             "whois.donuts.co",                      // whois -h whois.iana.org xn--unup4y
 	"xn--wgbh1c":             "",                                     //
 	"xn--wgbl6a":             "whois.registry.qa",                    // whois -h whois.iana.org xn--wgbl6a
-	"xn--xkc2al3hye2a":       "",                                     //
+	"xn--xkc2al3hye2a":       "whois.nic.lk",                         // Sri Lanka
 	"xn--xkc2dl3a5ee0h":      "",                                     //
 	"xn--yfro4i67o":          "whois.sgnic.sg",                       // whois -h whois.iana.org xn--yfro4i67o
 	"xn--ygbi2ammx":          "whois.pnina.ps",                       // whois -h whois.iana.org xn--ygbi2ammx
 	"xn--zfr164b":            "whois.conac.cn",                       // whois -h whois.iana.org xn--zfr164b
 	"xxx":                    "whois.nic.xxx",                        // whois -h whois.iana.org xxx
 	"xyz":                    "whois.nic.xyz",                        // whois -h whois.iana.org xyz
+	"yachts":                 "whois.afilias-srs.net",                // whois -h whois.iana.org yachts
 	"ye":                     "",                                     //
 	"yokohama":               "whois.nic.yokohama",                   // dig yokohama.whois-servers.net CNAME
 	"yt":                     "whois.nic.yt",                         // whois -h whois.iana.org yt
-	"za":                     "",                                     //
+	"za":                     "whois.registry.net.za",                // http://en.wikipedia.org/wiki/.za
 	"zm":                     "whois.nic.zm",                         // whois -h whois.iana.org zm
 	"zone":                   "whois.donuts.co",                      // whois -h whois.iana.org zone
 	"zw":                     "",                                     //
