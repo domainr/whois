@@ -34,12 +34,14 @@ type ZoneWhois struct {
 }
 
 var exceptions = map[string]ZoneWhois{
-	"bv":         ZoneWhois{server: "whois.norid.no", msg: "http://www.norid.no/navnepolitikk.en.html#link1"},
-	"gmo":        ZoneWhois{server: "whois.gmoregistry.net", msg: "http://en.wikipedia.org/wiki/.gmo"},
-	"nr":         ZoneWhois{server: "cenpac.net.nr", msg: "http://cenpac.net.nr/dns/"},
-	"sj":         ZoneWhois{server: "whois.norid.no", msg: "http://www.norid.no/navnepolitikk.en.html#link1"},
-	"xn--90a3ac": ZoneWhois{server: "whois.rnids.rs", msg: "http://en.wikipedia.org/wiki/.xn--90a3ac"},
-	"za":         ZoneWhois{server: "whois.registry.net.za", msg: "http://en.wikipedia.org/wiki/.za"},
+	"bv":            ZoneWhois{server: "whois.norid.no", msg: "http://www.norid.no/navnepolitikk.en.html#link1"},
+	"gmo":           ZoneWhois{server: "whois.gmoregistry.net", msg: "http://en.wikipedia.org/wiki/.gmo"},
+	"lk":            ZoneWhois{server: "whois.nic.lk", msg: "http://nic.lk"},
+	"nr":            ZoneWhois{server: "cenpac.net.nr", msg: "http://cenpac.net.nr/dns/"},
+	"sj":            ZoneWhois{server: "whois.norid.no", msg: "http://www.norid.no/navnepolitikk.en.html#link1"},
+	"xn--90a3ac":    ZoneWhois{server: "whois.rnids.rs", msg: "http://en.wikipedia.org/wiki/.xn--90a3ac"},
+	"xn--fzc2c9e2c": ZoneWhois{server: "whois.nic.lk", msg: "http://www.iana.org/domains/root/db/.xn--fzc2c9e2c.html"},
+	"za":            ZoneWhois{server: "whois.registry.net.za", msg: "http://en.wikipedia.org/wiki/.za"},
 }
 
 func init() {
