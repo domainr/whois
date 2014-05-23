@@ -34,6 +34,7 @@ type ZoneWhois struct {
 }
 
 var exceptions = map[string]ZoneWhois{
+	"bd":            ZoneWhois{server: "www.whois.com.bd", msg: "http://www.whois.com.bd/"},
 	"bv":            ZoneWhois{server: "whois.norid.no", msg: "http://www.norid.no/navnepolitikk.en.html#link1"},
 	"gmo":           ZoneWhois{server: "whois.gmoregistry.net", msg: "http://en.wikipedia.org/wiki/.gmo"},
 	"lk":            ZoneWhois{server: "whois.nic.lk", msg: "http://nic.lk"},

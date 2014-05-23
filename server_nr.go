@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-var cenpac = &Server{
+var nr = &Server{
 	Resolve: func(req *Request) error {
 		labels := strings.SplitN(req.Query, ".", 2)
 		values := url.Values{}
@@ -20,7 +20,7 @@ var cenpac = &Server{
 
 func init() {
 	register(
-		cenpac,
+		nr,
 		"cenpac.net.nr",
 	)
 }
