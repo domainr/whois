@@ -27,6 +27,13 @@ var (
 	dnsClient   *dns.Client
 )
 
+type ZoneWhois struct {
+	Zone   string
+	Server string
+	Msg    string
+	ViaDNS bool
+}
+
 func init() {
 	flag.StringVar(
 		&url,
@@ -70,7 +77,7 @@ func main1() error {
 		defer res.Body.Close()
 	}
 
-	zoneMap := make(map[string]tools.ZoneWhois)
+	zoneMap := make(map[string]ZoneWhois)
 
 	fmt.Fprintf(os.Stderr, "Parsing root.zone\n")
 	for token := range dns.ParseZone(input, "", "") {
@@ -85,7 +92,7 @@ func main1() error {
 		if domain == "" {
 			continue
 		}
-		zoneMap[domain] = tools.ZoneWhois{}
+		zoneMap[domain] = ZoneWhois{}
 	}
 
 	// Sort zones
@@ -104,7 +111,7 @@ func main1() error {
 
 	// Get whois servers for each zone
 	re := regexp.MustCompile("whois:\\s+([a-z0-9\\-\\.]+)")
-	c := make(chan tools.ZoneWhois, len(zones))
+	c := make(chan ZoneWhois, len(zones))
 	limiter := make(chan struct{}, concurrency) // semaphore to limit concurrency
 
 	fmt.Fprintf(os.Stderr, "Querying whois and DNS for %d zones\n", len(zones))
@@ -114,7 +121,7 @@ func main1() error {
 		go func(zone string, i int) {
 			limiter <- struct{}{} // acquire semaphore
 
-			zw := tools.ZoneWhois{zone, "", "", false}
+			zw := ZoneWhois{zone, "", "", false}
 			defer func() { // send result and release semaphore
 				c <- zw
 				<-limiter
@@ -143,8 +150,11 @@ func main1() error {
 			}
 
 			// Check exception list
-			zw = tools.Exceptions[zone]
-			zw.Zone = zone
+			ex, ok := tools.Exceptions[zone]
+			if ok {
+				zw.Server = ex.Server
+				zw.Msg = ex.Msg
+			}
 		}(zone, i)
 	}
 
