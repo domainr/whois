@@ -8,7 +8,7 @@ var zones = map[string]string{
 	"academy":                "whois.donuts.co",                      // whois -h whois.iana.org academy
 	"accountants":            "whois.donuts.co",                      // whois -h whois.iana.org accountants
 	"actor":                  "whois.unitedtld.com",                  // whois -h whois.iana.org actor
-	"ad":                     "whois.ripe.net",                       // dig ad.whois-servers.net CNAME
+	"ad":                     "whois.ripe.net",                       //
 	"ae":                     "whois.aeda.net.ae",                    // whois -h whois.iana.org ae
 	"aero":                   "whois.aero",                           // whois -h whois.iana.org aero
 	"af":                     "whois.nic.af",                         // whois -h whois.iana.org af
@@ -34,8 +34,8 @@ var zones = map[string]string{
 	"aw":                     "whois.nic.aw",                         // whois -h whois.iana.org aw
 	"ax":                     "whois.ax",                             // whois -h whois.iana.org ax
 	"axa":                    "whois.nic.axa",                        // dig axa.whois-servers.net CNAME
-	"az":                     "whois.ripe.net",                       // dig az.whois-servers.net CNAME
-	"ba":                     "whois.ripe.net",                       // dig ba.whois-servers.net CNAME
+	"az":                     "www.nic.az",                           // web (POST)
+	"ba":                     "nic.ba",                               // web (POST)
 	"bar":                    "whois.nic.bar",                        // whois -h whois.iana.org bar
 	"bargains":               "whois.donuts.co",                      // whois -h whois.iana.org bargains
 	"bayern":                 "whois-dub.mm-registry.com",            // whois -h whois.iana.org bayern
@@ -128,7 +128,7 @@ var zones = map[string]string{
 	"cv":                     "www.dns.cv",                           // web
 	"cw":                     "",                                     //
 	"cx":                     "whois.nic.cx",                         // whois -h whois.iana.org cx
-	"cy":                     "whois.ripe.net",                       // dig cy.whois-servers.net CNAME
+	"cy":                     "www.nic.cy",                           // web
 	"cz":                     "whois.nic.cz",                         // whois -h whois.iana.org cz
 	"dance":                  "whois.unitedtld.com",                  // whois -h whois.iana.org dance
 	"dating":                 "whois.donuts.co",                      // whois -h whois.iana.org dating
@@ -151,7 +151,7 @@ var zones = map[string]string{
 	"edu":                    "whois.educause.edu",                   // whois -h whois.iana.org edu
 	"education":              "whois.donuts.co",                      // whois -h whois.iana.org education
 	"ee":                     "whois.tld.ee",                         // whois -h whois.iana.org ee
-	"eg":                     "whois.ripe.net",                       // dig eg.whois-servers.net CNAME
+	"eg":                     "lookup.egregistry.eg",                 // web (POST)
 	"email":                  "whois.donuts.co",                      // whois -h whois.iana.org email
 	"engineering":            "whois.donuts.co",                      // whois -h whois.iana.org engineering
 	"enterprises":            "whois.donuts.co",                      // whois -h whois.iana.org enterprises
@@ -191,9 +191,9 @@ var zones = map[string]string{
 	"ga":                     "whois.dot.ga",                         // dig ga.whois-servers.net CNAME
 	"gal":                    "whois.gal.coreregistry.net",           // whois -h whois.iana.org gal
 	"gallery":                "whois.donuts.co",                      // whois -h whois.iana.org gallery
-	"gb":                     "whois.ripe.net",                       // dig gb.whois-servers.net CNAME
+	"gb":                     "whois.ripe.net",                       //
 	"gd":                     "whois.nic.gd",                         // whois -h whois.iana.org gd
-	"ge":                     "whois.ripe.net",                       // dig ge.whois-servers.net CNAME
+	"ge":                     "www.nic.net.ge",                       // web (POST)
 	"gf":                     "www.dom-enic.com",                     // web (POST)
 	"gg":                     "whois.gg",                             // whois -h whois.iana.org gg
 	"gh":                     "",                                     //
@@ -202,14 +202,14 @@ var zones = map[string]string{
 	"gl":                     "whois.nic.gl",                         // whois -h whois.iana.org gl
 	"glass":                  "whois.donuts.co",                      // whois -h whois.iana.org glass
 	"globo":                  "whois.gtlds.nic.br",                   // whois -h whois.iana.org globo
-	"gm":                     "whois.ripe.net",                       // dig gm.whois-servers.net CNAME
+	"gm":                     "www.nic.gm",                           // web
 	"gmo":                    "whois.gmoregistry.net",                // http://en.wikipedia.org/wiki/.gmo
 	"gn":                     "",                                     //
 	"gop":                    "whois-cl01.mm-registry.com",           // whois -h whois.iana.org gop
 	"gov":                    "whois.dotgov.gov",                     // whois -h whois.iana.org gov
 	"gp":                     "www.dom-enic.com",                     // web (POST)
 	"gq":                     "",                                     //
-	"gr":                     "whois.ripe.net",                       // dig gr.whois-servers.net CNAME
+	"gr":                     "grweb.ics.forth.gr",                   // web (CAPTCHA)
 	"graphics":               "whois.donuts.co",                      // whois -h whois.iana.org graphics
 	"gratis":                 "whois.donuts.co",                      // whois -h whois.iana.org gratis
 	"gripe":                  "whois.donuts.co",                      // whois -h whois.iana.org gripe
@@ -256,7 +256,7 @@ var zones = map[string]string{
 	"je":                     "whois.je",                             // whois -h whois.iana.org je
 	"jetzt":                  "whois.nic.jetzt",                      // dig jetzt.whois-servers.net CNAME
 	"jm":                     "",                                     //
-	"jo":                     "whois.ripe.net",                       // dig jo.whois-servers.net CNAME
+	"jo":                     "whois.ripe.net",                       //
 	"jobs":                   "jobswhois.verisign-grs.com",           // whois -h whois.iana.org jobs
 	"jp":                     "whois.jprs.jp",                        // whois -h whois.iana.org jp
 	"juegos":                 "whois.uniregistry.net",                // whois -h whois.iana.org juegos
@@ -304,7 +304,7 @@ var zones = map[string]string{
 	"management":             "whois.donuts.co",                      // whois -h whois.iana.org management
 	"mango":                  "whois.mango.coreregistry.net",         // whois -h whois.iana.org mango
 	"marketing":              "whois.donuts.co",                      // whois -h whois.iana.org marketing
-	"mc":                     "whois.ripe.net",                       // dig mc.whois-servers.net CNAME
+	"mc":                     "whois.ripe.net",                       //
 	"md":                     "whois.nic.md",                         // whois -h whois.iana.org md
 	"me":                     "whois.nic.me",                         // whois -h whois.iana.org me
 	"media":                  "whois.donuts.co",                      // whois -h whois.iana.org media
@@ -329,7 +329,7 @@ var zones = map[string]string{
 	"mq":                     "www.dom-enic.com",                     // web (POST)
 	"mr":                     "",                                     //
 	"ms":                     "whois.nic.ms",                         // whois -h whois.iana.org ms
-	"mt":                     "whois.ripe.net",                       // dig mt.whois-servers.net CNAME
+	"mt":                     "www.nic.org.mt",                       // web
 	"mu":                     "whois.nic.mu",                         // whois -h whois.iana.org mu
 	"museum":                 "whois.museum",                         // whois -h whois.iana.org museum
 	"mv":                     "",                                     //
@@ -489,7 +489,7 @@ var zones = map[string]string{
 	"us":                     "whois.nic.us",                         // whois -h whois.iana.org us
 	"uy":                     "whois.nic.org.uy",                     // whois -h whois.iana.org uy
 	"uz":                     "whois.cctld.uz",                       // whois -h whois.iana.org uz
-	"va":                     "whois.ripe.net",                       // dig va.whois-servers.net CNAME
+	"va":                     "whois.iana.org",                       // Every .va domain name owned by the Vatican
 	"vacations":              "whois.donuts.co",                      // whois -h whois.iana.org vacations
 	"vc":                     "whois2.afilias-grs.net",               // whois -h whois.iana.org vc
 	"ve":                     "whois.nic.ve",                         // whois -h whois.iana.org ve

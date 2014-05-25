@@ -27,11 +27,20 @@ var (
 	dnsClient   *dns.Client
 )
 
+type Source int
+
+const (
+	None Source = iota
+	IANA
+	DNS
+	Exception
+)
+
 type ZoneWhois struct {
 	Zone   string
 	Server string
 	Msg    string
-	ViaDNS bool
+	Source
 }
 
 func init() {
@@ -121,7 +130,7 @@ func main1() error {
 		go func(zone string, i int) {
 			limiter <- struct{}{} // acquire semaphore
 
-			zw := ZoneWhois{zone, "", "", false}
+			zw := ZoneWhois{Zone: zone}
 			defer func() { // send result and release semaphore
 				c <- zw
 				<-limiter
@@ -135,17 +144,20 @@ func main1() error {
 			// Look for whois: string
 			matches := re.FindStringSubmatch(res)
 			if matches != nil {
+				// IANA historically never returned whois.ripe.net
 				zw.Server = matches[1]
 				zw.Msg = fmt.Sprintf("whois -h %s %s", whois, zw.Zone)
+				zw.Source = IANA
 				return
 			}
 
 			// Check whois-servers.net
 			host := zone + ".whois-servers.net"
 			zw.Server, err = queryCNAME(host)
-			if zw.Server != "" {
+			// whois-servers.net occasionally returns whois.ripe.net (unusable)
+			if zw.Server != "" && zw.Server != "whois.ripe.net" {
 				zw.Msg = fmt.Sprintf("dig %s CNAME", host)
-				zw.ViaDNS = true
+				zw.Source = DNS
 				return
 			}
 
@@ -154,11 +166,12 @@ func main1() error {
 			if ok {
 				zw.Server = ex.Server
 				zw.Msg = ex.Msg
+				zw.Source = Exception
 			}
 		}(zone, i)
 	}
 
-	numMissing, numDNS := 0, 0
+	var numMissing, numIANA, numDNS, numExceptions int
 
 	// Collect from goroutines
 	for i := 0; i < len(zones); i++ {
@@ -176,15 +189,20 @@ func main1() error {
 			if zw.Server == "" {
 				numMissing++
 			}
-			if zw.ViaDNS {
+			switch zw.Source {
+			case IANA:
+				numIANA++
+			case DNS:
 				numDNS++
+			case Exception:
+				numExceptions++
 			}
 		}
 	}
 
 	// Print stats
-	fmt.Fprintf(os.Stderr, "Zones with whois servers:    %d (%d via DNS)\n",
-		len(zones)-numMissing, numDNS)
+	fmt.Fprintf(os.Stderr, "Zones with whois servers:    %d (%d via IANA, %d via DNS, %d exceptions)\n",
+		len(zones)-numMissing, numIANA, numDNS, numExceptions)
 	fmt.Fprintf(os.Stderr, "Zones without whois servers: %d (%.0f%%)\n",
 		numMissing, float32(numMissing)/float32(len(zones))*float32(100))
 	fmt.Fprintf(os.Stderr, "Total number of zones:       %d\n",
@@ -247,7 +265,8 @@ func queryCNAME(host string) (string, error) {
 	}
 	if r.Rcode == dns.RcodeSuccess && r.Answer != nil && len(r.Answer) >= 1 {
 		if cname, ok := r.Answer[0].(*dns.CNAME); ok {
-			return cname.Target, nil
+			t := strings.TrimSuffix(cname.Target, ".")
+			return t, nil
 		}
 	}
 	return "", nil
