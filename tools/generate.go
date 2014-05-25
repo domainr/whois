@@ -130,7 +130,7 @@ func main1() error {
 		go func(zone string, i int) {
 			limiter <- struct{}{} // acquire semaphore
 
-			zw := ZoneWhois{Zone: zone}
+			zw := ZoneWhois{Zone: zone, Msg: "(not found)"}
 			defer func() { // send result and release semaphore
 				c <- zw
 				<-limiter
