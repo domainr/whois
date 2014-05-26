@@ -136,6 +136,16 @@ func main1() error {
 				<-limiter
 			}()
 
+			// First: check exception list first
+			ex, ok := tools.Exceptions[zone]
+			if ok {
+				zw.Server = ex.Server
+				zw.Msg = ex.Msg
+				zw.Source = Exception
+				return
+			}
+
+			// Second: check IANA
 			res, err := querySocket(whois, zone)
 			if err != nil {
 				return
@@ -151,7 +161,7 @@ func main1() error {
 				return
 			}
 
-			// Check whois-servers.net
+			// Third, check whois-servers.net
 			host := zone + ".whois-servers.net"
 			zw.Server, err = queryCNAME(host)
 			// whois-servers.net occasionally returns whois.ripe.net (unusable)
@@ -159,14 +169,6 @@ func main1() error {
 				zw.Msg = fmt.Sprintf("dig %s CNAME", host)
 				zw.Source = DNS
 				return
-			}
-
-			// Check exception list
-			ex, ok := tools.Exceptions[zone]
-			if ok {
-				zw.Server = ex.Server
-				zw.Msg = ex.Msg
-				zw.Source = Exception
 			}
 		}(zone, i)
 	}

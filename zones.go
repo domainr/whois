@@ -288,7 +288,7 @@ var zones = map[string]string{
 	"limited":                "whois.donuts.co",                      // whois -h whois.iana.org limited
 	"limo":                   "whois.donuts.co",                      // whois -h whois.iana.org limo
 	"link":                   "whois.uniregistry.net",                // whois -h whois.iana.org link
-	"lk":                     "arisen.nic.lk",                        // dig lk.whois-servers.net CNAME
+	"lk":                     "whois.nic.lk",                         // http://nic.lk
 	"loans":                  "whois.donuts.co",                      // whois -h whois.iana.org loans
 	"london":                 "whois-lon.mm-registry.com",            // whois -h whois.iana.org london
 	"lr":                     "",                                     // (not found)
