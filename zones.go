@@ -34,7 +34,7 @@ var zones = map[string]string{
 	"aw":                     "whois.nic.aw",                         // whois -h whois.iana.org aw
 	"ax":                     "whois.ax",                             // whois -h whois.iana.org ax
 	"axa":                    "whois.nic.axa",                        // dig axa.whois-servers.net CNAME
-	"az":                     "www.nic.az",                           // web (POST)
+	"az":                     "www.whois.az",                         // web (POST)
 	"ba":                     "nic.ba",                               // web (POST)
 	"bar":                    "whois.nic.bar",                        // whois -h whois.iana.org bar
 	"bargains":               "whois.donuts.co",                      // whois -h whois.iana.org bargains

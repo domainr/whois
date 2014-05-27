@@ -7,7 +7,7 @@ type Exception struct {
 
 var Exceptions = map[string]Exception{
 	"ar":               Exception{"nic.ar", "web (CAPTCHA)"},
-	"az":               Exception{"www.nic.az", "web (POST)"},
+	"az":               Exception{"www.whois.az", "web (POST)"},
 	"ba":               Exception{"nic.ba", "web (POST)"},
 	"bd":               Exception{"www.whois.com.bd", "web"},
 	"bm":               Exception{"www.bermudanic.bm", "web (POST)"},
