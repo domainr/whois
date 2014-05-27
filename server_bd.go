@@ -11,7 +11,6 @@ var bd = &Server{
 		values := url.Values{}
 		values.Set("dom", labels[0])
 		values.Set("ext", labels[1])
-		// "http://www.whois.com.bd/?dom=google&ext=com.bd"
 		req.URL = "http://www.whois.com.bd/?" + values.Encode()
 		req.Body = ""
 		return nil
