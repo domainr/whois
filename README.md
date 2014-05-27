@@ -26,3 +26,8 @@ for res.Refer != "" {
   res = res.FetchRefer()
 }
 ```
+
+### TODO
+
+[ ] Create whois.Client
+[ ] Embed an http.Client in whois.Client to reuse state
