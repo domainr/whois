@@ -2,16 +2,14 @@ package whois
 
 import (
 	"net/url"
-	"strings"
 )
 
 var az = &Server{
 	Resolve: func(req *Request) error {
-		labels := strings.SplitN(req.Query, ".", 2)
 		values := url.Values{}
 		values.Set("lang", "en")
-		values.Set("domain", labels[0])
-		values.Set("dom", labels[1])
+		values.Set("domain", req.Query)
+		values.Set("dom", "") // Server concatentates domain+dom, so we can leave dom empty
 		req.URL = "http://www.whois.az/cgi-bin/whois.cgi"
 		req.Body = values.Encode()
 		return nil
