@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"net"
 	"net/http"
+	"strings"
 	"time"
 )
 
@@ -57,12 +58,25 @@ func (req *Request) fetchWhois() (*Response, error) {
 func (req *Request) fetchURL() (*Response, error) {
 	res := &Response{Request: req, FetchedAt: time.Now()}
 
-	getResp, err := http.Get(req.URL)
+	var hreq *http.Request
+	var err error
+	if req.Body != "" {
+		hreq, err = http.NewRequest("POST", req.URL, strings.NewReader(req.Body))
+	} else {
+		hreq, err = http.NewRequest("GET", req.URL, nil)
+	}
 	if err != nil {
 		return res, err
 	}
-	defer getResp.Body.Close()
-	if res.Body, err = ioutil.ReadAll(getResp.Body); err != nil {
+	hreq.Header.Add("Referer", req.URL)
+
+	client := &http.Client{}
+	hres, err := client.Do(hreq)
+	if err != nil {
+		return res, err
+	}
+	defer hres.Body.Close()
+	if res.Body, err = ioutil.ReadAll(hres.Body); err != nil {
 		return res, err
 	}
 
