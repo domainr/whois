@@ -14,7 +14,6 @@ var az = &Server{
 		values.Set("dom", labels[1])
 		req.URL = "http://www.whois.az/cgi-bin/whois.cgi"
 		req.Body = values.Encode()
-		req.Referer = "http://www.whois.az/"
 		return nil
 	},
 }
