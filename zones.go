@@ -8,7 +8,7 @@ var zones = map[string]string{
 	"academy":                "whois.donuts.co",                      // whois -h whois.iana.org academy
 	"accountants":            "whois.donuts.co",                      // whois -h whois.iana.org accountants
 	"actor":                  "whois.unitedtld.com",                  // whois -h whois.iana.org actor
-	"ad":                     "whois.ripe.net",                       // (not found)
+	"ad":                     "",                                     // (not found)
 	"ae":                     "whois.aeda.net.ae",                    // whois -h whois.iana.org ae
 	"aero":                   "whois.aero",                           // whois -h whois.iana.org aero
 	"af":                     "whois.nic.af",                         // whois -h whois.iana.org af
@@ -191,7 +191,7 @@ var zones = map[string]string{
 	"ga":                     "whois.dot.ga",                         // dig ga.whois-servers.net CNAME
 	"gal":                    "whois.gal.coreregistry.net",           // whois -h whois.iana.org gal
 	"gallery":                "whois.donuts.co",                      // whois -h whois.iana.org gallery
-	"gb":                     "whois.ripe.net",                       // (not found)
+	"gb":                     "",                                     // (not found)
 	"gd":                     "whois.nic.gd",                         // whois -h whois.iana.org gd
 	"ge":                     "www.nic.net.ge",                       // web (POST)
 	"gf":                     "www.dom-enic.com",                     // web (POST)
@@ -256,7 +256,7 @@ var zones = map[string]string{
 	"je":                     "whois.je",                             // whois -h whois.iana.org je
 	"jetzt":                  "whois.nic.jetzt",                      // dig jetzt.whois-servers.net CNAME
 	"jm":                     "",                                     // (not found)
-	"jo":                     "whois.ripe.net",                       // (not found)
+	"jo":                     "",                                     // (not found)
 	"jobs":                   "jobswhois.verisign-grs.com",           // whois -h whois.iana.org jobs
 	"jp":                     "whois.jprs.jp",                        // whois -h whois.iana.org jp
 	"juegos":                 "whois.uniregistry.net",                // whois -h whois.iana.org juegos
@@ -304,7 +304,7 @@ var zones = map[string]string{
 	"management":             "whois.donuts.co",                      // whois -h whois.iana.org management
 	"mango":                  "whois.mango.coreregistry.net",         // whois -h whois.iana.org mango
 	"marketing":              "whois.donuts.co",                      // whois -h whois.iana.org marketing
-	"mc":                     "whois.ripe.net",                       // (not found)
+	"mc":                     "",                                     // (not found)
 	"md":                     "whois.nic.md",                         // whois -h whois.iana.org md
 	"me":                     "whois.nic.me",                         // whois -h whois.iana.org me
 	"media":                  "whois.donuts.co",                      // whois -h whois.iana.org media

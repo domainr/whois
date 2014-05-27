@@ -30,11 +30,19 @@ var (
 type Source int
 
 const (
-	None Source = iota
-	IANA
+	None Source = 0
+	IANA        = 1 << iota
 	DNS
 	Exception
 )
+
+var Conflicts = map[Source]string{
+	None:                     "None",
+	(IANA | DNS):             "IANA & DNS",
+	(IANA | Exception):       "IANA & Exception",
+	(DNS | Exception):        "DNS & Exception",
+	(IANA | DNS | Exception): "IANA & DNS & Exception",
+}
 
 type ZoneWhois struct {
 	Zone   string
@@ -139,41 +147,41 @@ func main1() error {
 			// First: check exception list first
 			ex, ok := tools.Exceptions[zone]
 			if ok {
+				zw.Source |= Exception
 				zw.Server = ex.Server
 				zw.Msg = ex.Msg
-				zw.Source = Exception
-				return
 			}
 
 			// Second: check IANA
 			res, err := querySocket(whois, zone)
-			if err != nil {
-				return
-			}
-
-			// Look for whois: string
-			matches := re.FindStringSubmatch(res)
-			if matches != nil {
-				// IANA historically never returned whois.ripe.net
-				zw.Server = matches[1]
-				zw.Msg = fmt.Sprintf("whois -h %s %s", whois, zw.Zone)
-				zw.Source = IANA
-				return
+			if err == nil {
+				matches := re.FindStringSubmatch(res)
+				if matches != nil {
+					zw.Source |= IANA
+					// Set if not previously found
+					if zw.Server == "" {
+						zw.Server = matches[1]
+						zw.Msg = fmt.Sprintf("whois -h %s %s", whois, zw.Zone)
+					}
+				}
 			}
 
 			// Third, check whois-servers.net
 			host := zone + ".whois-servers.net"
-			zw.Server, err = queryCNAME(host)
+			c, err := queryCNAME(host)
 			// whois-servers.net occasionally returns whois.ripe.net (unusable)
-			if zw.Server != "" && zw.Server != "whois.ripe.net" {
-				zw.Msg = fmt.Sprintf("dig %s CNAME", host)
-				zw.Source = DNS
-				return
+			if c != "" && c != "whois.ripe.net" && err == nil {
+				zw.Source |= DNS
+				// Set if not previously found
+				if zw.Server == "" {
+					zw.Server = c
+					zw.Msg = fmt.Sprintf("dig %s CNAME", host)
+				}
 			}
 		}(zone, i)
 	}
 
-	var numMissing, numIANA, numDNS, numExceptions int
+	var numMissing, numIANA, numDNS, numExceptions, numConflicts int
 
 	// Collect from goroutines
 	for i := 0; i < len(zones); i++ {
@@ -181,34 +189,40 @@ func main1() error {
 		case zw := <-c:
 			if zw.Msg == "" {
 				fmt.Fprintf(os.Stderr, "No match for %s\n", zw.Zone)
-			} else if v && zw.Msg != "" {
-				fmt.Fprintf(os.Stderr, "%s\t\t%s\n", zw.Msg, zw.Server)
 			}
 
 			zw.Server = strings.TrimSuffix(strings.ToLower(zw.Server), ".")
 			zoneMap[zw.Zone] = zw
 
-			if zw.Server == "" {
+			switch {
+			case zw.Server == "":
 				numMissing++
-			}
-			switch zw.Source {
-			case IANA:
+			case (zw.Source & IANA) != 0:
 				numIANA++
-			case DNS:
+			case (zw.Source & DNS) != 0:
 				numDNS++
-			case Exception:
+			case (zw.Source & Exception) != 0:
 				numExceptions++
+			}
+
+			if ((zw.Source & Exception) != 0) && ((zw.Source & (zw.Source - 1)) != 0) {
+				numConflicts++
+				if v {
+					fmt.Fprintf(os.Stderr, "Conflict: %s\t(%s)\n", zw.Zone, Conflicts[zw.Source])
+				}
 			}
 		}
 	}
 
 	// Print stats
-	fmt.Fprintf(os.Stderr, "Zones with whois servers:    %d (%d via IANA, %d via DNS, %d exceptions)\n",
+	fmt.Fprintf(os.Stderr, "Zones with whois servers:     %d (%d via IANA, %d via DNS, %d exceptions)\n",
 		len(zones)-numMissing, numIANA, numDNS, numExceptions)
-	fmt.Fprintf(os.Stderr, "Zones without whois servers: %d (%.0f%%)\n",
+	fmt.Fprintf(os.Stderr, "Zones without whois servers:  %d (%.0f%%)\n",
 		numMissing, float32(numMissing)/float32(len(zones))*float32(100))
-	fmt.Fprintf(os.Stderr, "Total number of zones:       %d\n",
+	fmt.Fprintf(os.Stderr, "Total number of zones:        %d\n",
 		len(zones))
+	fmt.Fprintf(os.Stderr, "Zones with conflicting data:  %d (%.0f%%)\n",
+		numConflicts, float32(numConflicts)/float32(len(zones))*float32(100))
 
 	// Generate zones.go
 	buf := new(bytes.Buffer)
