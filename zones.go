@@ -523,6 +523,7 @@ var zones = map[string]string{
 	"xn--3ds443g":            "whois.afilias-srs.net",                // whois -h whois.iana.org xn--3ds443g
 	"xn--3e0b707e":           "whois.kr",                             // whois -h whois.iana.org xn--3e0b707e
 	"xn--45brj9c":            "",                                     // (not found)
+	"xn--4gbrim":             "whois.afilias-srs.net",                // whois -h whois.iana.org xn--4gbrim
 	"xn--55qw42g":            "whois.conac.cn",                       // whois -h whois.iana.org xn--55qw42g
 	"xn--55qx5d":             "whois.ngtld.cn",                       // whois -h whois.iana.org xn--55qx5d
 	"xn--6frz82g":            "whois.afilias.net",                    // whois -h whois.iana.org xn--6frz82g
