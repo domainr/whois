@@ -35,7 +35,7 @@ var zones = map[string]string{
 	"autos":                  "whois.afilias-srs.net",                // whois -h whois.iana.org autos
 	"aw":                     "whois.nic.aw",                         // whois -h whois.iana.org aw
 	"ax":                     "whois.ax",                             // whois -h whois.iana.org ax
-	"axa":                    "",                                     // (not found)
+	"axa":                    "whois.nic.axa",                        // dig axa.whois-servers.net CNAME
 	"az":                     "www.whois.az",                         // web (POST)
 	"ba":                     "nic.ba",                               // web (POST)
 	"bar":                    "whois.nic.bar",                        // whois -h whois.iana.org bar
@@ -96,7 +96,7 @@ var zones = map[string]string{
 	"christmas":              "whois.uniregistry.net",                // whois -h whois.iana.org christmas
 	"church":                 "whois.donuts.co",                      // whois -h whois.iana.org church
 	"ci":                     "whois.nic.ci",                         // whois -h whois.iana.org ci
-	"citic":                  "",                                     // (not found)
+	"citic":                  "whois.nic.citic",                      // dig citic.whois-servers.net CNAME
 	"ck":                     "whois.ck-nic.org.ck",                  // dig ck.whois-servers.net CNAME
 	"cl":                     "whois.nic.cl",                         // whois -h whois.iana.org cl
 	"claims":                 "whois.donuts.co",                      // whois -h whois.iana.org claims
@@ -149,7 +149,7 @@ var zones = map[string]string{
 	"dk":                     "whois.dk-hostmaster.dk",               // whois -h whois.iana.org dk
 	"dm":                     "whois.nic.dm",                         // whois -h whois.iana.org dm
 	"dnp":                    "whois.nic.dnp",                        // dig dnp.whois-servers.net CNAME
-	"do":                     "",                                     // (not found)
+	"do":                     "ns.nic.do",                            // dig do.whois-servers.net CNAME
 	"domains":                "whois.donuts.co",                      // whois -h whois.iana.org domains
 	"dz":                     "whois.nic.dz",                         // whois -h whois.iana.org dz
 	"ec":                     "whois.nic.ec",                         // whois -h whois.iana.org ec
