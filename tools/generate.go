@@ -112,6 +112,11 @@ func main1() error {
 		zoneMap[domain] = ZoneWhois{}
 	}
 
+	// Inject exception zones
+	for domain, _ := range tools.Exceptions {
+		zoneMap[domain] = ZoneWhois{}
+	}
+
 	// Sort zones
 	i := 0
 	zones := make([]string, len(zoneMap))
