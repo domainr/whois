@@ -208,6 +208,7 @@ var zones = map[string]string{
 	"gives":                  "whois.rightside.co",                   // whois -h whois.iana.org gives
 	"gl":                     "whois.nic.gl",                         // whois -h whois.iana.org gl
 	"glass":                  "whois.donuts.co",                      // whois -h whois.iana.org glass
+	"global":                 "whois.afilias-srs.net",                // whois -h whois.iana.org global
 	"globo":                  "whois.gtlds.nic.br",                   // whois -h whois.iana.org globo
 	"gm":                     "www.nic.gm",                           // web
 	"gmo":                    "whois.gmoregistry.net",                // http://en.wikipedia.org/wiki/.gmo
