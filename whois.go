@@ -25,10 +25,10 @@ func Resolve(q string) (*Request, error) {
 	req := NewRequest(q)
 
 	labels := strings.Split(q, ".")
-	zone := labels[len(labels)-1]
-
 	var ok bool
-	req.Host, ok = zones[zone]
+	for i := 0; i < len(labels) && !ok; i++ {
+		req.Host, ok = zones[strings.Join(labels[i:], ".")]
+	}
 	if !ok {
 		return req, errors.New("No whois server found for " + q)
 	}
