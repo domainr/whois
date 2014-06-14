@@ -35,7 +35,7 @@ func (req *Request) Fetch() (*Response, error) {
 }
 
 func (req *Request) fetchWhois() (*Response, error) {
-	res := &Response{Request: req, FetchedAt: time.Now()}
+	res := NewResponse(req.Query, req.Host)
 
 	c, err := net.DialTimeout("tcp", req.Host+":43", req.Timeout)
 	if err != nil {
@@ -50,13 +50,13 @@ func (req *Request) fetchWhois() (*Response, error) {
 		return res, err
 	}
 
-	res.ContentType = http.DetectContentType(res.Body)
+	res.DetectContentType("")
 
 	return res, nil
 }
 
 func (req *Request) fetchURL() (*Response, error) {
-	res := &Response{Request: req, FetchedAt: time.Now()}
+	res := NewResponse(req.Query, req.Host)
 
 	var hreq *http.Request
 	var err error
@@ -80,7 +80,7 @@ func (req *Request) fetchURL() (*Response, error) {
 		return res, err
 	}
 
-	res.ContentType = http.DetectContentType(res.Body)
+	res.DetectContentType(hres.Header.Get("Content-Type"))
 
 	return res, nil
 }
