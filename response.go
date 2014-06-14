@@ -1,7 +1,6 @@
 package whois
 
 import (
-	"fmt"
 	"mime"
 	"net/http"
 	"time"
@@ -64,7 +63,6 @@ func (res *Response) Header() http.Header {
 	h.Set("Host", res.Host)
 	h.Set("Fetched-At", res.FetchedAt.Format(time.RFC3339))
 	h.Set("Content-Type", res.contentType())
-	fmt.Printf("Content-Type: %s\n\n", res.ContentType)
 	return h
 }
 
