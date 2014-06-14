@@ -29,5 +29,7 @@ for res.Refer != "" {
 
 ### TODO
 
-[ ] Create whois.Client
-[ ] Embed an http.Client in whois.Client to reuse state
+- [ ] Create whois.Client
+- [ ] Embed an http.Client in whois.Client to reuse state
+- [ ] Implementations for known HTTP-based whois servers
+- [ ] Parsers
