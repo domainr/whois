@@ -420,6 +420,7 @@ var zones = map[string]string{
 	"onl":                      "whois.afilias-srs.net",                // whois -h whois.iana.org onl
 	"org":                      "whois.pir.org",                        // whois -h whois.iana.org org
 	"org.za":                   "whois.org.za",                         // Ruby Whois
+	"organic":                  "whois.afilias.net",                    // whois -h whois.iana.org organic
 	"pa":                       "www.nic.pa",                           // web
 	"paris":                    "whois-paris.nic.fr",                   // whois -h whois.iana.org paris
 	"parliament.uk":            "whois.nic.uk",                         // whois -h whois.iana.org parliament.uk
@@ -489,6 +490,7 @@ var zones = map[string]string{
 	"sb":                       "whois.nic.net.sb",                     // whois -h whois.iana.org sb
 	"sc":                       "whois2.afilias-grs.net",               // whois -h whois.iana.org sc
 	"schule":                   "whois.donuts.co",                      // whois -h whois.iana.org schule
+	"scot":                     "whois.scot.coreregistry.net",          // whois -h whois.iana.org scot
 	"sd":                       "",                                     // (not found)
 	"se":                       "whois.iis.se",                         // whois -h whois.iana.org se
 	"se.com":                   "whois.centralnic.com",                 // Ruby Whois
