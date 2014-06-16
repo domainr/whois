@@ -8,12 +8,12 @@ import (
 
 // Response represents a whois response from a server.
 type Response struct {
-	Query       string
-	Host        string
-	FetchedAt   time.Time
-	ContentType string
-	Charset     string
-	Body        []byte
+	Query     string
+	Host      string
+	FetchedAt time.Time
+	MediaType string
+	Charset   string
+	Body      []byte
 }
 
 // NewResponse initializes a new whois response.
@@ -33,7 +33,7 @@ func (res *Response) String() string {
 // DetectContentType detects and sets the response content type and charset.
 func (res *Response) DetectContentType(mt string) {
 	// Sensible defaults
-	res.ContentType = "text/plain"
+	res.MediaType = "text/plain"
 	res.Charset = "utf-8"
 
 	// Autodetect if not passed a Content-Type header
@@ -42,14 +42,14 @@ func (res *Response) DetectContentType(mt string) {
 	}
 
 	// Content type (e.g. text/plan or text/html)
-	ct, mh, err := mime.ParseMediaType(mt)
+	mt, params, err := mime.ParseMediaType(mt)
 	if err != nil {
 		return
 	}
-	res.ContentType = ct
+	res.MediaType = mt
 
 	// Character set (e.g. utf-8)
-	cs, ok := mh["charset"]
+	cs, ok := params["charset"]
 	if !ok {
 		return
 	}
@@ -62,10 +62,11 @@ func (res *Response) Header() http.Header {
 	h.Set("Query", res.Query)
 	h.Set("Host", res.Host)
 	h.Set("Fetched-At", res.FetchedAt.Format(time.RFC3339))
-	h.Set("Content-Type", res.contentType())
+	h.Set("Content-Type", res.ContentType())
 	return h
 }
 
-func (res *Response) contentType() string {
-	return mime.FormatMediaType(res.ContentType, map[string]string{"charset": res.Charset})
+// ContentType returns an RFC 2045 compatible internet media type string.
+func (res *Response) ContentType() string {
+	return mime.FormatMediaType(res.MediaType, map[string]string{"charset": res.Charset})
 }
