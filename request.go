@@ -1,6 +1,7 @@
 package whois
 
 import (
+	"errors"
 	"io"
 	"io/ioutil"
 	"net"
@@ -24,6 +25,43 @@ type Request struct {
 // NewRequest returns a request ready to fetch.
 func NewRequest(q string) *Request {
 	return &Request{Query: q, Timeout: DefaultTimeout}
+}
+
+// Resolve resolves a given request’s query. Will not re-resolve Host if already set.
+func (req *Request) Resolve() error {
+	if req.Host == "" {
+		err := req.resolveHost()
+		if err != nil {
+			return err
+		}
+	}
+	srv := req.Server()
+	if srv.Resolve == nil {
+		return nil
+	}
+	return srv.Resolve(req)
+}
+
+// resolveHost resolves a query to a whois host.
+func (req *Request) resolveHost() error {
+	var ok bool
+	labels := strings.Split(req.Query, ".")
+	for i := 0; i < len(labels) && !ok; i++ {
+		req.Host, ok = zones[strings.Join(labels[i:], ".")]
+	}
+	if !ok {
+		return errors.New("No whois server found for " + req.Query)
+	}
+	return nil
+}
+
+// Server returns a server implementation for a given host. It will always return a valid server.
+func (req *Request) Server() *Server {
+	srv, ok := servers[req.Host]
+	if !ok {
+		srv = defaultServer
+	}
+	return srv
 }
 
 // Fetch queries a whois server via whois protocol or by HTTP if URL is set.
