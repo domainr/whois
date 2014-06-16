@@ -25,10 +25,17 @@ func main() {
 		flag.Usage()
 	}
 
-	info, err := whois.Whois(query)
+	req, err := whois.Resolve(query)
 	if err != nil {
 		fmt.Println(err)
-	} else {
-		fmt.Println(info)
+		return
 	}
+
+	res, err := req.Fetch()
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	res.WriteMIME(os.Stdout)
 }

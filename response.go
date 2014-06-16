@@ -1,8 +1,10 @@
 package whois
 
 import (
+	"io"
 	"mime"
 	"net/http"
+	"strconv"
 	"time"
 )
 
@@ -63,10 +65,29 @@ func (res *Response) Header() http.Header {
 	h.Set("Host", res.Host)
 	h.Set("Fetched-At", res.FetchedAt.Format(time.RFC3339))
 	h.Set("Content-Type", res.ContentType())
+	h.Set("Content-Length", strconv.Itoa(len(res.Body)))
 	return h
 }
 
 // ContentType returns an RFC 2045 compatible internet media type string.
 func (res *Response) ContentType() string {
 	return mime.FormatMediaType(res.MediaType, map[string]string{"charset": res.Charset})
+}
+
+// WriteMIME writes a MIME-formatted representation of the response to an io.Writer.
+func (res *Response) WriteMIME(w io.Writer) error {
+	io.WriteString(w, "MIME-Version: 1.0\r\n")
+	err := res.Header().Write(w)
+	if err != nil {
+		return err
+	}
+	_, err = io.WriteString(w, "\r\n")
+	if err != nil {
+		return err
+	}
+	_, err = w.Write(res.Body)
+	if err != nil {
+		return err
+	}
+	return nil
 }
