@@ -13,6 +13,14 @@ import (
 // DefaultTimeout for whois queries.
 const DefaultTimeout = 10 * time.Second
 
+var (
+	tr = &http.Transport{
+		Dial: dialTimeout,
+		ResponseHeaderTimeout: DefaultTimeout,
+	}
+	client = &http.Client{Transport: tr}
+)
+
 // Request represents a whois request.
 type Request struct {
 	Query   string
@@ -108,7 +116,6 @@ func (req *Request) fetchURL() (*Response, error) {
 	}
 	hreq.Header.Add("Referer", req.URL)
 
-	client := &http.Client{}
 	hres, err := client.Do(hreq)
 	if err != nil {
 		return res, err
@@ -121,4 +128,9 @@ func (req *Request) fetchURL() (*Response, error) {
 	res.DetectContentType(hres.Header.Get("Content-Type"))
 
 	return res, nil
+}
+
+func dialTimeout(network, address string) (net.Conn, error) {
+	d := net.Dialer{Timeout: DefaultTimeout}
+	return d.Dial(network, address)
 }
