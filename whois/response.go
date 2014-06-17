@@ -1,12 +1,15 @@
 package whois
 
 import (
+	"encoding/hex"
 	"io"
 	"mime"
 	"net/http"
 	"strconv"
 	"strings"
 	"time"
+
+	"crypto/sha1"
 
 	"code.google.com/p/go.net/html/charset"
 	"github.com/saintfish/chardet"
@@ -93,6 +96,13 @@ func (res *Response) DetectCharset() {
 	// fmt.Printf("Detected charset via saintfish/chardet:   %s (%d)\n", cs2, r[0].Confidence)
 }
 
+// Checksum returns a hex-encoded SHA-1 checksum of the response Body.
+func (res *Response) Checksum() string {
+	h := sha1.New()
+	h.Write(res.Body)
+	return strings.ToLower(hex.EncodeToString(h.Sum(nil)))
+}
+
 // Header returns a stringproto header representing the response.
 func (res *Response) Header() http.Header {
 	h := make(http.Header)
@@ -101,6 +111,7 @@ func (res *Response) Header() http.Header {
 	h.Set("Fetched-At", res.FetchedAt.Format(time.RFC3339))
 	h.Set("Content-Type", res.ContentType())
 	h.Set("Content-Length", strconv.Itoa(len(res.Body)))
+	h.Set("Content-Checksum", res.Checksum())
 	return h
 }
 
