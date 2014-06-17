@@ -6,8 +6,8 @@ import (
 	"flag"
 	"fmt"
 	"os"
-	
-	"github.com/domainr/go-whois"
+
+	"github.com/domainr/go-whois/whois"
 )
 
 func main() {
