@@ -1,4 +1,4 @@
-package types
+package core
 
 // RegisterServer globally associates a Server with given hostnames.
 func RegisterServer(s *Server, names ...string) {

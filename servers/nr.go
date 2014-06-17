@@ -4,11 +4,11 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/domainr/go-whois/types"
+	"github.com/domainr/go-whois/core"
 )
 
-var nr = &types.Server{
-	Resolve: func(req *types.Request) error {
+var nr = &core.Server{
+	Resolve: func(req *core.Request) error {
 		labels := strings.SplitN(req.Query, ".", 2)
 		values := url.Values{}
 		values.Set("subdomain", labels[0])
@@ -20,7 +20,7 @@ var nr = &types.Server{
 }
 
 func init() {
-	types.RegisterServer(
+	core.RegisterServer(
 		nr,
 		"cenpac.net.nr",
 	)

@@ -1,4 +1,4 @@
-package types
+package core
 
 // Status summarizes a domain name’s RPP or EPP status.
 type Status int

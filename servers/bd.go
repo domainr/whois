@@ -4,11 +4,11 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/domainr/go-whois/types"
+	"github.com/domainr/go-whois/core"
 )
 
-var bd = &types.Server{
-	Resolve: func(req *types.Request) error {
+var bd = &core.Server{
+	Resolve: func(req *core.Request) error {
 		labels := strings.SplitN(req.Query, ".", 2)
 		values := url.Values{}
 		values.Set("dom", labels[0])
@@ -20,7 +20,7 @@ var bd = &types.Server{
 }
 
 func init() {
-	types.RegisterServer(
+	core.RegisterServer(
 		bd,
 		"www.whois.com.bd",
 	)

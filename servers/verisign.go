@@ -2,11 +2,11 @@ package servers
 
 import (
 	"fmt"
-	"github.com/domainr/go-whois/types"
+	"github.com/domainr/go-whois/core"
 )
 
-var verisign = &types.Server{
-	Resolve: func(req *types.Request) error {
+var verisign = &core.Server{
+	Resolve: func(req *core.Request) error {
 		Default.Resolve(req)
 		req.Body = fmt.Sprintf("=%s\r\n", req.Query)
 		return nil
@@ -14,7 +14,7 @@ var verisign = &types.Server{
 }
 
 func init() {
-	types.RegisterServer(
+	core.RegisterServer(
 		verisign,
 		"whois.verisign-grs.com",
 		"bzwhois.verisign-grs.com",

@@ -1,7 +1,7 @@
 package whois
 
 import (
-	"github.com/domainr/go-whois/types"
+	"github.com/domainr/go-whois/core"
 	_ "github.com/domainr/go-whois/servers"
 )
 
@@ -21,8 +21,8 @@ func Whois(q string) (string, error) {
 }
 
 // Resolve finds a whois server for q and prepares a Request.
-func Resolve(q string) (*types.Request, error) {
-	req := types.NewRequest(q)
+func Resolve(q string) (*core.Request, error) {
+	req := core.NewRequest(q)
 	err := req.Resolve()
 	return req, err
 }

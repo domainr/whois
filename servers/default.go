@@ -3,11 +3,11 @@ package servers
 import (
 	"fmt"
 
-	"github.com/domainr/go-whois/types"
+	"github.com/domainr/go-whois/core"
 )
 
-var Default = &types.Server{
-	Resolve: func(req *types.Request) error {
+var Default = &core.Server{
+	Resolve: func(req *core.Request) error {
 		req.URL = ""
 		req.Body = fmt.Sprintf("%s\r\n", req.Query)
 		return nil
@@ -15,7 +15,7 @@ var Default = &types.Server{
 }
 
 func init() {
-	types.RegisterServer(
+	core.RegisterServer(
 		Default,
 		"default",
 	)
