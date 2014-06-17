@@ -1,4 +1,4 @@
-package whois
+package types
 
 import (
 	"errors"
@@ -67,7 +67,7 @@ func (req *Request) resolveHost() error {
 func (req *Request) Server() *Server {
 	srv, ok := servers[req.Host]
 	if !ok {
-		srv = defaultServer
+		srv = servers["default"]
 	}
 	return srv
 }

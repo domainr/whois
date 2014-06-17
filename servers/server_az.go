@@ -1,11 +1,13 @@
-package whois
+package servers
 
 import (
 	"net/url"
+
+	"github.com/domainr/go-whois/types"
 )
 
-var az = &Server{
-	Resolve: func(req *Request) error {
+var az = &types.Server{
+	Resolve: func(req *types.Request) error {
 		values := url.Values{}
 		values.Set("lang", "en")
 		values.Set("domain", req.Query)
@@ -17,7 +19,7 @@ var az = &Server{
 }
 
 func init() {
-	register(
+	types.RegisterServer(
 		az,
 		"www.whois.az",
 		"www.nic.az",

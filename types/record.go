@@ -1,4 +1,4 @@
-package whois
+package types
 
 // Status summarizes a domain name’s RPP or EPP status.
 type Status int
