@@ -1,11 +1,15 @@
 package whois
 
 import (
+	"fmt"
 	"io"
 	"mime"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
+
+	"github.com/saintfish/chardet"
 )
 
 // Response represents a whois response from a server.
@@ -52,10 +56,26 @@ func (res *Response) DetectContentType(mt string) {
 
 	// Character set (e.g. utf-8)
 	cs, ok := params["charset"]
-	if !ok {
+	if ok {
+		res.Charset = cs
+	}
+	res.DetectCharset()
+}
+
+// DetectCharset returns best guess for the reesponse body character set.
+func (res *Response) DetectCharset() {
+	var det *chardet.Detector
+	if strings.Contains(res.MediaType, "html") {
+		det = chardet.NewHtmlDetector()
+	} else {
+		det = chardet.NewTextDetector()
+	}
+	r, err := det.DetectAll(res.Body)
+	if err != nil || len(r) == 0 {
 		return
 	}
-	res.Charset = cs
+	res.Charset = r[0].Charset
+	fmt.Printf("%+v\n\n", r)
 }
 
 // Header returns a stringproto header representing the response.
