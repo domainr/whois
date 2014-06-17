@@ -1,4 +1,4 @@
-package core
+package whois
 
 // RegisterServer globally associates a Server with given hostnames.
 func RegisterServer(s *Server, names ...string) {

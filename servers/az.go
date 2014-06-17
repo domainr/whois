@@ -3,11 +3,11 @@ package servers
 import (
 	"net/url"
 
-	"github.com/domainr/go-whois/core"
+	"github.com/domainr/go-whois/whois"
 )
 
-var az = &core.Server{
-	Resolve: func(req *core.Request) error {
+var az = &whois.Server{
+	Resolve: func(req *whois.Request) error {
 		values := url.Values{}
 		values.Set("lang", "en")
 		values.Set("domain", req.Query)
@@ -19,7 +19,7 @@ var az = &core.Server{
 }
 
 func init() {
-	core.RegisterServer(
+	whois.RegisterServer(
 		az,
 		"www.whois.az",
 		"www.nic.az",
