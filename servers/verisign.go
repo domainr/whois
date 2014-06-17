@@ -2,6 +2,7 @@ package servers
 
 import (
 	"fmt"
+
 	"github.com/domainr/go-whois/whois"
 )
 
