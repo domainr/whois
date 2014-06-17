@@ -1,7 +1,6 @@
 package whois
 
 import (
-	"fmt"
 	"io"
 	"mime"
 	"net/http"
@@ -9,6 +8,7 @@ import (
 	"strings"
 	"time"
 
+	"code.google.com/p/go.net/html/charset"
 	"github.com/saintfish/chardet"
 )
 
@@ -37,18 +37,18 @@ func (res *Response) String() string {
 }
 
 // DetectContentType detects and sets the response content type and charset.
-func (res *Response) DetectContentType(mt string) {
+func (res *Response) DetectContentType(ct string) {
 	// Sensible defaults
 	res.MediaType = "text/plain"
-	res.Charset = "utf-8"
+	res.Charset = ""
 
 	// Autodetect if not passed a Content-Type header
-	if mt == "" {
-		mt = http.DetectContentType(res.Body)
+	if ct == "" {
+		ct = http.DetectContentType(res.Body)
 	}
 
 	// Content type (e.g. text/plan or text/html)
-	mt, params, err := mime.ParseMediaType(mt)
+	mt, params, err := mime.ParseMediaType(ct)
 	if err != nil {
 		return
 	}
@@ -64,18 +64,33 @@ func (res *Response) DetectContentType(mt string) {
 
 // DetectCharset returns best guess for the reesponse body character set.
 func (res *Response) DetectCharset() {
+	// Detect via BOM / HTML meta tag
+	_, cs1, ok1 := charset.DetermineEncoding(res.Body, res.MediaType)
+
+	// Detect via ICU
+	cs2, ok2, html := "", false, false
 	var det *chardet.Detector
-	if strings.Contains(res.MediaType, "html") {
+	if strings.Contains(res.MediaType, "html") || true {
 		det = chardet.NewHtmlDetector()
+		html = true
 	} else {
 		det = chardet.NewTextDetector()
 	}
 	r, err := det.DetectAll(res.Body)
-	if err != nil || len(r) == 0 {
-		return
+	if err == nil && len(r) > 0 {
+		cs2 = strings.ToLower(r[0].Charset)
+		ok2 = r[0].Confidence > 50
 	}
-	res.Charset = r[0].Charset
-	fmt.Printf("%+v\n\n", r)
+
+	// Prefer charset if HTML, otherwise ICU
+	if !ok2 && (ok1 || html) {
+		res.Charset = cs1
+	} else {
+		res.Charset = cs2
+	}
+
+	// fmt.Printf("Detected charset via go.net/html/charset: %s (%t)\n", cs1, ok1)
+	// fmt.Printf("Detected charset via saintfish/chardet:   %s (%d)\n", cs2, r[0].Confidence)
 }
 
 // Header returns a stringproto header representing the response.
