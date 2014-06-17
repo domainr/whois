@@ -20,7 +20,7 @@ var zones = map[string]string{
 	"agency":                   "whois.donuts.co",                      // whois -h whois.iana.org agency
 	"ai":                       "whois.ai",                             // whois -h whois.iana.org ai
 	"airforce":                 "whois.unitedtld.com",                  // whois -h whois.iana.org airforce
-	"al":                       "whois.ai",                             // dig al.whois-servers.net CNAME
+	"al":                       "www.akep.al",                          // web (CAPTCHA) http://www.akep.al/sq/kerkoni-domain
 	"am":                       "whois.amnic.net",                      // whois -h whois.iana.org am
 	"an":                       "",                                     // (not found)
 	"ao":                       "",                                     // (not found)
