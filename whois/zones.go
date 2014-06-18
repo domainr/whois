@@ -82,6 +82,7 @@ var zones = map[string]string{
 	"bw":                       "whois.nic.net.bw",                     // whois -h whois.iana.org bw
 	"by":                       "whois.cctld.by",                       // whois -h whois.iana.org by
 	"bz":                       "bzwhois.verisign-grs.com",             // dig bz.whois-servers.net CNAME
+	"bzh":                      "whois-bzh.nic.fr",                     // whois -h whois.iana.org bzh
 	"ca":                       "whois.cira.ca",                        // whois -h whois.iana.org ca
 	"cab":                      "whois.donuts.co",                      // whois -h whois.iana.org cab
 	"camera":                   "whois.donuts.co",                      // whois -h whois.iana.org camera
@@ -640,6 +641,7 @@ var zones = map[string]string{
 	"xn--j6w193g":              "whois.hkirc.hk",                       // whois -h whois.iana.org xn--j6w193g
 	"xn--kprw13d":              "whois.twnic.net.tw",                   // whois -h whois.iana.org xn--kprw13d
 	"xn--kpry57d":              "whois.twnic.net.tw",                   // whois -h whois.iana.org xn--kpry57d
+	"xn--kput3i":               "whois.afilias-srs.net",                // whois -h whois.iana.org xn--kput3i
 	"xn--l1acc":                "",                                     // (not found)
 	"xn--lgbbat1ad8j":          "whois.nic.dz",                         // whois -h whois.iana.org xn--lgbbat1ad8j
 	"xn--mgb9awbf":             "whois.registry.om",                    // whois -h whois.iana.org xn--mgb9awbf
