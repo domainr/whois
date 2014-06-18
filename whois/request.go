@@ -10,8 +10,10 @@ import (
 	"time"
 )
 
-// DefaultTimeout for whois queries.
-const DefaultTimeout = 10 * time.Second
+const (
+	DefaultTimeout = 10 * time.Second
+	IANA           = "whois.iana.org"
+)
 
 var (
 	tr = &http.Transport{
@@ -52,8 +54,16 @@ func (req *Request) Resolve() error {
 
 // resolveHost resolves a query to a whois host.
 func (req *Request) resolveHost() error {
-	var ok bool
 	labels := strings.Split(req.Query, ".")
+
+	// Queries on TLDs always against IANA
+	if len(labels) == 1 {
+		req.Host = IANA
+		return nil
+	}
+
+	// Otherwise, query zones map
+	var ok bool
 	for i := 0; i < len(labels) && !ok; i++ {
 		req.Host, ok = zones[strings.Join(labels[i:], ".")]
 	}
