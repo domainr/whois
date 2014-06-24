@@ -67,6 +67,7 @@ var zones = map[string]string{
 	"blackfriday":              "whois.uniregistry.net",                // whois -h whois.iana.org blackfriday
 	"blue":                     "whois.afilias.net",                    // whois -h whois.iana.org blue
 	"bm":                       "www.bermudanic.bm",                    // web (POST)
+	"bmw":                      "whois.ksregistry.net",                 // whois -h whois.iana.org bmw
 	"bn":                       "whois.bn",                             // whois -h whois.iana.org bn
 	"bo":                       "whois.nic.bo",                         // whois -h whois.iana.org bo
 	"boutique":                 "whois.donuts.co",                      // whois -h whois.iana.org boutique
@@ -442,7 +443,7 @@ var zones = map[string]string{
 	"photo":                    "whois.uniregistry.net",                // whois -h whois.iana.org photo
 	"photography":              "whois.donuts.co",                      // whois -h whois.iana.org photography
 	"photos":                   "whois.donuts.co",                      // whois -h whois.iana.org photos
-	"physio":                   "whois.aridnrs.net.au",                 // whois -h whois.iana.org physio
+	"physio":                   "whois.nic.physio",                     // whois -h whois.iana.org physio
 	"pics":                     "whois.uniregistry.net",                // whois -h whois.iana.org pics
 	"pictures":                 "whois.donuts.co",                      // whois -h whois.iana.org pictures
 	"pink":                     "whois.afilias.net",                    // whois -h whois.iana.org pink
