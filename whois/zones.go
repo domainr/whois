@@ -9,6 +9,7 @@ var zones = map[string]string{
 	"ac.za":                    "whois.ac.za",                          // Ruby Whois
 	"academy":                  "whois.donuts.co",                      // whois -h whois.iana.org academy
 	"accountants":              "whois.donuts.co",                      // whois -h whois.iana.org accountants
+	"active":                   "whois.afilias-srs.net",                // whois -h whois.iana.org active
 	"actor":                    "whois.unitedtld.com",                  // whois -h whois.iana.org actor
 	"ad":                       "",                                     // (not found)
 	"ae":                       "whois.aeda.net.ae",                    // whois -h whois.iana.org ae
@@ -374,6 +375,7 @@ var zones = map[string]string{
 	"mh":                       "",                                     // (not found)
 	"miami":                    "whois-dub.mm-registry.com",            // whois -h whois.iana.org miami
 	"mil":                      "is-1.nic.mil",                         // dig mil.whois-servers.net CNAME
+	"mini":                     "whois.ksregistry.net",                 // whois -h whois.iana.org mini
 	"mk":                       "whois.marnet.mk",                      // whois -h whois.iana.org mk
 	"ml":                       "whois.dot.ml",                         // whois -h whois.iana.org ml
 	"mm":                       "whois.nic.mm",                         // dig mm.whois-servers.net CNAME
