@@ -90,6 +90,7 @@ var zones = map[string]string{
 	"cab":                      "whois.donuts.co",                      // whois -h whois.iana.org cab
 	"camera":                   "whois.donuts.co",                      // whois -h whois.iana.org camera
 	"camp":                     "whois.donuts.co",                      // whois -h whois.iana.org camp
+	"cancerresearch":           "whois.nic.cancerresearch",             // whois -h whois.iana.org cancerresearch
 	"capetown":                 "capetown-whois.registry.net.za",       // whois -h whois.iana.org capetown
 	"capital":                  "whois.donuts.co",                      // whois -h whois.iana.org capital
 	"cards":                    "whois.donuts.co",                      // whois -h whois.iana.org cards
@@ -150,6 +151,7 @@ var zones = map[string]string{
 	"creditcard":               "whois.donuts.co",                      // whois -h whois.iana.org creditcard
 	"cruises":                  "whois.donuts.co",                      // whois -h whois.iana.org cruises
 	"cu":                       "www.nic.cu",                           // web
+	"cuisinella":               "whois.nic.cuisinella",                 // whois -h whois.iana.org cuisinella
 	"cv":                       "www.dns.cv",                           // web
 	"cw":                       "",                                     // (not found)
 	"cx":                       "whois.nic.cx",                         // whois -h whois.iana.org cx
@@ -166,6 +168,7 @@ var zones = map[string]string{
 	"desi":                     "whois.ksregistry.net",                 // whois -h whois.iana.org desi
 	"diamonds":                 "whois.donuts.co",                      // whois -h whois.iana.org diamonds
 	"digital":                  "whois.donuts.co",                      // whois -h whois.iana.org digital
+	"direct":                   "whois.donuts.co",                      // whois -h whois.iana.org direct
 	"directory":                "whois.donuts.co",                      // whois -h whois.iana.org directory
 	"discount":                 "whois.donuts.co",                      // whois -h whois.iana.org discount
 	"dj":                       "www.dj",                               // web
@@ -451,6 +454,7 @@ var zones = map[string]string{
 	"pink":                     "whois.afilias.net",                    // whois -h whois.iana.org pink
 	"pk":                       "pk6.pknic.net.pk",                     // web
 	"pl":                       "whois.dns.pl",                         // whois -h whois.iana.org pl
+	"place":                    "whois.donuts.co",                      // whois -h whois.iana.org place
 	"plumbing":                 "whois.donuts.co",                      // whois -h whois.iana.org plumbing
 	"pm":                       "whois.nic.pm",                         // whois -h whois.iana.org pm
 	"pn":                       "www.government.pn",                    // web (POST)
@@ -501,6 +505,7 @@ var zones = map[string]string{
 	"saarland":                 "whois.ksregistry.net",                 // whois -h whois.iana.org saarland
 	"sb":                       "whois.nic.net.sb",                     // whois -h whois.iana.org sb
 	"sc":                       "whois2.afilias-grs.net",               // whois -h whois.iana.org sc
+	"schmidt":                  "whois.nic.schmidt",                    // whois -h whois.iana.org schmidt
 	"schule":                   "whois.donuts.co",                      // whois -h whois.iana.org schule
 	"scot":                     "whois.scot.coreregistry.net",          // whois -h whois.iana.org scot
 	"sd":                       "",                                     // (not found)
@@ -536,6 +541,7 @@ var zones = map[string]string{
 	"support":                  "whois.donuts.co",                      // whois -h whois.iana.org support
 	"surf":                     "whois-dub.mm-registry.com",            // whois -h whois.iana.org surf
 	"surgery":                  "whois.donuts.co",                      // whois -h whois.iana.org surgery
+	"suzuki":                   "",                                     // (not found)
 	"sv":                       "",                                     // (not found)
 	"sx":                       "whois.sx",                             // whois -h whois.iana.org sx
 	"sy":                       "whois.tld.sy",                         // whois -h whois.iana.org sy
