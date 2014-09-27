@@ -81,6 +81,7 @@ var zones = map[string]string{
 	"brussels":                 "whois.nic.brussels",                   // whois -h whois.iana.org brussels
 	"bs":                       "www.register.bs",                      // web
 	"bt":                       "www.nic.bt",                           // web (POST)
+	"budapest":                 "whois-dub.mm-registry.com",            // whois -h whois.iana.org budapest
 	"build":                    "whois.nic.build",                      // whois -h whois.iana.org build
 	"builders":                 "whois.donuts.co",                      // whois -h whois.iana.org builders
 	"business":                 "whois.donuts.co",                      // whois -h whois.iana.org business
@@ -92,6 +93,7 @@ var zones = map[string]string{
 	"bzh":                      "whois-bzh.nic.fr",                     // whois -h whois.iana.org bzh
 	"ca":                       "whois.cira.ca",                        // whois -h whois.iana.org ca
 	"cab":                      "whois.donuts.co",                      // whois -h whois.iana.org cab
+	"cal":                      "domain-registry-whois.l.google.com",   // whois -h whois.iana.org cal
 	"camera":                   "whois.donuts.co",                      // whois -h whois.iana.org camera
 	"camp":                     "whois.donuts.co",                      // whois -h whois.iana.org camp
 	"cancerresearch":           "whois.nic.cancerresearch",             // whois -h whois.iana.org cancerresearch
@@ -102,6 +104,7 @@ var zones = map[string]string{
 	"care":                     "whois.donuts.co",                      // whois -h whois.iana.org care
 	"career":                   "whois.nic.career",                     // whois -h whois.iana.org career
 	"careers":                  "whois.donuts.co",                      // whois -h whois.iana.org careers
+	"casa":                     "whois-dub.mm-registry.com",            // whois -h whois.iana.org casa
 	"cash":                     "whois.donuts.co",                      // whois -h whois.iana.org cash
 	"cat":                      "whois.cat",                            // whois -h whois.iana.org cat
 	"catering":                 "whois.donuts.co",                      // whois -h whois.iana.org catering
@@ -114,9 +117,11 @@ var zones = map[string]string{
 	"cg":                       "",                                     // (not found)
 	"ch":                       "whois.nic.ch",                         // whois -h whois.iana.org ch
 	"chambagri.fr":             "whois.smallregistry.net",              // Ruby Whois
+	"channel":                  "domain-registry-whois.l.google.com",   // whois -h whois.iana.org channel
 	"cheap":                    "whois.donuts.co",                      // whois -h whois.iana.org cheap
 	"chirurgiens-dentistes.fr": "whois.smallregistry.net",              // Ruby Whois
 	"christmas":                "whois.uniregistry.net",                // whois -h whois.iana.org christmas
+	"chrome":                   "domain-registry-whois.l.google.com",   // whois -h whois.iana.org chrome
 	"church":                   "whois.donuts.co",                      // whois -h whois.iana.org church
 	"ci":                       "whois.nic.ci",                         // whois -h whois.iana.org ci
 	"citic":                    "whois.nic.citic",                      // dig citic.whois-servers.net CNAME
@@ -233,12 +238,13 @@ var zones = map[string]string{
 	"fk":                       "whois.marcaria.com",                   // web
 	"flights":                  "whois.donuts.co",                      // whois -h whois.iana.org flights
 	"florist":                  "whois.donuts.co",                      // whois -h whois.iana.org florist
+	"fly":                      "domain-registry-whois.l.google.com",   // whois -h whois.iana.org fly
 	"fm":                       "whois.nic.fm",                         // dig fm.whois-servers.net CNAME
 	"fo":                       "whois.nic.fo",                         // whois -h whois.iana.org fo
 	"foo":                      "domain-registry-whois.l.google.com",   // whois -h whois.iana.org foo
 	"foundation":               "whois.donuts.co",                      // whois -h whois.iana.org foundation
 	"fr":                       "whois.nic.fr",                         // whois -h whois.iana.org fr
-	"frl":                      "",                                     // (not found)
+	"frl":                      "whois.nic.frl",                        // whois -h whois.iana.org frl
 	"frogans":                  "whois-frogans.nic.fr",                 // whois -h whois.iana.org frogans
 	"fund":                     "whois.donuts.co",                      // whois -h whois.iana.org fund
 	"furniture":                "whois.donuts.co",                      // whois -h whois.iana.org furniture
@@ -263,12 +269,15 @@ var zones = map[string]string{
 	"gives":                    "whois.rightside.co",                   // whois -h whois.iana.org gives
 	"gl":                       "whois.nic.gl",                         // whois -h whois.iana.org gl
 	"glass":                    "whois.donuts.co",                      // whois -h whois.iana.org glass
+	"gle":                      "domain-registry-whois.l.google.com",   // whois -h whois.iana.org gle
 	"global":                   "whois.afilias-srs.net",                // whois -h whois.iana.org global
 	"globo":                    "whois.gtlds.nic.br",                   // whois -h whois.iana.org globo
 	"gm":                       "www.nic.gm",                           // web
 	"gmail":                    "domain-registry-whois.l.google.com",   // whois -h whois.iana.org gmail
 	"gmo":                      "whois.gmoregistry.net",                // http://en.wikipedia.org/wiki/.gmo
+	"gmx":                      "whois-fe1.gmx.tango.knipp.de",         // whois -h whois.iana.org gmx
 	"gn":                       "",                                     // (not found)
+	"google":                   "domain-registry-whois.l.google.com",   // whois -h whois.iana.org google
 	"gop":                      "whois-cl01.mm-registry.com",           // whois -h whois.iana.org gop
 	"gov":                      "whois.dotgov.gov",                     // whois -h whois.iana.org gov
 	"gov.uk":                   "whois.ja.net",                         // Ruby Whois
@@ -448,6 +457,7 @@ var zones = map[string]string{
 	"network":                  "whois.donuts.co",                      // whois -h whois.iana.org network
 	"neustar":                  "whois.nic.neustar",                    // dig neustar.whois-servers.net CNAME
 	"new":                      "domain-registry-whois.l.google.com",   // whois -h whois.iana.org new
+	"nexus":                    "domain-registry-whois.l.google.com",   // whois -h whois.iana.org nexus
 	"nf":                       "whois.nic.nf",                         // whois -h whois.iana.org nf
 	"ng":                       "whois.nic.net.ng",                     // whois -h whois.iana.org ng
 	"ngo":                      "whois.publicinterestregistry.net",     // whois -h whois.iana.org ngo
@@ -487,6 +497,7 @@ var zones = map[string]string{
 	"pg":                       "",                                     // (not found)
 	"ph":                       "www.dot.ph",                           // web (CAPTCHA)
 	"pharmacien.fr":            "whois.smallregistry.net",              // Ruby Whois
+	"pharmacy":                 "",                                     // (not found)
 	"photo":                    "whois.uniregistry.net",                // whois -h whois.iana.org photo
 	"photography":              "whois.donuts.co",                      // whois -h whois.iana.org photography
 	"photos":                   "whois.donuts.co",                      // whois -h whois.iana.org photos
@@ -511,6 +522,7 @@ var zones = map[string]string{
 	"pro":                      "whois.dotproregistry.net",             // whois -h whois.iana.org pro
 	"prod":                     "domain-registry-whois.l.google.com",   // whois -h whois.iana.org prod
 	"productions":              "whois.donuts.co",                      // whois -h whois.iana.org productions
+	"prof":                     "domain-registry-whois.l.google.com",   // whois -h whois.iana.org prof
 	"properties":               "whois.donuts.co",                      // whois -h whois.iana.org properties
 	"property":                 "whois.uniregistry.net",                // whois -h whois.iana.org property
 	"ps":                       "whois.pnina.ps",                       // dig ps.whois-servers.net CNAME
@@ -681,7 +693,10 @@ var zones = map[string]string{
 	"wien":                     "whois.nic.wien",                       // whois -h whois.iana.org wien
 	"wiki":                     "whois.nic.wiki",                       // whois -h whois.iana.org wiki
 	"williamhill":              "",                                     // (not found)
+	"wme":                      "whois.centralnic.com",                 // whois -h whois.iana.org wme
+	"work":                     "whois-dub.mm-registry.com",            // whois -h whois.iana.org work
 	"works":                    "whois.donuts.co",                      // whois -h whois.iana.org works
+	"world":                    "whois.donuts.co",                      // whois -h whois.iana.org world
 	"ws":                       "whois.website.ws",                     // whois -h whois.iana.org ws
 	"wtc":                      "whois.nic.wtc",                        // whois -h whois.iana.org wtc
 	"wtf":                      "whois.donuts.co",                      // whois -h whois.iana.org wtf
@@ -765,6 +780,7 @@ var zones = map[string]string{
 	"za.com":                   "whois.centralnic.com",                 // Ruby Whois
 	"za.net":                   "whois.za.net",                         // Ruby Whois
 	"za.org":                   "whois.za.org",                         // Ruby Whois
+	"zip":                      "domain-registry-whois.l.google.com",   // whois -h whois.iana.org zip
 	"zm":                       "whois.nic.zm",                         // whois -h whois.iana.org zm
 	"zone":                     "whois.donuts.co",                      // whois -h whois.iana.org zone
 	"zw":                       "www.zispa.org.zw",                     // web
