@@ -1,4 +1,4 @@
-# whois for go (golang)
+# Whois client for Go (golang)
 
 `import "github.com/domainr/whois"`
 
