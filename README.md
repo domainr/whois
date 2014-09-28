@@ -1,4 +1,6 @@
-# go-whois
+# whois for go (golang)
+
+`import "github.com/domainr/whois"`
 
 Go whois library, heavily inspired by [Ruby Whois](https://github.com/weppos/whois). WIP.
 

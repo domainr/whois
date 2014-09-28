@@ -1,7 +1,5 @@
 package whois
 
-import ()
-
 // Whois queries a whois server for q and returns the result.
 func Whois(q string) (string, error) {
 	req, err := Resolve(q)

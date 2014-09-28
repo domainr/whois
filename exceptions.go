@@ -1,4 +1,4 @@
-package tools
+package whois
 
 type Exception struct {
 	Server string

@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/domainr/go-whois/whois"
+	"github.com/domainr/whois"
 	_ "github.com/domainr/go-whois/servers"
 )
 

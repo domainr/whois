@@ -1,10 +1,8 @@
-package servers
+package whois
 
 import (
 	"net/url"
 	"strings"
-
-	"github.com/domainr/go-whois/whois"
 )
 
 var slds = map[string]string{
@@ -17,8 +15,8 @@ var slds = map[string]string{
 	"tur.ar": "8",
 }
 
-var ar = &whois.Server{
-	Resolve: func(req *whois.Request) error {
+var ar = &Server{
+	Resolve: func(req *Request) error {
 		labels := strings.SplitN(req.Query, ".", 2)
 		values := url.Values{}
 		values.Set("busquedaDominioForm2", "busquedaDominioForm2")
@@ -32,7 +30,7 @@ var ar = &whois.Server{
 }
 
 func init() {
-	whois.RegisterServer(
+	RegisterServer(
 		ar,
 		"nic.ar",
 	)
