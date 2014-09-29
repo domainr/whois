@@ -32,7 +32,7 @@ func NewResponse(query, host string) *Response {
 	return &Response{
 		Query:     query,
 		Host:      host,
-		FetchedAt: time.Now(),
+		FetchedAt: time.Now().UTC(),
 	}
 }
 
