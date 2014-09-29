@@ -1,7 +1,6 @@
 package whois
 
 import (
-	"fmt"
 	"os"
 	"testing"
 
@@ -13,15 +12,11 @@ func TestReadMIME(t *testing.T) {
 	fns, err := whoistest.ResponseFiles()
 	st.Assert(t, err, nil)
 	for _, fn := range fns {
-		fmt.Printf("%s\n", fn)
+		// fmt.Printf("%s\n", fn)
 		res, err := readMIMEFile(fn)
-		if res != nil && err != nil {
-			fmt.Fprintf(os.Stderr, "Error reading MIME file: %s\n", err.Error())
-			res.DetectContentType("")
-		}
-		// st.Assert(t, err, nil)
-		res.Body = make([]byte, 0)
-		fmt.Printf("%#v\n\n", res)
+		st.Refute(t, res, nil)
+		st.Assert(t, err, nil)
+		// fmt.Printf("%#v\n\n", res)
 	}
 }
 
@@ -32,4 +27,19 @@ func readMIMEFile(fn string) (*Response, error) {
 	}
 	defer f.Close()
 	return ReadMIME(f)
+}
+
+func TestRateLimit(t *testing.T) {
+	req, err := Resolve("google.org")
+	st.Assert(t, err, nil)
+	res, err := req.Fetch()
+	st.Assert(t, err, nil)
+	st.Expect(t, res.MediaType, "text/plain")
+	st.Expect(t, res.Charset, "iso-8859-1")
+	res.Body = []byte("WHOIS LIMIT EXCEEDED - SEE WWW.PIR.ORG/WHOIS FOR DETAILS\n")
+	res.DetectContentType("")
+	st.Expect(t, res.MediaType, "text/plain")
+	st.Expect(t, res.Charset, "windows-1252")
+	h := res.Header()
+	st.Expect(t, h.Get("Content-Type"), "text/plain; charset=windows-1252")
 }
