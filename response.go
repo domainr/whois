@@ -3,8 +3,10 @@ package whois
 import (
 	"encoding/hex"
 	"io"
+	"io/ioutil"
 	"mime"
 	"net/http"
+	"net/mail"
 	"strconv"
 	"strings"
 	"time"
@@ -136,4 +138,27 @@ func (res *Response) WriteMIME(w io.Writer) error {
 		return err
 	}
 	return nil
+}
+
+// ReadMIME reads a MIME-formatted representation of the response into a Response.
+func ReadMIME(r io.Reader) (*Response, error) {
+	msg, err := mail.ReadMessage(r)
+	if err != nil {
+		return nil, err
+	}
+	h := msg.Header
+	res := NewResponse(h.Get("Query"), h.Get("Host"))
+	if res.Body, err = ioutil.ReadAll(msg.Body); err != nil {
+		return res, err
+	}
+	if res.FetchedAt, err = time.Parse(time.RFC3339, h.Get("Fetched-At")); err != nil {
+		return res, err
+	}
+	if mt, params, err := mime.ParseMediaType(h.Get("Content-Type")); err != nil {
+		return res, err
+	} else {
+		res.MediaType = mt
+		res.Charset = params["charset"]
+	}
+	return res, nil
 }
