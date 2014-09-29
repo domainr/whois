@@ -91,53 +91,47 @@ func (req *Request) Fetch() (*Response, error) {
 }
 
 func (req *Request) fetchWhois() (*Response, error) {
-	res := NewResponse(req.Query, req.Host)
-
 	c, err := net.DialTimeout("tcp", req.Host+":43", req.Timeout)
 	if err != nil {
-		return res, err
+		return nil, err
 	}
 	defer c.Close()
 	c.SetDeadline(time.Now().Add(req.Timeout))
 	if _, err = io.WriteString(c, req.Body); err != nil {
-		return res, err
+		return nil, err
 	}
+	res := NewResponse(req.Query, req.Host)
 	if res.Body, err = ioutil.ReadAll(c); err != nil {
-		return res, err
+		return nil, err
 	}
-
 	res.DetectContentType("")
-
 	return res, nil
 }
 
 func (req *Request) fetchURL() (*Response, error) {
-	res := NewResponse(req.Query, req.Host)
-
-	var hreq *http.Request
-	var err error
-	if req.Body != "" {
-		hreq, err = http.NewRequest("POST", req.URL, strings.NewReader(req.Body))
-	} else {
-		hreq, err = http.NewRequest("GET", req.URL, nil)
-	}
+	hreq, err := req.httpRequest()
 	if err != nil {
-		return res, err
+		return nil, err
 	}
 	hreq.Header.Add("Referer", req.URL)
-
 	hres, err := client.Do(hreq)
 	if err != nil {
-		return res, err
+		return nil, err
 	}
 	defer hres.Body.Close()
+	res := NewResponse(req.Query, req.Host)
 	if res.Body, err = ioutil.ReadAll(hres.Body); err != nil {
-		return res, err
+		return nil, err
 	}
-
 	res.DetectContentType(hres.Header.Get("Content-Type"))
-
 	return res, nil
+}
+
+func (req *Request) httpRequest() (*http.Request, error) {
+	if req.Body == "" {
+		return http.NewRequest("GET", req.URL, nil)
+	}
+	return http.NewRequest("POST", req.URL, strings.NewReader(req.Body))
 }
 
 func dialTimeout(network, address string) (net.Conn, error) {
