@@ -8,7 +8,6 @@ import (
 	"os"
 
 	"github.com/domainr/whois"
-	_ "github.com/domainr/go-whois/servers"
 )
 
 func main() {
