@@ -7,11 +7,11 @@ Go whois library, heavily inspired by [Ruby Whois](https://github.com/weppos/who
 ## Design Doc
 
 ```
-func whois.Whois(query string) whois.Record   // fetches and returns a fully-parsed whois.Record
+func whois.Whois(query string) *whois.Record  // Fetches and returns a fully-parsed whois.Record
 
-request = whois.Resolve(query)                // returns a whois.Request
-response = req.Fetch()                        // fetches the request, returns a whois.Response
-record = res.Parse()                          // parses the response, returns a whois.Record
+request = whois.Resolve(query)                // Returns a whois.Request
+response = whois.Fetch(request)               // Fetches the request, returns a whois.Response
+record = res.Parse()                          // Parses the response, returns a whois.Record
 
 whois.Request — represents a qualified whois request, including server, URL, and request body
 whois.Response — intermediate record, raw response from a whois server for a given query
@@ -22,11 +22,11 @@ whois.Record — parsed whois response; structured data
 
 ```
 query := "domai.nr"
-request := whois.Resolve(query)
-response := request.Fetch()
-record := response.Parse()
-for record.Refer != "" {
-  response = record.FetchRefer()
+request, err := whois.Resolve(query)
+response, err := whois.Fetch(request)
+record, err := whois.Parse(response)
+if record.Refer != "" {
+  response = whois.FetchRefer(record)
 }
 ```
 

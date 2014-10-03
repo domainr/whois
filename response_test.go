@@ -29,10 +29,10 @@ func readMIMEFile(fn string) (*Response, error) {
 	return ReadMIME(f)
 }
 
-func TestRateLimit(t *testing.T) {
+func TestPIRRateLimitText(t *testing.T) {
 	req, err := Resolve("google.org")
 	st.Assert(t, err, nil)
-	res, err := req.Fetch()
+	res, err := Fetch(req)
 	st.Assert(t, err, nil)
 	st.Expect(t, res.MediaType, "text/plain")
 	st.Expect(t, res.Charset, "iso-8859-1")

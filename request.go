@@ -2,54 +2,43 @@ package whois
 
 import (
 	"errors"
-	"io"
-	"io/ioutil"
-	"net"
-	"net/http"
 	"strings"
-	"time"
 )
 
 const (
-	DefaultTimeout = 10 * time.Second
-	IANA           = "whois.iana.org"
-)
-
-var (
-	tr = &http.Transport{
-		Dial: dialTimeout,
-		ResponseHeaderTimeout: DefaultTimeout,
-	}
-	client = &http.Client{Transport: tr}
+	IANA = "whois.iana.org"
 )
 
 // Request represents a whois request.
 type Request struct {
-	Query   string
-	Host    string
-	URL     string
-	Body    string
-	Timeout time.Duration
+	Query string
+	Host  string
+	URL   string
+	Body  string
 }
 
-// NewRequest returns a request ready to fetch.
-func NewRequest(q string) *Request {
-	return &Request{Query: q, Timeout: DefaultTimeout}
+// Resolve returns a Request ready to fetch.
+func Resolve(query string) (*Request, error) {
+	req := &Request{Query: query}
+	if err := req.Resolve(); err != nil {
+		return nil, err
+	}
+	return req, nil
 }
 
-// Resolve resolves a given request’s query. Will not re-resolve Host if already set.
+// Resolve associates req with a Server capable of processing the request.
 func (req *Request) Resolve() error {
-	if req.Host == "" {
-		err := req.resolveHost()
-		if err != nil {
-			return err
-		}
+	if err := req.resolveHost(); err != nil {
+		return err
 	}
 	srv := req.Server()
 	if srv.Resolve == nil {
-		return nil
+		return errors.New("Server missing Resolve func")
 	}
-	return srv.Resolve(req)
+	if err := srv.Resolve(req); err != nil {
+		return err
+	}
+	return nil
 }
 
 // resolveHost resolves a query to a whois host.
@@ -80,61 +69,4 @@ func (req *Request) Server() *Server {
 		srv = servers["default"]
 	}
 	return srv
-}
-
-// Fetch queries a whois server via whois protocol or by HTTP if URL is set.
-func (req *Request) Fetch() (*Response, error) {
-	if req.URL != "" {
-		return req.fetchURL()
-	}
-	return req.fetchWhois()
-}
-
-func (req *Request) fetchWhois() (*Response, error) {
-	c, err := net.DialTimeout("tcp", req.Host+":43", req.Timeout)
-	if err != nil {
-		return nil, err
-	}
-	defer c.Close()
-	c.SetDeadline(time.Now().Add(req.Timeout))
-	if _, err = io.WriteString(c, req.Body); err != nil {
-		return nil, err
-	}
-	res := NewResponse(req.Query, req.Host)
-	if res.Body, err = ioutil.ReadAll(c); err != nil {
-		return nil, err
-	}
-	res.DetectContentType("")
-	return res, nil
-}
-
-func (req *Request) fetchURL() (*Response, error) {
-	hreq, err := req.httpRequest()
-	if err != nil {
-		return nil, err
-	}
-	hreq.Header.Add("Referer", req.URL)
-	hres, err := client.Do(hreq)
-	if err != nil {
-		return nil, err
-	}
-	defer hres.Body.Close()
-	res := NewResponse(req.Query, req.Host)
-	if res.Body, err = ioutil.ReadAll(hres.Body); err != nil {
-		return nil, err
-	}
-	res.DetectContentType(hres.Header.Get("Content-Type"))
-	return res, nil
-}
-
-func (req *Request) httpRequest() (*http.Request, error) {
-	if req.Body == "" {
-		return http.NewRequest("GET", req.URL, nil)
-	}
-	return http.NewRequest("POST", req.URL, strings.NewReader(req.Body))
-}
-
-func dialTimeout(network, address string) (net.Conn, error) {
-	d := net.Dialer{Timeout: DefaultTimeout}
-	return d.Dial(network, address)
 }

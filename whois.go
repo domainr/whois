@@ -1,13 +1,13 @@
 package whois
 
-// Whois queries a whois server for q and returns the result.
-func Whois(q string) (string, error) {
-	req, err := Resolve(q)
+// Whois queries a whois server for query and returns the result.
+func Whois(query string) (string, error) {
+	req, err := Resolve(query)
 	if err != nil {
 		return "", err
 	}
 
-	res, err := req.Fetch()
+	res, err := Fetch(req)
 	if err != nil {
 		return "", err
 	}
@@ -15,9 +15,7 @@ func Whois(q string) (string, error) {
 	return string(res.Body), nil
 }
 
-// Resolve finds a whois server for q and prepares a Request.
-func Resolve(q string) (*Request, error) {
-	req := NewRequest(q)
-	err := req.Resolve()
-	return req, err
+// Fetch performs a whois Request.
+func Fetch(req *Request) (*Response, error) {
+	return DefaultClient.Fetch(req)
 }
