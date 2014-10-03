@@ -27,7 +27,7 @@ func NewClient(timeout time.Duration) *Client {
 	client := &Client{timeout: timeout}
 	transport := &http.Transport{
 		Proxy:                 http.ProxyFromEnvironment,
-		Dial:                  (client).Dial,
+		Dial:                  client.Dial,
 		TLSHandshakeTimeout:   timeout,
 		ResponseHeaderTimeout: timeout,
 	}
