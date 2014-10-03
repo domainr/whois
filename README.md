@@ -32,7 +32,7 @@ if record.Refer != "" {
 
 ### TODO
 
-- [ ] Create whois.Client
-- [ ] Embed an http.Client in whois.Client to reuse state
+- [X] Create whois.Client
+- [X] Embed an http.Client in whois.Client to reuse state
 - [ ] Implementations for known HTTP-based whois servers
 - [ ] Parsers
