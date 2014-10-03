@@ -32,7 +32,7 @@ func readMIMEFile(fn string) (*Response, error) {
 func TestPIRRateLimitText(t *testing.T) {
 	req, err := Resolve("google.org")
 	st.Assert(t, err, nil)
-	res, err := Fetch(req)
+	res, err := req.Fetch()
 	st.Assert(t, err, nil)
 	st.Expect(t, res.MediaType, "text/plain")
 	st.Expect(t, res.Charset, "iso-8859-1")
