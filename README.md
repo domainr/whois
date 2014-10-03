@@ -10,8 +10,8 @@ Go whois library, heavily inspired by [Ruby Whois](https://github.com/weppos/who
 func whois.Whois(query string) *whois.Record  // Fetches and returns a fully-parsed whois.Record
 
 request = whois.Resolve(query)                // Returns a whois.Request
-response = whois.Fetch(request)               // Fetches the request, returns a whois.Response
-record = res.Parse()                          // Parses the response, returns a whois.Record
+response = request.Fetch()                    // Fetches the request, returns a whois.Response
+record = response.Parse()                     // Parses the response, returns a whois.Record
 
 whois.Request — represents a qualified whois request, including server, URL, and request body
 whois.Response — intermediate record, raw response from a whois server for a given query
@@ -23,8 +23,8 @@ whois.Record — parsed whois response; structured data
 ```
 query := "domai.nr"
 request, err := whois.Resolve(query)
-response, err := whois.Fetch(request)
-record, err := whois.Parse(response)
+response, err := request.Fetch()
+record, err := response.Parse()
 if record.Refer != "" {
   response = whois.FetchRefer(record)
 }

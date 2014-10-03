@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-const DefaultTimeout = 10 * time.Second
+const DefaultTimeout = 30 * time.Second
 
 // Client represents a whois client. It contains internal state,
 // including an http.Client, for executing whois Requests.
@@ -90,14 +90,14 @@ func (c *Client) fetchHTTP(req *Request) (*Response, error) {
 }
 
 func httpRequest(req *Request) (*http.Request, error) {
-	// POST by default, GET if zero-length Request.Body
-	method := "POST"
-	body := strings.NewReader(req.Body)
-	if len(req.Body) == 0 {
-		method = "GET"
-		body = nil
+	var hreq *http.Request
+	var err error
+	// POST if non-zero Request.Body
+	if len(req.Body) > 0 {
+		hreq, err = http.NewRequest("POST", req.URL, strings.NewReader(req.Body))
+	} else {
+		hreq, err = http.NewRequest("GET", req.URL, nil)
 	}
-	hreq, err := http.NewRequest(method, req.URL, body)
 	if err != nil {
 		return nil, err
 	}

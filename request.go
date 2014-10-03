@@ -70,3 +70,8 @@ func (req *Request) Server() *Server {
 	}
 	return srv
 }
+
+// Fetch performs a request.
+func (req *Request) Fetch() (*Response, error) {
+	return DefaultClient.Fetch(req)
+}

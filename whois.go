@@ -2,20 +2,18 @@ package whois
 
 // Whois queries a whois server for query and returns the result.
 func Whois(query string) (string, error) {
-	req, err := Resolve(query)
+	res, err := Fetch(query)
 	if err != nil {
 		return "", err
 	}
-
-	res, err := Fetch(req)
-	if err != nil {
-		return "", err
-	}
-
-	return string(res.Body), nil
+	return res.String(), nil
 }
 
-// Fetch performs a whois Request.
-func Fetch(req *Request) (*Response, error) {
-	return DefaultClient.Fetch(req)
+// Fetch queries a whois server and returns a Response.
+func Fetch(query string) (*Response, error) {
+	req, err := Resolve(query)
+	if err != nil {
+		return nil, err
+	}
+	return req.Fetch()
 }
