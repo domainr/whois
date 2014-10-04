@@ -1,11 +1,14 @@
 package whois
 
 import (
+	"fmt"
 	"io"
 	"io/ioutil"
 	"net"
 	"net/http"
+	"os"
 	"strings"
+	"syscall"
 	"time"
 )
 
@@ -62,10 +65,12 @@ func (c *Client) fetchWhois(req *Request) (*Response, error) {
 	}
 	defer conn.Close()
 	if _, err = io.WriteString(conn, req.Body); err != nil {
+		logError(err)
 		return nil, err
 	}
 	res := NewResponse(req.Query, req.Host)
 	if res.Body, err = ioutil.ReadAll(conn); err != nil {
+		logError(err)
 		return nil, err
 	}
 	res.DetectContentType("")
@@ -83,6 +88,7 @@ func (c *Client) fetchHTTP(req *Request) (*Response, error) {
 	}
 	res := NewResponse(req.Query, req.Host)
 	if res.Body, err = ioutil.ReadAll(hres.Body); err != nil {
+		logError(err)
 		return nil, err
 	}
 	res.DetectContentType(hres.Header.Get("Content-Type"))
@@ -104,4 +110,15 @@ func httpRequest(req *Request) (*http.Request, error) {
 	// Some web whois servers require a Referer header
 	hreq.Header.Add("Referer", req.URL)
 	return hreq, nil
+}
+
+func logError(err error) {
+	switch t := err.(type) {
+	case syscall.Errno:
+		fmt.Fprintf(os.Stderr, "syscall.Errno %d: %s\n", t, err.Error())
+	case net.Error:
+		fmt.Fprintf(os.Stderr, "net.Error timeout=%t, temp=%t: %s\n", t.Timeout(), t.Temporary(), err.Error())
+	default:
+		fmt.Fprintf(os.Stderr, "Unknown error %v: %s\n", t, err.Error())
+	}
 }

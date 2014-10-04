@@ -8,7 +8,7 @@ import (
 type DefaultAdapter struct{}
 
 // Resolve adapts a Request for a standard whois server.
-func (a *DefaultAdapter) Resolve(req *Request) error {
+func (a *DefaultAdapter) Prepare(req *Request) error {
 	req.URL = ""
 	req.Body = fmt.Sprintf("%s\r\n", req.Query)
 	return nil

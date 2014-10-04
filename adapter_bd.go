@@ -9,7 +9,7 @@ type bdAdapter struct {
 	DefaultAdapter
 }
 
-func (a *bdAdapter) Resolve(req *Request) error {
+func (a *bdAdapter) Prepare(req *Request) error {
 	labels := strings.SplitN(req.Query, ".", 2)
 	values := url.Values{}
 	values.Set("dom", labels[0])

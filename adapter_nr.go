@@ -9,7 +9,7 @@ type nrAdapter struct {
 	DefaultAdapter
 }
 
-func (a *nrAdapter) Resolve(req *Request) error {
+func (a *nrAdapter) Prepare(req *Request) error {
 	labels := strings.SplitN(req.Query, ".", 2)
 	values := url.Values{}
 	values.Set("subdomain", labels[0])

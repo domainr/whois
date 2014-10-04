@@ -25,7 +25,7 @@ func main() {
 		flag.Usage()
 	}
 
-	req, err := whois.Resolve(query)
+	req, err := whois.NewRequest(query)
 	if err != nil {
 		fmt.Println(err)
 		return

@@ -19,7 +19,7 @@ type arAdapter struct {
 	DefaultAdapter
 }
 
-func (a *arAdapter) Resolve(req *Request) error {
+func (a *arAdapter) Prepare(req *Request) error {
 	labels := strings.SplitN(req.Query, ".", 2)
 	values := url.Values{}
 	values.Set("busquedaDominioForm2", "busquedaDominioForm2")

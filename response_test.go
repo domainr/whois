@@ -30,7 +30,7 @@ func readMIMEFile(fn string) (*Response, error) {
 }
 
 func TestPIRRateLimitText(t *testing.T) {
-	req, err := Resolve("google.org")
+	req, err := NewRequest("google.org")
 	st.Assert(t, err, nil)
 	res, err := req.Fetch()
 	st.Assert(t, err, nil)

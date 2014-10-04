@@ -8,7 +8,7 @@ type azAdapter struct {
 	DefaultAdapter
 }
 
-func (a *azAdapter) Resolve(req *Request) error {
+func (a *azAdapter) Prepare(req *Request) error {
 	values := url.Values{}
 	values.Set("lang", "en")
 	values.Set("domain", req.Query)

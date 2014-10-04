@@ -9,7 +9,7 @@ Whois client for Go (golang), inspired by [Ruby Whois](https://github.com/weppos
 ```
 func whois.Whois(query string) *whois.Record  // Fetches and returns a fully-parsed whois.Record
 
-request = whois.Resolve(query)                // Returns a whois.Request
+request = whois.NewRequest(query)             // Returns a prepared whois.Request
 response = request.Fetch()                    // Fetches the request, returns a whois.Response
 record = response.Parse()                     // Parses the response, returns a whois.Record
 
@@ -22,7 +22,7 @@ whois.Record — parsed whois response; structured data
 
 ```
 query := "domai.nr"
-request, err := whois.Resolve(query)
+request, err := whois.NewRequest(query)
 response, err := request.Fetch()
 record, err := response.Parse()
 if record.Refer != "" {

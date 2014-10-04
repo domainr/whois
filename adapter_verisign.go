@@ -8,8 +8,8 @@ type verisignAdapter struct {
 	DefaultAdapter
 }
 
-func (a *verisignAdapter) Resolve(req *Request) error {
-	a.DefaultAdapter.Resolve(req)
+func (a *verisignAdapter) Prepare(req *Request) error {
+	a.DefaultAdapter.Prepare(req)
 	req.Body = fmt.Sprintf("=%s\r\n", req.Query)
 	return nil
 }
