@@ -1,7 +1,10 @@
 package whois
 
 import (
+	"bytes"
+	"crypto/sha1"
 	"encoding/hex"
+	"errors"
 	"io"
 	"io/ioutil"
 	"mime"
@@ -11,9 +14,9 @@ import (
 	"strings"
 	"time"
 
-	"crypto/sha1"
-
 	"code.google.com/p/go.net/html/charset"
+	"code.google.com/p/go.text/encoding"
+	"code.google.com/p/go.text/transform"
 	"github.com/saintfish/chardet"
 )
 
@@ -38,7 +41,33 @@ func NewResponse(query, host string) *Response {
 
 // String returns the response body.
 func (res *Response) String() string {
-	return string(res.Body)
+	r, err := res.Reader()
+	if err != nil {
+		return ""
+	}
+	body, err := ioutil.ReadAll(r)
+	if err != nil {
+		return ""
+	}
+	return string(body)
+}
+
+// Reader returns a new UTF-8 io.Reader for the response body.
+func (res *Response) Reader() (io.Reader, error) {
+	enc, err := res.Encoding()
+	if err != nil {
+		return nil, err
+	}
+	return transform.NewReader(bytes.NewReader(res.Body), enc.NewDecoder()), nil
+}
+
+// Encoding returns an Encoding for the response body.
+func (res *Response) Encoding() (encoding.Encoding, error) {
+	enc, _ := charset.Lookup(res.Charset)
+	if enc == nil {
+		return nil, errors.New("No encoding found for " + res.Charset)
+	}
+	return enc, nil
 }
 
 // DetectContentType detects and sets the response content type and charset.

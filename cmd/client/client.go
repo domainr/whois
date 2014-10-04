@@ -37,5 +37,5 @@ func main() {
 		return
 	}
 
-	res.WriteMIME(os.Stdout)
+	fmt.Println(res.String())
 }
