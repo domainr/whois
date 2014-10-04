@@ -10,7 +10,7 @@ type deAdapter struct {
 
 func (a *deAdapter) Prepare(req *Request) error {
 	a.DefaultAdapter.Prepare(req)
-	req.Body = fmt.Sprintf("-T dn,ace %s\r\n", req.Query) // http://www.denic.de/en/domains/whois-service.html
+	req.Body = []byte(fmt.Sprintf("-T dn,ace %s\r\n", req.Query)) // http://www.denic.de/en/domains/whois-service.html
 	return nil
 }
 

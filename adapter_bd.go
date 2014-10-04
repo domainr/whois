@@ -15,7 +15,7 @@ func (a *bdAdapter) Prepare(req *Request) error {
 	values.Set("dom", labels[0])
 	values.Set("ext", labels[1])
 	req.URL = "http://www.whois.com.bd/?" + values.Encode()
-	req.Body = ""
+	req.Body = []byte{}
 	return nil
 }
 

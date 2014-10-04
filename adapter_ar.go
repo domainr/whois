@@ -27,7 +27,7 @@ func (a *arAdapter) Prepare(req *Request) error {
 	values.Set("busquedaDominioForm2:dominio", labels[0])
 	values.Set("busquedaDominioForm2:j_idt56", arDomains[labels[1]])
 	req.URL = "https://nic.ar/buscarDominio.xhtml"
-	req.Body = values.Encode()
+	req.Body = []byte(values.Encode())
 	return nil
 }
 

@@ -14,7 +14,7 @@ func (a *azAdapter) Prepare(req *Request) error {
 	values.Set("domain", req.Query)
 	values.Set("dom", "") // The server concatentates domain+dom, so we can leave dom empty
 	req.URL = "http://www.whois.az/cgi-bin/whois.cgi"
-	req.Body = values.Encode()
+	req.Body = []byte(values.Encode())
 	return nil
 }
 

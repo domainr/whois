@@ -1,13 +1,12 @@
 package whois
 
 import (
+	"bytes"
 	"fmt"
-	"io"
 	"io/ioutil"
 	"net"
 	"net/http"
 	"os"
-	"strings"
 	"syscall"
 	"time"
 )
@@ -64,7 +63,7 @@ func (c *Client) fetchWhois(req *Request) (*Response, error) {
 		return nil, err
 	}
 	defer conn.Close()
-	if _, err = io.WriteString(conn, req.Body); err != nil {
+	if _, err = conn.Write(req.Body); err != nil {
 		logError(err)
 		return nil, err
 	}
@@ -100,7 +99,7 @@ func httpRequest(req *Request) (*http.Request, error) {
 	var err error
 	// POST if non-zero Request.Body
 	if len(req.Body) > 0 {
-		hreq, err = http.NewRequest("POST", req.URL, strings.NewReader(req.Body))
+		hreq, err = http.NewRequest("POST", req.URL, bytes.NewReader(req.Body))
 	} else {
 		hreq, err = http.NewRequest("GET", req.URL, nil)
 	}

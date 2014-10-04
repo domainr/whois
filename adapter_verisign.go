@@ -10,7 +10,7 @@ type verisignAdapter struct {
 
 func (a *verisignAdapter) Prepare(req *Request) error {
 	a.DefaultAdapter.Prepare(req)
-	req.Body = fmt.Sprintf("=%s\r\n", req.Query)
+	req.Body = []byte(fmt.Sprintf("=%s\r\n", req.Query))
 	return nil
 }
 

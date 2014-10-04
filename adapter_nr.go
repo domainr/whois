@@ -15,7 +15,7 @@ func (a *nrAdapter) Prepare(req *Request) error {
 	values.Set("subdomain", labels[0])
 	values.Set("tld", labels[1])
 	req.URL = "http://cenpac.net.nr/dns/whois.html?" + values.Encode()
-	req.Body = ""
+	req.Body = []byte{}
 	return nil
 }
 

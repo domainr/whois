@@ -9,7 +9,7 @@ type Request struct {
 	Query string
 	Host  string
 	URL   string
-	Body  string
+	Body  []byte
 }
 
 // NewRequest returns a prepared Request ready to fetch.
