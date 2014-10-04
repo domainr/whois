@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-var bd = &Server{
+var bd = &Adapter{
 	Resolve: func(req *Request) error {
 		labels := strings.SplitN(req.Query, ".", 2)
 		values := url.Values{}
@@ -18,7 +18,7 @@ var bd = &Server{
 }
 
 func init() {
-	RegisterServer(
+	RegisterAdapter(
 		bd,
 		"www.whois.com.bd",
 	)

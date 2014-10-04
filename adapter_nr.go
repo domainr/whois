@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-var nr = &Server{
+var nr = &Adapter{
 	Resolve: func(req *Request) error {
 		labels := strings.SplitN(req.Query, ".", 2)
 		values := url.Values{}
@@ -18,7 +18,7 @@ var nr = &Server{
 }
 
 func init() {
-	RegisterServer(
+	RegisterAdapter(
 		nr,
 		"cenpac.net.nr",
 	)

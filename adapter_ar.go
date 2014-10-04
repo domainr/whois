@@ -15,7 +15,7 @@ var slds = map[string]string{
 	"tur.ar": "8",
 }
 
-var ar = &Server{
+var ar = &Adapter{
 	Resolve: func(req *Request) error {
 		labels := strings.SplitN(req.Query, ".", 2)
 		values := url.Values{}
@@ -30,7 +30,7 @@ var ar = &Server{
 }
 
 func init() {
-	RegisterServer(
+	RegisterAdapter(
 		ar,
 		"nic.ar",
 	)
