@@ -52,6 +52,12 @@ func (res *Response) String() string {
 	return string(body)
 }
 
+// Parse parses a Response, returning a Record or an error.
+func (res *Response) Parse() (*Record, error) {
+	scan(res)
+	return nil, nil
+}
+
 // Reader returns a new UTF-8 io.Reader for the response body.
 func (res *Response) Reader() (io.Reader, error) {
 	enc, err := res.Encoding()
