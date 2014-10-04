@@ -11,45 +11,46 @@ import (
 	"time"
 )
 
+// DefaultTimeout sets the maximum lifetime of whois requests.
 const DefaultTimeout = 30 * time.Second
 
-// Client represents a whois client. It contains internal state,
-// including an http.Client, for executing whois Requests.
+// Client represents a whois client. It contains an http.Client, for executing
+// some whois Requests.
 type Client struct {
 	httpClient *http.Client
 	timeout    time.Duration
 }
 
-// DefaultClient represents a shared whois client with a default
-// timeout, HTTP transport, and dialer.
+// DefaultClient represents a shared whois client with a default timeout, HTTP
+// transport, and dialer.
 var DefaultClient = NewClient(DefaultTimeout)
 
-// NewClient creates and initializes a new Client
+// NewClient creates and initializes a new Client with the specified timeout.
 func NewClient(timeout time.Duration) *Client {
-	client := &Client{timeout: timeout}
 	transport := &http.Transport{
 		Proxy:                 http.ProxyFromEnvironment,
-		Dial:                  client.Dial,
 		TLSHandshakeTimeout:   timeout,
 		ResponseHeaderTimeout: timeout,
 	}
+	client := &Client{timeout: timeout}
+	transport.Dial = client.Dial
 	client.httpClient = &http.Client{Transport: transport}
 	return client
 }
 
-// Dial implements the Dial interface with the specified Client’s timeout.
-// Client timeout affects cumulative dial + read time.
+// Dial implements the Dial interface, strictly enforcing that cumulative dial +
+// read time is limited to timeout. It applies to both whois and HTTP connections.
 func (c *Client) Dial(network, address string) (net.Conn, error) {
 	deadline := time.Now().Add(c.timeout)
 	conn, err := net.DialTimeout(network, address, c.timeout)
 	if err != nil {
-		return conn, err
+		return nil, err
 	}
 	conn.SetDeadline(deadline)
 	return conn, nil
 }
 
-// Fetch performs a Request.
+// Fetch sends the Request to a whois server.
 func (c *Client) Fetch(req *Request) (*Response, error) {
 	if req.URL != "" {
 		return c.fetchHTTP(req)
