@@ -1,10 +1,10 @@
-# Whois client for Go (golang)
+# Whois [![GoDoc](https://godoc.org/github.com/domainr/whois?status.png)](https://godoc.org/github.com/domainr/whois) ![Project Status](http://img.shields.io/badge/status-development-red.svg)
 
 `go get github.com/domainr/whois`
 
-Go whois library, heavily inspired by [Ruby Whois](https://github.com/weppos/whois). WIP.
+Whois client for Go (golang), inspired by [Ruby Whois](https://github.com/weppos/whois).
 
-## Design Doc
+## Design
 
 ```
 func whois.Whois(query string) *whois.Record  // Fetches and returns a fully-parsed whois.Record
