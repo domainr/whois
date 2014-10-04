@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-const DefaultTimeout = 10 * time.Second
+const DefaultTimeout = 30 * time.Second
 
 // Client represents a whois client. It contains internal state,
 // including an http.Client, for executing whois Requests.
