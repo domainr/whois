@@ -1,14 +1,14 @@
 package whois
 
-// A Adapter retrieves and interprets whois results.
-type Adapter struct {
-	Resolve func(*Request) error
+// Adapter contains server-specific code for retrieving and parsing whois data.
+type Adapter interface {
+	Resolve(*Request) error
 }
 
-var adapters = map[string]*Adapter{}
+var adapters = map[string]Adapter{}
 
-// RegisterAdapter globally associates a Adapter with given hostnames.
-func RegisterAdapter(s *Adapter, names ...string) {
+// BindAdapter globally associates an Adapter with given hostname(s).
+func BindAdapter(s Adapter, names ...string) {
 	for _, name := range names {
 		adapters[name] = s
 	}

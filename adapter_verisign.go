@@ -4,17 +4,19 @@ import (
 	"fmt"
 )
 
-var verisign = &Adapter{
-	Resolve: func(req *Request) error {
-		Default.Resolve(req)
-		req.Body = fmt.Sprintf("=%s\r\n", req.Query)
-		return nil
-	},
+type verisignAdapter struct {
+	DefaultAdapter
+}
+
+func (a *verisignAdapter) Resolve(req *Request) error {
+	a.DefaultAdapter.Resolve(req)
+	req.Body = fmt.Sprintf("=%s\r\n", req.Query)
+	return nil
 }
 
 func init() {
-	RegisterAdapter(
-		verisign,
+	BindAdapter(
+		&verisignAdapter{},
 		"whois.verisign-grs.com",
 		"bzwhois.verisign-grs.com",
 		"ccwhois.verisign-grs.com",

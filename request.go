@@ -26,15 +26,12 @@ func Resolve(query string) (*Request, error) {
 	return req, nil
 }
 
-// Resolve associates req with a Adapter capable of processing the request.
+// Resolve identifies an Adapter capable of processing the Request.
 func (req *Request) Resolve() error {
 	if err := req.resolveHost(); err != nil {
 		return err
 	}
 	a := req.Adapter()
-	if a.Resolve == nil {
-		return errors.New("Adapter missing Resolve func")
-	}
 	if err := a.Resolve(req); err != nil {
 		return err
 	}
@@ -62,13 +59,12 @@ func (req *Request) resolveHost() error {
 	return nil
 }
 
-// Adapter returns a server implementation for a given host. It will always return a valid adapter.
-func (req *Request) Adapter() *Adapter {
-	a, ok := adapters[req.Host]
-	if !ok {
-		a = adapters["default"]
+// Adapter returns an adapter for a given host. It will always return a valid adapter.
+func (req *Request) Adapter() Adapter {
+	if a, ok := adapters[req.Host]; ok {
+		return a
 	}
-	return a
+	return adapters["default"]
 }
 
 // Fetch performs a request.

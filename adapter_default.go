@@ -4,17 +4,19 @@ import (
 	"fmt"
 )
 
-var Default = &Adapter{
-	Resolve: func(req *Request) error {
-		req.URL = ""
-		req.Body = fmt.Sprintf("%s\r\n", req.Query)
-		return nil
-	},
+// DefaultAdapter represents the base Adapter for most whois servers.
+type DefaultAdapter struct{}
+
+// Resolve adapts a Request for a standard whois server.
+func (a *DefaultAdapter) Resolve(req *Request) error {
+	req.URL = ""
+	req.Body = fmt.Sprintf("%s\r\n", req.Query)
+	return nil
 }
 
 func init() {
-	RegisterAdapter(
-		Default,
+	BindAdapter(
+		&DefaultAdapter{},
 		"default",
 	)
 }
