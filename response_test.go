@@ -1,7 +1,6 @@
 package whois
 
 import (
-	"os"
 	"testing"
 
 	"github.com/domainr/whoistest"
@@ -13,20 +12,11 @@ func TestReadMIME(t *testing.T) {
 	st.Assert(t, err, nil)
 	for _, fn := range fns {
 		// fmt.Printf("%s\n", fn)
-		res, err := readMIMEFile(fn)
+		res, err := ReadMIMEFile(fn)
 		st.Refute(t, res, nil)
 		st.Assert(t, err, nil)
 		// fmt.Printf("%#v\n\n", res)
 	}
-}
-
-func readMIMEFile(fn string) (*Response, error) {
-	f, err := os.Open(fn)
-	if err != nil {
-		return nil, err
-	}
-	defer f.Close()
-	return ReadMIME(f)
 }
 
 func TestPIRRateLimitText(t *testing.T) {

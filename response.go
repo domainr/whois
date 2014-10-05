@@ -10,6 +10,7 @@ import (
 	"mime"
 	"net/http"
 	"net/mail"
+	"os"
 	"strconv"
 	"strings"
 	"time"
@@ -190,4 +191,15 @@ func ReadMIME(r io.Reader) (*Response, error) {
 		res.Charset = params["charset"]
 	}
 	return res, nil
+}
+
+// ReadMIMEFile opens and reads a response MIME file at path.
+// Returns any errors.
+func ReadMIMEFile(path string) (*Response, error) {
+	f, err := os.Open(path)
+	if err != nil {
+		return nil, err
+	}
+	defer f.Close()
+	return ReadMIME(f)
 }
