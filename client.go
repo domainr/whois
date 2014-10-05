@@ -3,6 +3,7 @@ package whois
 import (
 	"bytes"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"net"
 	"net/http"
@@ -11,8 +12,13 @@ import (
 	"time"
 )
 
-// DefaultTimeout sets the maximum lifetime of whois requests.
-const DefaultTimeout = 30 * time.Second
+const (
+	// DefaultTimeout sets the maximum lifetime of whois requests.
+	DefaultTimeout = 30 * time.Second
+
+	// DefaultReadLimit sets the maximum bytes a client will attempt to read from a connection.
+	DefaultReadLimit = 1 << 20 // 1 MB
+)
 
 // Client represents a whois client. It contains an http.Client, for executing
 // some whois Requests.
@@ -69,7 +75,7 @@ func (c *Client) fetchWhois(req *Request) (*Response, error) {
 		return nil, err
 	}
 	res := NewResponse(req.Query, req.Host)
-	if res.Body, err = ioutil.ReadAll(conn); err != nil {
+	if res.Body, err = ioutil.ReadAll(io.LimitReader(conn, DefaultReadLimit)); err != nil {
 		logError(err)
 		return nil, err
 	}
@@ -87,7 +93,7 @@ func (c *Client) fetchHTTP(req *Request) (*Response, error) {
 		return nil, err
 	}
 	res := NewResponse(req.Query, req.Host)
-	if res.Body, err = ioutil.ReadAll(hres.Body); err != nil {
+	if res.Body, err = ioutil.ReadAll(io.LimitReader(hres.Body, DefaultReadLimit)); err != nil {
 		logError(err)
 		return nil, err
 	}
