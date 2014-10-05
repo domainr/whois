@@ -36,6 +36,7 @@ func NewResponse(query, host string) *Response {
 		Query:     query,
 		Host:      host,
 		FetchedAt: time.Now().UTC(),
+		MediaType: "text/plain",
 	}
 }
 
@@ -72,55 +73,41 @@ func (res *Response) Encoding() (encoding.Encoding, error) {
 
 // DetectContentType detects and sets the response content type and charset.
 func (res *Response) DetectContentType(ct string) {
-	// Sensible defaults
-	res.MediaType = "text/plain"
-	res.Charset = ""
-
 	// Autodetect if not passed a Content-Type header
 	if ct == "" {
 		ct = http.DetectContentType(res.Body)
 	}
 
 	// Content type (e.g. text/plain or text/html)
-	mt, params, err := mime.ParseMediaType(ct)
+	mt, _, err := mime.ParseMediaType(ct)
 	if err != nil {
 		return
 	}
 	res.MediaType = mt
-
-	// Character set (e.g. utf-8)
-	cs, ok := params["charset"]
-	if ok {
-		res.Charset = cs
-	}
 	res.DetectCharset()
 }
 
-// DetectCharset returns best guess for the reesponse body character set.
+// DetectCharset sets the charset field of the response to the best guess for
+// the response body's character set.
 func (res *Response) DetectCharset() {
-	// Detect via BOM / HTML meta tag
-	_, cs1, ok1 := charset.DetermineEncoding(res.Body, res.MediaType)
+	var certain bool
 
-	// Detect via ICU
-	cs2, ok2, html := "", false, false
+	// Detect via BOM or HTML media type.
+	_, res.Charset, certain = charset.DetermineEncoding(res.Body, res.MediaType)
+	if certain {
+		return
+	}
+
+	// Detect via ICU and set if confidence is high enough.
 	var det *chardet.Detector
-	if strings.Contains(res.MediaType, "html") || true {
+	if strings.Contains(res.MediaType, "html") {
 		det = chardet.NewHtmlDetector()
-		html = true
 	} else {
 		det = chardet.NewTextDetector()
 	}
-	r, err := det.DetectAll(res.Body)
-	if err == nil && len(r) > 0 {
-		cs2 = strings.ToLower(r[0].Charset)
-		ok2 = r[0].Confidence > 50
-	}
-
-	// Prefer charset if HTML, otherwise ICU
-	if !ok2 && (ok1 || html) {
-		res.Charset = cs1
-	} else {
-		res.Charset = cs2
+	r, err := det.DetectBest(res.Body)
+	if err == nil && r.Confidence > 50 {
+		_, res.Charset = charset.Lookup(r.Charset)
 	}
 
 	// fmt.Printf("Detected charset via go.net/html/charset: %s (%t)\n", cs1, ok1)
@@ -177,7 +164,7 @@ func ReadMIME(r io.Reader) (*Response, error) {
 	}
 	h := msg.Header
 	res := NewResponse(h.Get("Query"), h.Get("Host"))
-	if res.Body, err = ioutil.ReadAll(msg.Body); err != nil {
+	if res.Body, err = ioutil.ReadAll(io.LimitReader(msg.Body, DefaultReadLimit)); err != nil {
 		return res, err
 	}
 	if res.FetchedAt, err = time.Parse(time.RFC3339, h.Get("Fetched-At")); err != nil {
