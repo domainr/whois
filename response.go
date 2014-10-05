@@ -87,7 +87,7 @@ func (res *Response) DetectContentType(ct string) {
 		ct = http.DetectContentType(res.Body)
 	}
 
-	// Content type (e.g. text/plan or text/html)
+	// Content type (e.g. text/plain or text/html)
 	mt, params, err := mime.ParseMediaType(ct)
 	if err != nil {
 		return
