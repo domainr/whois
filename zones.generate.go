@@ -77,11 +77,11 @@ var overrides = map[string]override{
 	"tg":               override{"www.netmaster.tg", "web"},
 	"tj":               override{"www.nic.tj", "web"},
 	"tt":               override{"www.nic.tt", "web"},
-	"va":               override{"whois.sourceIANA.org", "Every .va domain name owned by the Vatican"},
+	"va":               override{"whois.iana.org", "Every .va domain name owned by the Vatican"},
 	"vi":               override{"secure.nic.vi", "web (POST)"},
 	"vn":               override{"whois.vnnic.vn", "web"},
 	"xn--90a3ac":       override{"whois.rnids.rs", "http://en.wikipedia.org/wiki/.xn--90a3ac"},
-	"xn--fzc2c9e2c":    override{"whois.nic.lk", "http://www.sourceIANA.org/domains/root/db/.xn--fzc2c9e2c.html"},
+	"xn--fzc2c9e2c":    override{"whois.nic.lk", "http://www.iana.org/domains/root/db/.xn--fzc2c9e2c.html"},
 	"xn--mgbc0a9azcg":  override{"whois.iam.net.ma", "Morocco"},
 	"xn--pgbs0dh":      override{"whois.ati.tn", "Tunisia"},
 	"xn--rhqv96g":      override{"whois.nic.xn--rhqv96g", "China"},
@@ -202,7 +202,7 @@ func init() {
 	flag.StringVar(
 		&server,
 		"server",
-		"whois.sourceIANA.org",
+		"whois.iana.org",
 		"Address of the root whois server to query",
 	)
 	flag.BoolVar(&v, "v", false, "verbose output (to stderr)")
