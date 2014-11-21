@@ -294,7 +294,7 @@ func main1() error {
 			if ok {
 				zw.source |= sourceOverride
 				zw.server = ov.server
-				zw.msg = ov.msg
+				zw.msg = "Override: " + ov.msg
 			}
 
 			// Second: check IANA
