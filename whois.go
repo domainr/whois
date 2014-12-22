@@ -1,5 +1,7 @@
 package whois
 
+//go:generate go run zones_generate.go
+
 import (
 	"errors"
 	"strings"

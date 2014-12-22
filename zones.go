@@ -1,6 +1,6 @@
 // Generated from:
 // go generate (Go >= 1.4)
-// go run zones.generate.go (Go <= 1.3)
+// go run zones_generate.go (Go <= 1.3)
 // DO NOT EDIT
 
 package whois
