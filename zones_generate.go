@@ -18,6 +18,7 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/domainr/whois"
 	"github.com/miekg/dns"
 )
 
@@ -326,7 +327,7 @@ func main1() error {
 		}(zone, i)
 	}
 
-	var numMissing, numIANA, numDNS, numoverrides, numConflicts int
+	var numAdded, numChanged, numLost, numMissing, numIANA, numDNS, numOverrides, numConflicts int
 
 	// Collect from goroutines
 	for i := 0; i < len(zones); i++ {
@@ -334,6 +335,19 @@ func main1() error {
 		case zw := <-c:
 			if zw.msg == "" {
 				fmt.Fprintf(os.Stderr, "No match for %s\n", zw.zone)
+			}
+
+			prev, _ := whois.Resolve("test." + zw.zone)
+			switch {
+			case zw.server != "" && prev == "":
+				numAdded++
+			case zw.server == "" && prev != "":
+				fmt.Fprintf(os.Stderr, "%s lost; previously %s\n", zw.zone, prev)
+				numLost++
+				numChanged++
+			case zw.server != prev:
+				fmt.Fprintf(os.Stderr, "%s changed from %s to %s\n", zw.zone, prev, zw.server)
+				numChanged++
 			}
 
 			zw.server = strings.TrimSuffix(strings.ToLower(zw.server), ".")
@@ -347,7 +361,7 @@ func main1() error {
 			case (zw.source & sourceDNS) != 0:
 				numDNS++
 			case (zw.source & sourceOverride) != 0:
-				numoverrides++
+				numOverrides++
 			}
 
 			if ((zw.source & sourceOverride) != 0) && ((zw.source & (zw.source - 1)) != 0) {
@@ -361,13 +375,19 @@ func main1() error {
 
 	// Print stats
 	fmt.Fprintf(os.Stderr, "Zones with whois servers:     %d (%d via IANA, %d via DNS, %d overrides)\n",
-		len(zones)-numMissing, numIANA, numDNS, numoverrides)
+		len(zones)-numMissing, numIANA, numDNS, numOverrides)
 	fmt.Fprintf(os.Stderr, "Zones without whois servers:  %d (%.0f%%)\n",
 		numMissing, float32(numMissing)/float32(len(zones))*float32(100))
 	fmt.Fprintf(os.Stderr, "Total number of zones:        %d\n",
 		len(zones))
 	fmt.Fprintf(os.Stderr, "Zones with conflicting data:  %d (%.0f%%)\n",
 		numConflicts, float32(numConflicts)/float32(len(zones))*float32(100))
+	fmt.Fprintf(os.Stderr, "Zones added:                  %d (%.0f%%)\n",
+		numAdded, float32(numChanged)/float32(len(zones))*float32(100))
+	fmt.Fprintf(os.Stderr, "Zones changed:                %d (%.0f%%)\n",
+		numChanged, float32(numChanged)/float32(len(zones))*float32(100))
+	fmt.Fprintf(os.Stderr, "Zones lost:                   %d (%.0f%%)\n",
+		numLost, float32(numChanged)/float32(len(zones))*float32(100))
 
 	// Generate zones.go
 	buf := new(bytes.Buffer)
