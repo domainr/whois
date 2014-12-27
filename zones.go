@@ -29,6 +29,7 @@ var zones = map[string]string{
 	"allfinanz":                "whois.ksregistry.net",                 // whois -h whois.iana.org allfinanz
 	"alsace":                   "whois-alsace.nic.fr",                  // whois -h whois.iana.org alsace
 	"am":                       "whois.amnic.net",                      // whois -h whois.iana.org am
+	"amsterdam":                "",                                     // (not found)
 	"an":                       "",                                     // (not found)
 	"android":                  "domain-registry-whois.l.google.com",   // whois -h whois.iana.org android
 	"ao":                       "",                                     // (not found)
@@ -263,6 +264,7 @@ var zones = map[string]string{
 	"fk":                       "whois.marcaria.com",                   // Override: web
 	"flights":                  "whois.donuts.co",                      // whois -h whois.iana.org flights
 	"florist":                  "whois.donuts.co",                      // whois -h whois.iana.org florist
+	"flowers":                  "whois.uniregistry.net",                // whois -h whois.iana.org flowers
 	"flsmidth":                 "whois.ksregistry.net",                 // whois -h whois.iana.org flsmidth
 	"fly":                      "domain-registry-whois.l.google.com",   // whois -h whois.iana.org fly
 	"fm":                       "whois.nic.fm",                         // dig fm.whois-servers.net CNAME
@@ -290,6 +292,7 @@ var zones = map[string]string{
 	"geometre-expert.fr":       "whois.smallregistry.net",              // Override: Ruby Whois
 	"gf":                       "www.dom-enic.com",                     // Override: web (POST)
 	"gg":                       "whois.gg",                             // whois -h whois.iana.org gg
+	"ggee":                     "whois.nic.gmo",                        // whois -h whois.iana.org ggee
 	"gh":                       "",                                     // (not found)
 	"gi":                       "whois2.afilias-grs.net",               // whois -h whois.iana.org gi
 	"gift":                     "whois.uniregistry.net",                // whois -h whois.iana.org gift
@@ -610,6 +613,7 @@ var zones = map[string]string{
 	"sa":                       "whois.nic.net.sa",                     // whois -h whois.iana.org sa
 	"sa.com":                   "whois.centralnic.com",                 // Override: Ruby Whois
 	"saarland":                 "whois.ksregistry.net",                 // whois -h whois.iana.org saarland
+	"sale":                     "whois.rightside.co",                   // whois -h whois.iana.org sale
 	"samsung":                  "whois.nic.samsung",                    // whois -h whois.iana.org samsung
 	"sarl":                     "whois.donuts.co",                      // whois -h whois.iana.org sarl
 	"sb":                       "whois.nic.net.sb",                     // whois -h whois.iana.org sb
@@ -728,6 +732,7 @@ var zones = map[string]string{
 	"vg":                       "ccwhois.ksregistry.net",               // whois -h whois.iana.org vg
 	"vi":                       "secure.nic.vi",                        // Override: web (POST)
 	"viajes":                   "whois.donuts.co",                      // whois -h whois.iana.org viajes
+	"video":                    "whois.rightside.co",                   // whois -h whois.iana.org video
 	"villas":                   "whois.donuts.co",                      // whois -h whois.iana.org villas
 	"vision":                   "whois.donuts.co",                      // whois -h whois.iana.org vision
 	"vlaanderen":               "whois.nic.vlaanderen",                 // whois -h whois.iana.org vlaanderen
@@ -851,5 +856,6 @@ var zones = map[string]string{
 	"zip":                      "domain-registry-whois.l.google.com",   // whois -h whois.iana.org zip
 	"zm":                       "whois.nic.zm",                         // whois -h whois.iana.org zm
 	"zone":                     "whois.donuts.co",                      // whois -h whois.iana.org zone
+	"zuerich":                  "whois.ksregistry.net",                 // whois -h whois.iana.org zuerich
 	"zw":                       "www.zispa.org.zw",                     // Override: web
 }
