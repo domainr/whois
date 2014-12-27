@@ -186,7 +186,7 @@ var (
 	url, server    string
 	v, quick       bool
 	concurrency    int
-	dnsClient      *dns.Client
+	dnsClient      = &dns.Client{Net: "tcp"}
 	_, _file, _, _ = runtime.Caller(0)
 	_filename      = filepath.Base(_file)
 	_dir           = filepath.Dir(_file)
@@ -431,7 +431,6 @@ func queryCNAME(host string) (string, error) {
 	m := new(dns.Msg)
 	m.RecursionDesired = true // embedded field
 	m.SetQuestion(dns.Fqdn(host), dns.TypeCNAME)
-	dnsClient = new(dns.Client)
 	r, _, err := dnsClient.Exchange(m, "8.8.8.8:53")
 	if err != nil {
 		return "", err
