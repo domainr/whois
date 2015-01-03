@@ -636,6 +636,7 @@ var zones = map[string]string{
 	"sh":                       "whois.nic.sh",                         // whois -h whois.iana.org sh
 	"shiksha":                  "whois.afilias.net",                    // whois -h whois.iana.org shiksha
 	"shoes":                    "whois.donuts.co",                      // whois -h whois.iana.org shoes
+	"shriram":                  "",                                     // (not found)
 	"si":                       "whois.arnes.si",                       // whois -h whois.iana.org si
 	"singles":                  "whois.donuts.co",                      // whois -h whois.iana.org singles
 	"sj":                       "whois.norid.no",                       // Override: http://www.norid.no/navnepolitikk.en.html#link1
