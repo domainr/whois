@@ -56,6 +56,7 @@ var zones = map[string]string{
 	"az":                       "www.whois.az",                         // Override: web (POST)
 	"ba":                       "nic.ba",                               // Override: web (POST)
 	"band":                     "whois.rightside.co",                   // whois -h whois.iana.org band
+	"bank":                     "whois.nic.bank",                       // whois -h whois.iana.org bank
 	"bar":                      "whois.nic.bar",                        // whois -h whois.iana.org bar
 	"bargains":                 "whois.donuts.co",                      // whois -h whois.iana.org bargains
 	"bayern":                   "whois-dub.mm-registry.com",            // whois -h whois.iana.org bayern
@@ -259,6 +260,7 @@ var zones = map[string]string{
 	"firmdale":                 "whois.nic.firmdale",                   // whois -h whois.iana.org firmdale
 	"fish":                     "whois.donuts.co",                      // whois -h whois.iana.org fish
 	"fishing":                  "whois-dub.mm-registry.com",            // whois -h whois.iana.org fishing
+	"fit":                      "whois-dub.mm-registry.com",            // whois -h whois.iana.org fit
 	"fitness":                  "whois.donuts.co",                      // whois -h whois.iana.org fitness
 	"fj":                       "domains.fj",                           // Override: web
 	"fk":                       "whois.marcaria.com",                   // Override: web
@@ -390,6 +392,7 @@ var zones = map[string]string{
 	"jpn.com":                  "whois.centralnic.com",                 // Override: Ruby Whois
 	"juegos":                   "whois.uniregistry.net",                // whois -h whois.iana.org juegos
 	"kaufen":                   "whois.unitedtld.com",                  // whois -h whois.iana.org kaufen
+	"kddi":                     "whois.nic.gmo",                        // whois -h whois.iana.org kddi
 	"ke":                       "whois.kenic.or.ke",                    // whois -h whois.iana.org ke
 	"kg":                       "whois.domain.kg",                      // whois -h whois.iana.org kg
 	"kh":                       "",                                     // (not found)
@@ -411,6 +414,7 @@ var zones = map[string]string{
 	"la":                       "whois.nic.la",                         // whois -h whois.iana.org la
 	"lacaixa":                  "whois.nic.lacaixa",                    // whois -h whois.iana.org lacaixa
 	"land":                     "whois.donuts.co",                      // whois -h whois.iana.org land
+	"lat":                      "whois.nic.lat",                        // whois -h whois.iana.org lat
 	"latrobe":                  "whois.nic.latrobe",                    // whois -h whois.iana.org latrobe
 	"lawyer":                   "whois.rightside.co",                   // whois -h whois.iana.org lawyer
 	"lb":                       "www.aub.edu.lb",                       // Override: web
@@ -637,7 +641,7 @@ var zones = map[string]string{
 	"shiksha":                  "whois.afilias.net",                    // whois -h whois.iana.org shiksha
 	"shoes":                    "whois.donuts.co",                      // whois -h whois.iana.org shoes
 	"shriram":                  "whois.afilias-srs.net",                // whois -h whois.iana.org shriram
-	"si":                       "whois.arnes.si",                       // whois -h whois.iana.org si
+	"si":                       "whois.register.si",                    // whois -h whois.iana.org si
 	"singles":                  "whois.donuts.co",                      // whois -h whois.iana.org singles
 	"sj":                       "whois.norid.no",                       // Override: http://www.norid.no/navnepolitikk.en.html#link1
 	"sk":                       "whois.sk-nic.sk",                      // whois -h whois.iana.org sk
@@ -752,7 +756,7 @@ var zones = map[string]string{
 	"wed":                      "whois.nic.wed",                        // whois -h whois.iana.org wed
 	"wedding":                  "whois-dub.mm-registry.com",            // whois -h whois.iana.org wedding
 	"wf":                       "whois.nic.wf",                         // whois -h whois.iana.org wf
-	"whoswho":                  "",                                     // (not found)
+	"whoswho":                  "whois.nic.whoswho",                    // whois -h whois.iana.org whoswho
 	"wien":                     "whois.nic.wien",                       // whois -h whois.iana.org wien
 	"wiki":                     "whois.nic.wiki",                       // whois -h whois.iana.org wiki
 	"williamhill":              "",                                     // (not found)
