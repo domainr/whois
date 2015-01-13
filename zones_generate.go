@@ -220,37 +220,9 @@ func main() {
 }
 
 func main1() error {
-	var input io.Reader = os.Stdin
-
-	if url != "" {
-		fmt.Fprintf(os.Stderr, "Fetching %s\n", url)
-		res, err := http.Get(url)
-		if err != nil {
-			return err
-		}
-		if res.StatusCode != http.StatusOK {
-			return fmt.Errorf("Bad GET status for %s: %d", url, res.Status)
-		}
-		input = res.Body
-		defer res.Body.Close()
-	}
-
-	zoneMap := make(map[string]zoneWhois)
-
-	fmt.Fprintf(os.Stderr, "Parsing root.zone\n")
-	for token := range dns.ParseZone(input, "", "") {
-		if token.Error != nil {
-			return token.Error
-		}
-		header := token.RR.Header()
-		if header.Rrtype != dns.TypeNS {
-			continue
-		}
-		domain := strings.TrimSuffix(strings.ToLower(header.Name), ".")
-		if domain == "" {
-			continue
-		}
-		zoneMap[domain] = zoneWhois{}
+	zoneMap, err := fetchRootZone(url)
+	if err != nil {
+		return err
 	}
 
 	// Inject override zones
@@ -426,6 +398,43 @@ var zones = map[string]string{
 
 	_, err = f.Write(formatted)
 	return err
+}
+
+func fetchRootZone(url string) (map[string]zoneWhois, error) {
+	var input io.Reader = os.Stdin
+
+	if url != "" {
+		fmt.Fprintf(os.Stderr, "Fetching %s\n", url)
+		res, err := http.Get(url)
+		if err != nil {
+			return nil, err
+		}
+		if res.StatusCode != http.StatusOK {
+			return nil, fmt.Errorf("Bad GET status for %s: %d", url, res.Status)
+		}
+		input = res.Body
+		defer res.Body.Close()
+	}
+
+	zoneMap := make(map[string]zoneWhois)
+
+	fmt.Fprintf(os.Stderr, "Parsing root.zone\n")
+	for token := range dns.ParseZone(input, "", "") {
+		if token.Error != nil {
+			return nil, token.Error
+		}
+		header := token.RR.Header()
+		if header.Rrtype != dns.TypeNS {
+			continue
+		}
+		domain := strings.TrimSuffix(strings.ToLower(header.Name), ".")
+		if domain == "" {
+			continue
+		}
+		zoneMap[domain] = zoneWhois{}
+	}
+	
+	return zoneMap, nil
 }
 
 func querySocket(addr, query string) (string, error) {
