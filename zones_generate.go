@@ -4,13 +4,16 @@ package main
 
 import (
 	"bytes"
+	"encoding/json"
 	"flag"
 	"fmt"
 	"go/format"
+	"golang.org/x/net/idna"
 	"io"
 	"io/ioutil"
 	"net"
 	"net/http"
+	"net/url"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -27,7 +30,7 @@ type override struct {
 	msg    string
 }
 
-var overrides = map[string]override{
+var baseOverrides = map[string]override{
 	"al":               override{"www.akep.al", "web (CAPTCHA) http://www.akep.al/sq/kerkoni-domain"},
 	"ar":               override{"nic.ar", "web (CAPTCHA)"},
 	"az":               override{"www.whois.az", "web (POST)"},
@@ -90,73 +93,6 @@ var overrides = map[string]override{
 	"xn--xkc2al3hye2a": override{"whois.nic.lk", "Sri Lanka"},
 	"za":               override{"whois.registry.net.za", "http://en.wikipedia.org/wiki/.za"},
 	"zw":               override{"www.zispa.org.zw", "web"},
-
-	// From Ruby Whois
-	// https://github.com/weppos/whois/blob/master/data/tld.json
-	"ae.org":                   override{"whois.centralnic.com", "Ruby Whois"},
-	"ar.com":                   override{"whois.centralnic.com", "Ruby Whois"},
-	"br.com":                   override{"whois.centralnic.com", "Ruby Whois"},
-	"cn.com":                   override{"whois.centralnic.com", "Ruby Whois"},
-	"com.de":                   override{"whois.centralnic.com", "Ruby Whois"},
-	"de.com":                   override{"whois.centralnic.com", "Ruby Whois"},
-	"eu.com":                   override{"whois.centralnic.com", "Ruby Whois"},
-	"gb.com":                   override{"whois.centralnic.com", "Ruby Whois"},
-	"gb.net":                   override{"whois.centralnic.com", "Ruby Whois"},
-	"gr.com":                   override{"whois.centralnic.com", "Ruby Whois"},
-	"hu.com":                   override{"whois.centralnic.com", "Ruby Whois"},
-	"jp.net":                   override{"whois.centralnic.com", "Ruby Whois"},
-	"jpn.com":                  override{"whois.centralnic.com", "Ruby Whois"},
-	"kr.com":                   override{"whois.centralnic.com", "Ruby Whois"},
-	"no.com":                   override{"whois.centralnic.com", "Ruby Whois"},
-	"qc.com":                   override{"whois.centralnic.com", "Ruby Whois"},
-	"ru.com":                   override{"whois.centralnic.com", "Ruby Whois"},
-	"sa.com":                   override{"whois.centralnic.com", "Ruby Whois"},
-	"se.com":                   override{"whois.centralnic.com", "Ruby Whois"},
-	"se.net":                   override{"whois.centralnic.com", "Ruby Whois"},
-	"uk.com":                   override{"whois.centralnic.com", "Ruby Whois"},
-	"uk.net":                   override{"whois.centralnic.com", "Ruby Whois"},
-	"us.com":                   override{"whois.centralnic.com", "Ruby Whois"},
-	"us.org":                   override{"whois.centralnic.com", "Ruby Whois"},
-	"uy.com":                   override{"whois.centralnic.com", "Ruby Whois"},
-	"za.com":                   override{"whois.centralnic.com", "Ruby Whois"},
-	"za.net":                   override{"whois.za.net", "Ruby Whois"},
-	"eu.org":                   override{"whois.eu.org", "Ruby Whois"},
-	"za.org":                   override{"whois.za.org", "Ruby Whois"},
-	"e164.arpa":                override{"whois.ripe.net", "Ruby Whois"},
-	"in-addr.arpa":             override{"", "Ruby Whois"},
-	"priv.at":                  override{"whois.nic.priv.at", "Ruby Whois"},
-	"co.ca":                    override{"whois.co.ca", "Ruby Whois"},
-	"edu.cn":                   override{"whois.edu.cn", "Ruby Whois"},
-	"aeroport.fr":              override{"whois.smallregistry.net", "Ruby Whois"},
-	"avocat.fr":                override{"whois.smallregistry.net", "Ruby Whois"},
-	"chambagri.fr":             override{"whois.smallregistry.net", "Ruby Whois"},
-	"chirurgiens-dentistes.fr": override{"whois.smallregistry.net", "Ruby Whois"},
-	"experts-comptables.fr":    override{"whois.smallregistry.net", "Ruby Whois"},
-	"geometre-expert.fr":       override{"whois.smallregistry.net", "Ruby Whois"},
-	"medecin.fr":               override{"whois.smallregistry.net", "Ruby Whois"},
-	"notaires.fr":              override{"whois.smallregistry.net", "Ruby Whois"},
-	"pharmacien.fr":            override{"whois.smallregistry.net", "Ruby Whois"},
-	"port.fr":                  override{"whois.smallregistry.net", "Ruby Whois"},
-	"veterinaire.fr":           override{"whois.smallregistry.net", "Ruby Whois"},
-	"co.pl":                    override{"whois.co.pl", "Ruby Whois"},
-	"edu.ru":                   override{"whois.informika.ru", "Ruby Whois"},
-	"in.ua":                    override{"whois.in.ua", "Ruby Whois"},
-	"ac.uk":                    override{"whois.ja.net", "Ruby Whois"},
-	"bl.uk":                    override{"", "Ruby Whois"},
-	"british-library.uk":       override{"", "Ruby Whois"},
-	"gov.uk":                   override{"whois.ja.net", "Ruby Whois"},
-	"icnet.uk":                 override{"", "Ruby Whois"},
-	"jet.uk":                   override{"", "Ruby Whois"},
-	"mod.uk":                   override{"", "Ruby Whois"},
-	"nhs.uk":                   override{"", "Ruby Whois"},
-	"nls.uk":                   override{"", "Ruby Whois"},
-	"parliament.uk":            override{"", "Ruby Whois"},
-	"police.uk":                override{"", "Ruby Whois"},
-	"com.uy":                   override{"nic.anteldata.com.uy", "https://nic.anteldata.com.uy/dns/consultaWhois/whois.action"},
-	"ac.za":                    override{"whois.ac.za", "Ruby Whois"},
-	"co.za":                    override{"whois.registry.net.za", "Ruby Whois"},
-	"gov.za":                   override{"whois.gov.za", "Ruby Whois"},
-	"org.za":                   override{"whois.org.za", "Ruby Whois"},
 }
 
 type source int
@@ -184,7 +120,9 @@ type zoneWhois struct {
 }
 
 var (
-	url, server    string
+	rootZoneURL    string
+	overrideURL    string
+	server         string
 	v, quick       bool
 	concurrency    int
 	dnsClient      = &dns.Client{Net: "tcp"}
@@ -195,10 +133,16 @@ var (
 
 func init() {
 	flag.StringVar(
-		&url,
-		"url",
+		&rootZoneURL,
+		"root",
 		"http://www.internic.net/domain/root.zone",
-		"URL of the IANA root zone file. If empty, read from stdin",
+		"URL of the IANA root zone file, or - to read from stdin",
+	)
+	flag.StringVar(
+		&overrideURL,
+		"override",
+		"https://github.com/weppos/whois/raw/master/data/tld.json",
+		"URL of the Ruby Whois tld.json override file, or - to read from stdin",
 	)
 	flag.StringVar(
 		&server,
@@ -220,7 +164,14 @@ func main() {
 }
 
 func main1() error {
-	zoneMap, err := fetchRootZone(url)
+	// Fetch root.zone
+	zoneMap, err := fetchRootZone(rootZoneURL)
+	if err != nil {
+		return err
+	}
+
+	// Fetch overrides
+	overrides, err := fetchOverrides(overrideURL)
 	if err != nil {
 		return err
 	}
@@ -400,20 +351,16 @@ var zones = map[string]string{
 	return err
 }
 
-func fetchRootZone(url string) (map[string]zoneWhois, error) {
+func fetchRootZone(u string) (map[string]zoneWhois, error) {
 	var input io.Reader = os.Stdin
 
-	if url != "" {
-		fmt.Fprintf(os.Stderr, "Fetching %s\n", url)
-		res, err := http.Get(url)
+	if u != "-" {
+		res, err := fetch(u)
 		if err != nil {
 			return nil, err
 		}
-		if res.StatusCode != http.StatusOK {
-			return nil, fmt.Errorf("Bad GET status for %s: %d", url, res.Status)
-		}
-		input = res.Body
 		defer res.Body.Close()
+		input = res.Body
 	}
 
 	zoneMap := make(map[string]zoneWhois)
@@ -433,8 +380,76 @@ func fetchRootZone(url string) (map[string]zoneWhois, error) {
 		}
 		zoneMap[domain] = zoneWhois{}
 	}
-	
+
 	return zoneMap, nil
+}
+
+func fetchOverrides(u string) (map[string]override, error) {
+	var input io.Reader = os.Stdin
+
+	if u != "-" {
+		res, err := fetch(u)
+		if err != nil {
+			return nil, err
+		}
+		defer res.Body.Close()
+		input = res.Body
+	}
+
+	type rubyOverride struct {
+		Host    string `json:"host"`
+		Adapter string `json:"adapter"`
+		URL     string `json:"url"`
+	}
+	rubyOverrides := make(map[string]rubyOverride)
+
+	fmt.Fprintf(os.Stderr, "Parsing overrides\n")
+	d := json.NewDecoder(input)
+	err := d.Decode(&rubyOverrides)
+	if err != nil {
+		return nil, err
+	}
+
+	// Copy Ruby Whois overrides
+	overrides := make(map[string]override)
+	for d, ro := range rubyOverrides {
+		d = strings.TrimPrefix(d, ".")
+		d, err = idna.ToUnicode(d)
+		if err != nil {
+			return nil, err
+		}
+		o := override{ro.Host, "Ruby Whois"}
+		if ro.URL != "" {
+			o.msg += " (web): " + ro.URL
+			u, err := url.Parse(ro.URL)
+			if err != nil {
+				return nil, err
+			}
+			o.server = u.Host
+		}
+		overrides[d] = o
+	}
+
+	// Inject base overrides
+	for d, o := range baseOverrides {
+		overrides[d] = o
+	}
+
+	fmt.Printf("%d overrides, %d from Ruby Whois\n", len(overrides), len(rubyOverrides))
+
+	return overrides, nil
+}
+
+func fetch(u string) (*http.Response, error) {
+	fmt.Fprintf(os.Stderr, "Fetching %s\n", u)
+	res, err := http.Get(u)
+	if err != nil {
+		return nil, err
+	}
+	if res.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("HTTP error for %s: %d", u, res.Status)
+	}
+	return res, nil
 }
 
 func querySocket(addr, query string) (string, error) {
