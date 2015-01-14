@@ -8,7 +8,6 @@ import (
 	"flag"
 	"fmt"
 	"go/format"
-	"golang.org/x/net/idna"
 	"io"
 	"io/ioutil"
 	"net"
@@ -221,30 +220,30 @@ func main1() error {
 				zw.msg = "Override: " + ov.msg
 			}
 
-			// Second: check IANA
-			res, err := querySocket(server, zone)
-			if err == nil {
-				matches := re.FindStringSubmatch(res)
-				if matches != nil {
-					zw.source |= sourceIANA
-					// Set if not previously found
-					if zw.server == "" {
-						zw.server = matches[1]
-						zw.msg = fmt.Sprintf("whois -h %s %s", server, zw.zone)
-					}
-				}
-			}
-
-			// Third, check whois-servers.net
+			// Check whois-servers.net
 			host := zone + ".whois-servers.net"
 			c, err := queryCNAME(host)
 			// whois-servers.net occasionally returns whois.ripe.net (unusable)
 			if c != "" && c != "whois.ripe.net" && err == nil {
 				zw.source |= sourceDNS
-				// Set if not previously found
-				if zw.server == "" {
+				// Set if equal or not previously found
+				if zw.server == c || zw.server == "" {
 					zw.server = c
 					zw.msg = fmt.Sprintf("dig %s CNAME", host)
+				}
+			}
+
+			// Check IANA
+			res, err := querySocket(server, zone)
+			if err == nil {
+				matches := re.FindStringSubmatch(res)
+				if matches != nil {
+					zw.source |= sourceIANA
+					// Set if equal or not previously found
+					if zw.server == matches[1] || zw.server == "" {
+						zw.server = matches[1]
+						zw.msg = fmt.Sprintf("whois -h %s %s", server, zw.zone)
+					}
 				}
 			}
 		}(zone, i)
@@ -306,11 +305,11 @@ func main1() error {
 	fmt.Fprintf(os.Stderr, "Zones with conflicting data:  %d (%.0f%%)\n",
 		numConflicts, float32(numConflicts)/float32(len(zones))*float32(100))
 	fmt.Fprintf(os.Stderr, "Zones added:                  %d (%.0f%%)\n",
-		numAdded, float32(numChanged)/float32(len(zones))*float32(100))
+		numAdded, float32(numAdded)/float32(len(zones))*float32(100))
 	fmt.Fprintf(os.Stderr, "Zones changed:                %d (%.0f%%)\n",
 		numChanged, float32(numChanged)/float32(len(zones))*float32(100))
 	fmt.Fprintf(os.Stderr, "Zones lost:                   %d (%.0f%%)\n",
-		numLost, float32(numChanged)/float32(len(zones))*float32(100))
+		numLost, float32(numLost)/float32(len(zones))*float32(100))
 
 	// Generate zones.go
 	buf := new(bytes.Buffer)
@@ -413,12 +412,9 @@ func fetchOverrides(u string) (map[string]override, error) {
 	// Copy Ruby Whois overrides
 	overrides := make(map[string]override)
 	for d, ro := range rubyOverrides {
-		d = strings.TrimPrefix(d, ".")
-		d, err = idna.ToUnicode(d)
-		if err != nil {
-			return nil, err
-		}
 		o := override{ro.Host, "Ruby Whois"}
+
+		// Parse host from URL
 		if ro.URL != "" {
 			o.msg += " (web): " + ro.URL
 			u, err := url.Parse(ro.URL)
@@ -426,6 +422,12 @@ func fetchOverrides(u string) (map[string]override, error) {
 				return nil, err
 			}
 			o.server = u.Host
+		}
+
+		// Add to overrides
+		d = strings.TrimPrefix(d, ".")
+		if _, ok := overrides[d]; ok && o.server == "" {
+			continue
 		}
 		overrides[d] = o
 	}
