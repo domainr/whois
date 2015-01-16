@@ -433,6 +433,7 @@ var zones = map[string]string{
 	"lk":                       "whois.nic.lk",                         // Override: http://nic.lk
 	"loans":                    "whois.donuts.co",                      // whois -h whois.iana.org loans
 	"london":                   "whois-lon.mm-registry.com",            // whois -h whois.iana.org london
+	"lotte":                    "whois.nic.gmo",                        // whois -h whois.iana.org lotte
 	"lotto":                    "whois.afilias.net",                    // whois -h whois.iana.org lotto
 	"lr":                       "",                                     // Override: Ruby Whois
 	"ls":                       "www.co.ls",                            // Override: web
@@ -450,6 +451,7 @@ var zones = map[string]string{
 	"mango":                    "whois.mango.coreregistry.net",         // whois -h whois.iana.org mango
 	"market":                   "whois.rightside.co",                   // whois -h whois.iana.org market
 	"marketing":                "whois.donuts.co",                      // whois -h whois.iana.org marketing
+	"marriott":                 "whois.afilias-srs.net",                // whois -h whois.iana.org marriott
 	"mc":                       "",                                     // Override: Ruby Whois
 	"md":                       "whois.nic.md",                         // whois -h whois.iana.org md
 	"me":                       "whois.nic.me",                         // whois -h whois.iana.org me
