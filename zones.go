@@ -420,6 +420,7 @@ var zones = map[string]string{
 	"kred":                     "whois.nic.kred",                       // dig kred.whois-servers.net CNAME
 	"kw":                       "www.kw",                               // Override: web (POST)
 	"ky":                       "kynseweb.messagesecure.com",           // Override: web (POST)
+	"kyoto":                    "whois.nic.tokyo",                      // whois -h whois.iana.org kyoto
 	"kz":                       "whois.nic.kz",                         // whois -h whois.iana.org kz
 	"la":                       "whois.nic.la",                         // whois -h whois.iana.org la
 	"lacaixa":                  "whois.nic.lacaixa",                    // whois -h whois.iana.org lacaixa
