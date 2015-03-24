@@ -443,7 +443,7 @@ var zones = map[string]string{
 	"krd":                      "whois.aridnrs.net.au",                 // whois -h whois.iana.org krd
 	"kred":                     "whois.nic.kred",                       // dig kred.whois-servers.net CNAME
 	"kw":                       "www.kw",                               // Override: web (POST)
-	"ky":                       "kynseweb.messagesecure.com",           // Override: web (POST)
+	"ky":                       "whois.uniregistrar.com",               // Override: https://uniregistry.com/whois
 	"kyoto":                    "whois.nic.tokyo",                      // Override: Ruby Whois
 	"kz":                       "whois.nic.kz",                         // whois -h whois.iana.org kz
 	"la":                       "whois.nic.la",                         // whois -h whois.iana.org la

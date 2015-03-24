@@ -56,7 +56,7 @@ var baseOverrides = map[string]override{
 	"gr":               override{"grweb.ics.forth.gr", "web (CAPTCHA)"},
 	"gt":               override{"www.gt", "web"},
 	"kw":               override{"www.kw", "web (POST)"},
-	"ky":               override{"kynseweb.messagesecure.com", "web (POST)"},
+	"ky":               override{"whois.uniregistrar.com", "https://uniregistry.com/whois"},
 	"lb":               override{"www.aub.edu.lb", "web"},
 	"lc":               override{"www.nic.lc", "web (POST)"},
 	"lk":               override{"whois.nic.lk", "http://nic.lk"},
