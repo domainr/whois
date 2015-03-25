@@ -16,6 +16,7 @@ var zones = map[string]string{
 	"active":                   "whois.afilias-srs.net",                // whois -h whois.iana.org active
 	"actor":                    "whois.unitedtld.com",                  // whois -h whois.iana.org actor
 	"ad":                       "",                                     // Override: Ruby Whois
+	"ads":                      "domain-registry-whois.l.google.com",   // whois -h whois.iana.org ads
 	"adult":                    "whois.afilias-srs.net",                // whois -h whois.iana.org adult
 	"ae":                       "whois.aeda.net.ae",                    // whois -h whois.iana.org ae
 	"ae.org":                   "whois.centralnic.com",                 // dig ae.org.whois-servers.net CNAME
@@ -277,6 +278,7 @@ var zones = map[string]string{
 	"fashion":                  "whois-dub.mm-registry.com",            // whois -h whois.iana.org fashion
 	"feedback":                 "whois.centralnic.com",                 // Override: Ruby Whois
 	"fi":                       "whois.fi",                             // whois -h whois.iana.org fi
+	"film":                     "whois.nic.film",                       // whois -h whois.iana.org film
 	"finance":                  "whois.donuts.co",                      // whois -h whois.iana.org finance
 	"financial":                "whois.donuts.co",                      // whois -h whois.iana.org financial
 	"firmdale":                 "whois.nic.firmdale",                   // whois -h whois.iana.org firmdale
@@ -335,7 +337,9 @@ var zones = map[string]string{
 	"gmo":                      "whois.gmoregistry.net",                // Override: http://en.wikipedia.org/wiki/.gmo
 	"gmx":                      "whois-fe1.gmx.tango.knipp.de",         // whois -h whois.iana.org gmx
 	"gn":                       "",                                     // Override: Ruby Whois
+	"gold":                     "whois.donuts.co",                      // whois -h whois.iana.org gold
 	"goldpoint":                "whois.nic.goldpoint",                  // whois -h whois.iana.org goldpoint
+	"golf":                     "whois.donuts.co",                      // whois -h whois.iana.org golf
 	"goo":                      "whois.nic.gmo",                        // whois -h whois.iana.org goo
 	"goog":                     "domain-registry-whois.l.google.com",   // whois -h whois.iana.org goog
 	"google":                   "domain-registry-whois.l.google.com",   // whois -h whois.iana.org google
@@ -354,8 +358,9 @@ var zones = map[string]string{
 	"gs":                       "whois.nic.gs",                         // whois -h whois.iana.org gs
 	"gt":                       "www.gt",                               // Override: web
 	"gu":                       "gadao.gov.gu",                         // Override: Ruby Whois (web): http://gadao.gov.gu/domainsearch.htm
+	"guge":                     "domain-registry-whois.l.google.com",   // whois -h whois.iana.org guge
 	"guide":                    "whois.donuts.co",                      // whois -h whois.iana.org guide
-	"guitars":                  "whois.donuts.co",                      // Override: Ruby Whois
+	"guitars":                  "whois.uniregistry.net",                // whois -h whois.iana.org guitars
 	"guru":                     "whois.donuts.co",                      // whois -h whois.iana.org guru
 	"gw":                       "",                                     // Override: Ruby Whois
 	"gy":                       "whois.registry.gy",                    // whois -h whois.iana.org gy
@@ -609,6 +614,7 @@ var zones = map[string]string{
 	"pl":                       "whois.dns.pl",                         // whois -h whois.iana.org pl
 	"place":                    "whois.donuts.co",                      // whois -h whois.iana.org place
 	"plumbing":                 "whois.donuts.co",                      // whois -h whois.iana.org plumbing
+	"plus":                     "whois.donuts.co",                      // whois -h whois.iana.org plus
 	"pm":                       "whois.nic.fr",                         // Override: Ruby Whois
 	"pn":                       "www.government.pn",                    // Override: web (POST)
 	"pohl":                     "whois.ksregistry.net",                 // whois -h whois.iana.org pohl
@@ -760,6 +766,7 @@ var zones = map[string]string{
 	"tools":                    "whois.donuts.co",                      // whois -h whois.iana.org tools
 	"top":                      "whois.nic.top",                        // whois -h whois.iana.org top
 	"toshiba":                  "whois.nic.toshiba",                    // whois -h whois.iana.org toshiba
+	"tours":                    "whois.donuts.co",                      // whois -h whois.iana.org tours
 	"town":                     "whois.donuts.co",                      // whois -h whois.iana.org town
 	"toys":                     "whois.donuts.co",                      // whois -h whois.iana.org toys
 	"tp":                       "",                                     // Override: Ruby Whois
