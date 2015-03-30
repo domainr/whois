@@ -24,6 +24,7 @@ var zones = map[string]string{
 	"aero":                     "whois.aero",                           // whois -h whois.iana.org aero
 	"aeroport.fr":              "whois.smallregistry.net",              // Override: Ruby Whois
 	"af":                       "whois.nic.af",                         // whois -h whois.iana.org af
+	"afl":                      "whois.nic.afl",                        // whois -h whois.iana.org afl
 	"ag":                       "whois.nic.ag",                         // whois -h whois.iana.org ag
 	"agency":                   "whois.donuts.co",                      // whois -h whois.iana.org agency
 	"ai":                       "whois.ai",                             // whois -h whois.iana.org ai
@@ -94,6 +95,7 @@ var zones = map[string]string{
 	"bnpparibas":               "whois.afilias-srs.net",                // whois -h whois.iana.org bnpparibas
 	"bo":                       "whois.nic.bo",                         // whois -h whois.iana.org bo
 	"boats":                    "whois.afilias-srs.net",                // whois -h whois.iana.org boats
+	"bond":                     "whois.nic.bond",                       // whois -h whois.iana.org bond
 	"boo":                      "domain-registry-whois.l.google.com",   // whois -h whois.iana.org boo
 	"boutique":                 "whois.donuts.co",                      // whois -h whois.iana.org boutique
 	"br":                       "whois.registro.br",                    // whois -h whois.iana.org br
@@ -656,6 +658,7 @@ var zones = map[string]string{
 	"realtor":                  "",                                     // Override: Ruby Whois
 	"recipes":                  "whois.donuts.co",                      // whois -h whois.iana.org recipes
 	"red":                      "whois.afilias.net",                    // whois -h whois.iana.org red
+	"redstone":                 "whois.afilias-srs.net",                // whois -h whois.iana.org redstone
 	"rehab":                    "whois.rightside.co",                   // whois -h whois.iana.org rehab
 	"reise":                    "whois.nic.reise",                      // whois -h whois.iana.org reise
 	"reisen":                   "whois.donuts.co",                      // whois -h whois.iana.org reisen
@@ -869,6 +872,7 @@ var zones = map[string]string{
 	"xn--80aswg":               "whois.online.rs.corenic.net",          // Override: Ruby Whois
 	"xn--90a3ac":               "whois.rnids.rs",                       // Override: http://en.wikipedia.org/wiki/.xn--90a3ac
 	"xn--90ais":                "whois.cctld.by",                       // whois -h whois.iana.org xn--90ais
+	"xn--9et52u":               "whois.nic.wang",                       // whois -h whois.iana.org xn--9et52u
 	"xn--b4w605ferd":           "whois.afilias-srs.net",                // whois -h whois.iana.org xn--b4w605ferd
 	"xn--c1avg":                "whois.publicinterestregistry.net",     // whois -h whois.iana.org xn--c1avg
 	"xn--cg4bki":               "whois.kr",                             // whois -h whois.iana.org xn--cg4bki
