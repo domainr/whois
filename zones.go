@@ -204,6 +204,7 @@ var zones = map[string]string{
 	"cx":                       "whois.nic.cx",                         // whois -h whois.iana.org cx
 	"cy":                       "www.nic.cy",                           // Override: web
 	"cymru":                    "whois.nic.cymru",                      // whois -h whois.iana.org cymru
+	"cyou":                     "whois.afilias-srs.net",                // whois -h whois.iana.org cyou
 	"cz":                       "whois.nic.cz",                         // whois -h whois.iana.org cz
 	"dabur":                    "whois.afilias-srs.net",                // whois -h whois.iana.org dabur
 	"dad":                      "domain-registry-whois.l.google.com",   // whois -h whois.iana.org dad
@@ -485,6 +486,7 @@ var zones = map[string]string{
 	"london":                   "whois-lon.mm-registry.com",            // whois -h whois.iana.org london
 	"lotte":                    "whois.nic.lotte",                      // whois -h whois.iana.org lotte
 	"lotto":                    "whois.afilias.net",                    // whois -h whois.iana.org lotto
+	"love":                     "whois.centralnic.com",                 // whois -h whois.iana.org love
 	"lr":                       "",                                     // Override: Ruby Whois
 	"ls":                       "www.co.ls",                            // Override: web
 	"lt":                       "whois.domreg.lt",                      // whois -h whois.iana.org lt
@@ -522,6 +524,7 @@ var zones = map[string]string{
 	"mk":                       "whois.marnet.mk",                      // whois -h whois.iana.org mk
 	"ml":                       "whois.dot.ml",                         // whois -h whois.iana.org ml
 	"mm":                       "whois.nic.mm",                         // dig mm.whois-servers.net CNAME
+	"mma":                      "whois-mma.nic.fr",                     // whois -h whois.iana.org mma
 	"mn":                       "whois.afilias-grs.info",               // dig mn.whois-servers.net CNAME
 	"mo":                       "whois.monic.mo",                       // whois -h whois.iana.org mo
 	"mobi":                     "whois.dotmobiregistry.net",            // whois -h whois.iana.org mobi
@@ -654,6 +657,7 @@ var zones = map[string]string{
 	"qc.com":                   "whois.centralnic.com",                 // dig qc.com.whois-servers.net CNAME
 	"qpon":                     "whois.nic.qpon",                       // dig qpon.whois-servers.net CNAME
 	"quebec":                   "whois.nic.quebec",                     // whois -h whois.iana.org quebec
+	"racing":                   "",                                     // (not found)
 	"re":                       "whois.nic.fr",                         // Override: Ruby Whois
 	"realtor":                  "",                                     // Override: Ruby Whois
 	"recipes":                  "whois.donuts.co",                      // whois -h whois.iana.org recipes
@@ -698,6 +702,7 @@ var zones = map[string]string{
 	"sca":                      "whois.nic.sca",                        // whois -h whois.iana.org sca
 	"scb":                      "whois.nic.scb",                        // whois -h whois.iana.org scb
 	"schmidt":                  "whois.nic.schmidt",                    // whois -h whois.iana.org schmidt
+	"scholarships":             "whois.afilias-srs.net",                // whois -h whois.iana.org scholarships
 	"school":                   "whois.donuts.co",                      // whois -h whois.iana.org school
 	"schule":                   "whois.donuts.co",                      // whois -h whois.iana.org schule
 	"schwarz":                  "",                                     // (not found)
@@ -856,6 +861,7 @@ var zones = map[string]string{
 	"wtf":                      "whois.donuts.co",                      // whois -h whois.iana.org wtf
 	"xin":                      "whois.afilias-srs.net",                // whois -h whois.iana.org xin
 	"xn--1qqw23a":              "whois.ngtld.cn",                       // whois -h whois.iana.org xn--1qqw23a
+	"xn--30rr7y":               "whois.nic.wang",                       // whois -h whois.iana.org xn--30rr7y
 	"xn--3bst00m":              "whois.gtld.knet.cn",                   // whois -h whois.iana.org xn--3bst00m
 	"xn--3ds443g":              "whois.afilias-srs.net",                // whois -h whois.iana.org xn--3ds443g
 	"xn--3e0b707e":             "whois.kr",                             // whois -h whois.iana.org xn--3e0b707e
@@ -915,6 +921,7 @@ var zones = map[string]string{
 	"xn--node":                 "whois.itdc.ge",                        // whois -h whois.iana.org xn--node
 	"xn--nqv7f":                "whois.publicinterestregistry.net",     // whois -h whois.iana.org xn--nqv7f
 	"xn--nqv7fs00ema":          "whois.publicinterestregistry.net",     // whois -h whois.iana.org xn--nqv7fs00ema
+	"xn--nyqy26a":              "",                                     // (not found)
 	"xn--o3cw4h":               "whois.thnic.co.th",                    // whois -h whois.iana.org xn--o3cw4h
 	"xn--ogbpf8fl":             "whois.tld.sy",                         // whois -h whois.iana.org xn--ogbpf8fl
 	"xn--p1acf":                "whois.nic.xn--p1acf",                  // whois -h whois.iana.org xn--p1acf
