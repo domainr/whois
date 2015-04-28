@@ -7,6 +7,22 @@ import (
 	"github.com/nbio/st"
 )
 
+func TestResponse_Text(t *testing.T) {
+	r := NewResponse("google.com", "whois.verisign-grs.com")
+	r.Charset = "utf-8"
+	r.Body = []byte("hello")
+	text, err := r.Text()
+	st.Expect(t, err, nil)
+	st.Expect(t, string(text), "hello")
+}
+
+func TestResponse_String(t *testing.T) {
+	r := NewResponse("google.com", "whois.verisign-grs.com")
+	r.Charset = "utf-8"
+	r.Body = []byte("hello")
+	st.Expect(t, r.String(), "hello")
+}
+
 func TestReadMIME(t *testing.T) {
 	fns, err := whoistest.ResponseFiles()
 	st.Assert(t, err, nil)

@@ -40,17 +40,28 @@ func NewResponse(query, host string) *Response {
 	}
 }
 
-// String returns the response body.
+// String returns a string representation of the response text.
+// Returns an empty string if an error occurs.
 func (res *Response) String() string {
+	text, err := res.Text()
+	if err != nil {
+		return ""
+	}
+	return string(text)
+}
+
+// Text returns the UTF-8 text content from the response body
+// or any errors that occur while decoding.
+func (res *Response) Text() ([]byte, error) {
 	r, err := res.Reader()
 	if err != nil {
-		return ""
+		return nil, err
 	}
-	body, err := ioutil.ReadAll(r)
+	text, err := ioutil.ReadAll(r)
 	if err != nil {
-		return ""
+		return nil, err
 	}
-	return string(body)
+	return text, nil
 }
 
 // Reader returns a new UTF-8 io.Reader for the response body.
