@@ -16,7 +16,7 @@ var arDomains = map[string]string{
 }
 
 type arAdapter struct {
-	DefaultAdapter
+	defaultAdapter
 }
 
 func (a *arAdapter) Prepare(req *Request) error {

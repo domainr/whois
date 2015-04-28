@@ -5,11 +5,11 @@ import (
 )
 
 type verisignAdapter struct {
-	DefaultAdapter
+	defaultAdapter
 }
 
 func (a *verisignAdapter) Prepare(req *Request) error {
-	a.DefaultAdapter.Prepare(req)
+	a.defaultAdapter.Prepare(req)
 	req.Body = []byte(fmt.Sprintf("=%s\r\n", req.Query))
 	return nil
 }

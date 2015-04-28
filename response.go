@@ -40,6 +40,11 @@ func NewResponse(query, host string) *Response {
 	}
 }
 
+// Adapter returns an appropriate Adapter for the Response.
+func (res *Response) Adapter() Adapter {
+	return adapterFor(res.Host)
+}
+
 // String returns a string representation of the response text.
 // Returns an empty string if an error occurs.
 func (res *Response) String() string {
@@ -53,7 +58,7 @@ func (res *Response) String() string {
 // Text returns the UTF-8 text content from the response body
 // or any errors that occur while decoding.
 func (res *Response) Text() ([]byte, error) {
-	return AdapterFor(res.Host).Text(res)
+	return res.Adapter().Text(res)
 }
 
 // Reader returns a new UTF-8 io.Reader for the response body.

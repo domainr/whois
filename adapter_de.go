@@ -5,11 +5,11 @@ import (
 )
 
 type deAdapter struct {
-	DefaultAdapter
+	defaultAdapter
 }
 
 func (a *deAdapter) Prepare(req *Request) error {
-	a.DefaultAdapter.Prepare(req)
+	a.defaultAdapter.Prepare(req)
 	req.Body = []byte(fmt.Sprintf("-T dn,ace %s\r\n", req.Query)) // http://www.denic.de/en/domains/whois-service.html
 	return nil
 }

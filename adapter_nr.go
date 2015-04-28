@@ -6,7 +6,7 @@ import (
 )
 
 type nrAdapter struct {
-	DefaultAdapter
+	defaultAdapter
 }
 
 func (a *nrAdapter) Prepare(req *Request) error {

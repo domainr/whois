@@ -32,5 +32,10 @@ func (req *Request) Prepare() error {
 			return err
 		}
 	}
-	return AdapterFor(req.Host).Prepare(req)
+	return req.Adapter().Prepare(req)
+}
+
+// Adapter returns an appropriate Adapter for the Request.
+func (req *Request) Adapter() Adapter {
+	return adapterFor(req.Host)
 }
