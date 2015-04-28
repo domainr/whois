@@ -28,16 +28,9 @@ func NewRequest(query string) (*Request, error) {
 func (req *Request) Prepare() error {
 	var err error
 	if req.Host == "" {
-		if req.Host, err = Resolve(req.Query); err != nil {
+		if req.Host, err = Server(req.Query); err != nil {
 			return err
 		}
 	}
 	return AdapterFor(req.Host).Prepare(req)
-}
-
-// Fetch performs a prepared Request.
-// Behavior undefined for unprepared Requests.
-// Returns any errors.
-func (req *Request) Fetch() (*Response, error) {
-	return DefaultClient.Fetch(req)
 }

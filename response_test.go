@@ -38,7 +38,7 @@ func TestReadMIME(t *testing.T) {
 func TestPIRRateLimitText(t *testing.T) {
 	req, err := NewRequest("google.org")
 	st.Assert(t, err, nil)
-	res, err := req.Fetch()
+	res, err := DefaultClient.Fetch(req)
 	st.Assert(t, err, nil)
 	st.Expect(t, res.MediaType, "text/plain")
 	st.Expect(t, res.Charset, "windows-1252")

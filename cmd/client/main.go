@@ -31,7 +31,7 @@ func main() {
 		return
 	}
 
-	res, err := req.Fetch()
+	res, err := whois.DefaultClient.Fetch(req)
 	if err != nil {
 		fmt.Println(err)
 		return

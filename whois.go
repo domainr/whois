@@ -8,32 +8,22 @@ import (
 	"github.com/zonedb/zonedb"
 )
 
-// Whois queries a whois server for query and returns the result.
-func Whois(query string) (string, error) {
-	res, err := Fetch(query)
-	if err != nil {
-		return "", err
-	}
-	return res.String(), nil
-}
-
 // Fetch queries a whois server and returns a Response.
 func Fetch(query string) (*Response, error) {
 	req, err := NewRequest(query)
 	if err != nil {
 		return nil, err
 	}
-	return req.Fetch()
+	return DefaultClient.Fetch(req)
 }
 
-// Resolve resolves query to an appropriate whois server.
+// Server returns the whois server for a given query.
 // Returns an error if it cannot resolve query to any known host.
-func Resolve(query string) (string, error) {
+func Server(query string) (string, error) {
 	// Queries on TLDs always against IANA
 	if strings.Index(query, ".") < 0 {
 		return IANA, nil
 	}
-
 	z := zonedb.PublicZone(query)
 	if z == nil {
 		return "", errors.New("No public zone found for " + query)
