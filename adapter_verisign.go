@@ -20,6 +20,7 @@ func init() {
 		"whois.verisign-grs.com",
 		"bzwhois.verisign-grs.com",
 		"ccwhois.verisign-grs.com",
+		"tvwhois.verisign-grs.com",
 		"jobswhois.verisign-grs.com",
 	)
 }
