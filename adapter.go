@@ -11,10 +11,10 @@ type Adapter interface {
 	Text(*Response) ([]byte, error)
 }
 
-// DefaultAdapter is base Adapter for most whois servers.
+// DefaultAdapter is the default Adapter for most whois servers.
 var DefaultAdapter = &defaultAdapter{}
 
-// defaultAdapter represents the base Adapter type for most whois servers.
+// defaultAdapter represents the base Adapter type.
 type defaultAdapter struct{}
 
 // Resolve adapts a Request for a standard whois server.
