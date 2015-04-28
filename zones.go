@@ -6,6 +6,7 @@
 package whois
 
 var zones = map[string]string{
+	"abb":                      "",                                     // (not found)
 	"abbott":                   "whois.afilias-srs.net",                // whois -h whois.iana.org abbott
 	"abogado":                  "whois-dub.mm-registry.com",            // whois -h whois.iana.org abogado
 	"ac":                       "whois.nic.ac",                         // whois -h whois.iana.org ac
@@ -122,7 +123,7 @@ var zones = map[string]string{
 	"camera":                   "whois.donuts.co",                      // whois -h whois.iana.org camera
 	"camp":                     "whois.donuts.co",                      // whois -h whois.iana.org camp
 	"cancerresearch":           "whois.nic.cancerresearch",             // whois -h whois.iana.org cancerresearch
-	"canon":                    "whois.nic.canon",                      // whois -h whois.iana.org canon
+	"canon":                    "whois.nic.gmo",                        // Override: Ruby Whois
 	"capetown":                 "capetown-whois.registry.net.za",       // whois -h whois.iana.org capetown
 	"capital":                  "whois.donuts.co",                      // whois -h whois.iana.org capital
 	"caravan":                  "",                                     // Override: Ruby Whois
@@ -225,7 +226,7 @@ var zones = map[string]string{
 	"dental":                   "whois.donuts.co",                      // whois -h whois.iana.org dental
 	"dentist":                  "whois.rightside.co",                   // whois -h whois.iana.org dentist
 	"desi":                     "whois.ksregistry.net",                 // whois -h whois.iana.org desi
-	"design":                   "whois.nic.design",                     // whois -h whois.iana.org design
+	"design":                   "whois.centralnic.com",                 // Override: Ruby Whois
 	"dev":                      "domain-registry-whois.l.google.com",   // whois -h whois.iana.org dev
 	"diamonds":                 "whois.donuts.co",                      // whois -h whois.iana.org diamonds
 	"diet":                     "whois.uniregistry.net",                // whois -h whois.iana.org diet
@@ -284,7 +285,7 @@ var zones = map[string]string{
 	"fail":                     "whois.donuts.co",                      // whois -h whois.iana.org fail
 	"faith":                    "",                                     // (not found)
 	"fan":                      "whois.centralnic.com",                 // whois -h whois.iana.org fan
-	"fans":                     "whois.nic.fans",                       // whois -h whois.iana.org fans
+	"fans":                     "whois.centralnic.com",                 // Override: Ruby Whois
 	"farm":                     "whois.donuts.co",                      // whois -h whois.iana.org farm
 	"fashion":                  "whois-dub.mm-registry.com",            // whois -h whois.iana.org fashion
 	"feedback":                 "whois.centralnic.com",                 // Override: Ruby Whois
@@ -349,7 +350,7 @@ var zones = map[string]string{
 	"gmx":                      "whois-fe1.gmx.tango.knipp.de",         // whois -h whois.iana.org gmx
 	"gn":                       "",                                     // Override: Ruby Whois
 	"gold":                     "whois.donuts.co",                      // whois -h whois.iana.org gold
-	"goldpoint":                "whois.nic.goldpoint",                  // whois -h whois.iana.org goldpoint
+	"goldpoint":                "whois.nic.gmo",                        // Override: Ruby Whois
 	"golf":                     "whois.donuts.co",                      // whois -h whois.iana.org golf
 	"goo":                      "whois.nic.gmo",                        // whois -h whois.iana.org goo
 	"goog":                     "domain-registry-whois.l.google.com",   // whois -h whois.iana.org goog
@@ -795,7 +796,7 @@ var zones = map[string]string{
 	"tokyo":                    "whois.nic.tokyo",                      // dig tokyo.whois-servers.net CNAME
 	"tools":                    "whois.donuts.co",                      // whois -h whois.iana.org tools
 	"top":                      "whois.nic.top",                        // whois -h whois.iana.org top
-	"toshiba":                  "whois.nic.toshiba",                    // whois -h whois.iana.org toshiba
+	"toshiba":                  "whois.nic.gmo",                        // Override: Ruby Whois
 	"tours":                    "whois.donuts.co",                      // whois -h whois.iana.org tours
 	"town":                     "whois.donuts.co",                      // whois -h whois.iana.org town
 	"toys":                     "whois.donuts.co",                      // whois -h whois.iana.org toys
