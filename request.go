@@ -32,10 +32,7 @@ func (req *Request) Prepare() error {
 			return err
 		}
 	}
-	if err = AdapterFor(req.Host).Prepare(req); err != nil {
-		return err
-	}
-	return nil
+	return AdapterFor(req.Host).Prepare(req)
 }
 
 // Fetch performs a prepared Request.

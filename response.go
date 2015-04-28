@@ -53,15 +53,7 @@ func (res *Response) String() string {
 // Text returns the UTF-8 text content from the response body
 // or any errors that occur while decoding.
 func (res *Response) Text() ([]byte, error) {
-	r, err := res.Reader()
-	if err != nil {
-		return nil, err
-	}
-	text, err := ioutil.ReadAll(r)
-	if err != nil {
-		return nil, err
-	}
-	return text, nil
+	return AdapterFor(res.Host).Text(res)
 }
 
 // Reader returns a new UTF-8 io.Reader for the response body.
