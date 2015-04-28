@@ -25,7 +25,7 @@ func TestPIRRateLimitText(t *testing.T) {
 	res, err := req.Fetch()
 	st.Assert(t, err, nil)
 	st.Expect(t, res.MediaType, "text/plain")
-	st.Expect(t, res.Charset, "iso-8859-1")
+	st.Expect(t, res.Charset, "windows-1252")
 	res.Body = []byte("WHOIS LIMIT EXCEEDED - SEE WWW.PIR.ORG/WHOIS FOR DETAILS\n")
 	res.DetectContentType("")
 	st.Expect(t, res.MediaType, "text/plain")

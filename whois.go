@@ -1,10 +1,11 @@
 package whois
 
-//go:generate go run zones_generate.go
-
 import (
 	"errors"
+	"net/url"
 	"strings"
+
+	"github.com/zonedb/zonedb"
 )
 
 // Whois queries a whois server for query and returns the result.
@@ -28,19 +29,22 @@ func Fetch(query string) (*Response, error) {
 // Resolve resolves query to an appropriate whois server.
 // Returns an error if it cannot resolve query to any known host.
 func Resolve(query string) (string, error) {
-	labels := strings.Split(query, ".")
-
 	// Queries on TLDs always against IANA
-	if len(labels) == 1 {
+	if strings.Index(query, ".") < 0 {
 		return IANA, nil
 	}
 
-	// Otherwise, query zones map
-	for i := 0; i < len(labels); i++ {
-		if host, ok := zones[strings.Join(labels[i:], ".")]; ok {
-			return host, nil
-		}
+	z := zonedb.PublicZone(query)
+	if z == nil {
+		return "", errors.New("No public zone found for " + query)
 	}
-
+	host := z.WhoisServer()
+	if host != "" {
+		return host, nil
+	}
+	u, err := url.Parse(z.WhoisURL())
+	if err == nil {
+		return u.Host, nil
+	}
 	return "", errors.New("No whois server found for " + query)
 }
