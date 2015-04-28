@@ -23,7 +23,7 @@ const (
 // Client represents a whois client. It contains an http.Client, for executing
 // some whois Requests.
 type Client struct {
-	httpClient *http.Client
+	HTTPClient *http.Client
 	timeout    time.Duration
 }
 
@@ -33,14 +33,14 @@ var DefaultClient = NewClient(DefaultTimeout)
 
 // NewClient creates and initializes a new Client with the specified timeout.
 func NewClient(timeout time.Duration) *Client {
+	client := &Client{timeout: timeout}
 	transport := &http.Transport{
+		Dial:                  client.Dial,
 		Proxy:                 http.ProxyFromEnvironment,
 		TLSHandshakeTimeout:   timeout,
 		ResponseHeaderTimeout: timeout,
 	}
-	client := &Client{timeout: timeout}
-	transport.Dial = client.Dial
-	client.httpClient = &http.Client{Transport: transport}
+	client.HTTPClient = &http.Client{Transport: transport}
 	return client
 }
 
@@ -88,7 +88,7 @@ func (c *Client) fetchHTTP(req *Request) (*Response, error) {
 	if err != nil {
 		return nil, err
 	}
-	hres, err := c.httpClient.Do(hreq)
+	hres, err := c.HTTPClient.Do(hreq)
 	if err != nil {
 		return nil, err
 	}
