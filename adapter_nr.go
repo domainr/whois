@@ -14,7 +14,7 @@ func (a *nrAdapter) Prepare(req *Request) error {
 	values := url.Values{}
 	values.Set("subdomain", labels[0])
 	values.Set("tld", labels[1])
-	req.URL = "http://cenpac.net.nr/dns/whois.html?" + values.Encode()
+	req.URL = "http://www.cenpac.net.nr/dns/whois.html?" + values.Encode()
 	req.Body = nil // Always override existing request body
 	return nil
 }
@@ -23,5 +23,6 @@ func init() {
 	BindAdapter(
 		&nrAdapter{},
 		"cenpac.net.nr",
+		"www.cenpac.net.nr",
 	)
 }
