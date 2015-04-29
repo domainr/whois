@@ -5,6 +5,8 @@ import (
 	"net/url"
 	"strings"
 
+	"code.google.com/p/cascadia"
+
 	"github.com/PuerkitoBio/goquery"
 )
 
@@ -22,6 +24,8 @@ func (a *nrAdapter) Prepare(req *Request) error {
 	return nil
 }
 
+var nrSelectTR = cascadia.MustCompile("hr+table tr:not(:has(tr))")
+
 func (a *nrAdapter) Text(res *Response) ([]byte, error) {
 	html, err := a.defaultAdapter.Text(res)
 	if err != nil {
@@ -32,7 +36,7 @@ func (a *nrAdapter) Text(res *Response) ([]byte, error) {
 		return nil, err
 	}
 	var buf bytes.Buffer
-	rows := doc.Find("hr+table tr:not(:has(tr))")
+	rows := doc.FindMatcher(nrSelectTR)
 	rows.Each(func(i int, s *goquery.Selection) {
 		buf.WriteString(s.Text())
 		buf.WriteString("\n")
