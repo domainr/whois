@@ -7,7 +7,11 @@ import (
 
 // Adapter contains server-specific code for retrieving and parsing whois data.
 type Adapter interface {
+	// Prepare performs any server-specific modifications of the Request.
 	Prepare(*Request) error
+
+	// Text returns the UTF-8 text of the Response body, stripping off any
+	// excess data, (e.g. HTML) from a web response.
 	Text(*Response) ([]byte, error)
 }
 

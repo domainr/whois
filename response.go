@@ -23,12 +23,19 @@ import (
 
 // Response represents a whois response from a server.
 type Response struct {
-	Query     string
-	Host      string
+	// Query and Host are copied from the Request.
+	Query string
+	Host  string
+
+	// FetchedAt is the date and time the response was fetched from the server.
 	FetchedAt time.Time
+
+	// MediaType and Charset hold the MIME-type and character set of the response body.
 	MediaType string
 	Charset   string
-	Body      []byte
+
+	// Body contains the raw bytes of the network response (minus HTTP headers).
+	Body []byte
 }
 
 // NewResponse initializes a new whois response.
