@@ -23,8 +23,8 @@ const (
 // Client represents a whois client. It contains an http.Client, for executing
 // some whois Requests.
 type Client struct {
+	Dial       func(string, string) (net.Conn, error)
 	HTTPClient *http.Client
-	timeout    time.Duration
 }
 
 // DefaultClient represents a shared whois client with a default timeout, HTTP
@@ -33,27 +33,30 @@ var DefaultClient = NewClient(DefaultTimeout)
 
 // NewClient creates and initializes a new Client with the specified timeout.
 func NewClient(timeout time.Duration) *Client {
-	client := &Client{timeout: timeout}
-	transport := &http.Transport{
-		Dial:                  client.Dial,
+	dial := func(network, address string) (net.Conn, error) {
+		deadline := time.Now().Add(timeout)
+		conn, err := net.DialTimeout(network, address, timeout)
+		if err != nil {
+			return nil, err
+		}
+		conn.SetDeadline(deadline)
+		return conn, nil
+	}
+	c := &Client{
+		Dial:       dial,
+		HTTPClient: &http.Client{},
+	}
+	c.HTTPClient.Transport = &http.Transport{
+		Dial:                  c.dial,
 		Proxy:                 http.ProxyFromEnvironment,
 		TLSHandshakeTimeout:   timeout,
 		ResponseHeaderTimeout: timeout,
 	}
-	client.HTTPClient = &http.Client{Transport: transport}
-	return client
+	return c
 }
 
-// Dial implements the Dial interface, strictly enforcing that cumulative dial +
-// read time is limited to timeout. It applies to both whois and HTTP connections.
-func (c *Client) Dial(network, address string) (net.Conn, error) {
-	deadline := time.Now().Add(c.timeout)
-	conn, err := net.DialTimeout(network, address, c.timeout)
-	if err != nil {
-		return nil, err
-	}
-	conn.SetDeadline(deadline)
-	return conn, nil
+func (c *Client) dial(network, address string) (net.Conn, error) {
+	return c.Dial(network, address)
 }
 
 // Fetch sends the Request to a whois server.
