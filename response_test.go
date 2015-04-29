@@ -29,8 +29,8 @@ func TestReadMIME(t *testing.T) {
 	for _, fn := range fns {
 		// fmt.Printf("%s\n", fn)
 		res, err := ReadMIMEFile(fn)
-		st.Refute(t, res, nil)
-		st.Assert(t, err, nil)
+		st.Reject(t, res, nil)
+		st.Expect(t, err, nil)
 		// fmt.Printf("%#v\n\n", res)
 	}
 }

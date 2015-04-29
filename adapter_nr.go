@@ -1,8 +1,11 @@
 package whois
 
 import (
+	"bytes"
 	"net/url"
 	"strings"
+
+	"github.com/PuerkitoBio/goquery"
 )
 
 type nrAdapter struct {
@@ -17,6 +20,24 @@ func (a *nrAdapter) Prepare(req *Request) error {
 	req.URL = "http://www.cenpac.net.nr/dns/whois.html?" + values.Encode()
 	req.Body = nil // Always override existing request body
 	return nil
+}
+
+func (a *nrAdapter) Text(res *Response) ([]byte, error) {
+	html, err := a.defaultAdapter.Text(res)
+	if err != nil {
+		return nil, err
+	}
+	doc, err := goquery.NewDocumentFromReader(bytes.NewReader(html))
+	if err != nil {
+		return nil, err
+	}
+	var buf bytes.Buffer
+	rows := doc.Find("hr+table tr:not(:has(tr))")
+	rows.Each(func(i int, s *goquery.Selection) {
+		buf.WriteString(s.Text())
+		buf.WriteString("\n")
+	})
+	return buf.Bytes(), nil
 }
 
 func init() {
