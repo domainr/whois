@@ -5,7 +5,7 @@ import (
 	"net/url"
 	"strings"
 
-	"code.google.com/p/cascadia"
+	"github.com/andybalholm/cascadia"
 
 	"github.com/PuerkitoBio/goquery"
 )

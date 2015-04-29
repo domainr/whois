@@ -15,9 +15,9 @@ import (
 	"strings"
 	"time"
 
-	"code.google.com/p/go.net/html/charset"
-	"code.google.com/p/go.text/encoding"
-	"code.google.com/p/go.text/transform"
+	"golang.org/x/net/html/charset"
+	"golang.org/x/text/encoding"
+	"golang.org/x/text/transform"
 	"github.com/saintfish/chardet"
 )
 
