@@ -79,7 +79,7 @@ func (c *Client) Fetch(req *Request) (*Response, error) {
 
 func (c *Client) fetchWhois(req *Request) (*Response, error) {
 	if req.Host == "" {
-		return nil, &FetchError{fmt.Errorf("no whois host for %s", req.Query), "unknown"}
+		return nil, &FetchError{fmt.Errorf("no request host for %s", req.Query), "unknown"}
 	}
 	conn, err := c.Dial("tcp", req.Host+":43")
 	if err != nil {

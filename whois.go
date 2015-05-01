@@ -1,7 +1,7 @@
 package whois
 
 import (
-	"errors"
+	"fmt"
 	"net/url"
 	"strings"
 
@@ -26,15 +26,15 @@ func Server(query string) (string, error) {
 	}
 	z := zonedb.PublicZone(query)
 	if z == nil {
-		return "", errors.New("No public zone found for " + query)
+		return "", fmt.Errorf("no public zone found for %s", query)
 	}
 	host := z.WhoisServer()
 	if host != "" {
 		return host, nil
 	}
 	u, err := url.Parse(z.WhoisURL())
-	if err == nil {
+	if err == nil && u.Host != "" {
 		return u.Host, nil
 	}
-	return "", errors.New("No whois server found for " + query)
+	return "", fmt.Errorf("no whois server found for %s", query)
 }

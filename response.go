@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"crypto/sha1"
 	"encoding/hex"
-	"errors"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"mime"
@@ -15,10 +15,10 @@ import (
 	"strings"
 	"time"
 
+	"github.com/saintfish/chardet"
 	"golang.org/x/net/html/charset"
 	"golang.org/x/text/encoding"
 	"golang.org/x/text/transform"
-	"github.com/saintfish/chardet"
 )
 
 // Response represents a whois response from a server.
@@ -81,7 +81,7 @@ func (res *Response) Reader() (io.Reader, error) {
 func (res *Response) Encoding() (encoding.Encoding, error) {
 	enc, _ := charset.Lookup(res.Charset)
 	if enc == nil {
-		return nil, errors.New("No encoding found for " + res.Charset)
+		return nil, fmt.Errorf("no encoding found for %s", res.Charset)
 	}
 	return enc, nil
 }
