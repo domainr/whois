@@ -59,6 +59,16 @@ func (c *Client) dial(network, address string) (net.Conn, error) {
 	return c.Dial(network, address)
 }
 
+// FetchError reports the underlying error and includes the target host of the fetch operation.
+type FetchError struct {
+	Err  error
+	Host string
+}
+
+func (f *FetchError) Error() string {
+	return f.Err.Error()
+}
+
 // Fetch sends the Request to a whois server.
 func (c *Client) Fetch(req *Request) (*Response, error) {
 	if req.URL != "" {
@@ -70,17 +80,17 @@ func (c *Client) Fetch(req *Request) (*Response, error) {
 func (c *Client) fetchWhois(req *Request) (*Response, error) {
 	conn, err := c.Dial("tcp", req.Host+":43")
 	if err != nil {
-		return nil, err
+		return nil, &FetchError{err, req.Host}
 	}
 	defer conn.Close()
 	if _, err = conn.Write(req.Body); err != nil {
 		logError(err)
-		return nil, err
+		return nil, &FetchError{err, req.Host}
 	}
 	res := NewResponse(req.Query, req.Host)
 	if res.Body, err = ioutil.ReadAll(io.LimitReader(conn, DefaultReadLimit)); err != nil {
 		logError(err)
-		return nil, err
+		return nil, &FetchError{err, req.Host}
 	}
 	res.DetectContentType("")
 	return res, nil
@@ -89,16 +99,16 @@ func (c *Client) fetchWhois(req *Request) (*Response, error) {
 func (c *Client) fetchHTTP(req *Request) (*Response, error) {
 	hreq, err := httpRequest(req)
 	if err != nil {
-		return nil, err
+		return nil, &FetchError{err, req.Host}
 	}
 	hres, err := c.HTTPClient.Do(hreq)
 	if err != nil {
-		return nil, err
+		return nil, &FetchError{err, req.Host}
 	}
 	res := NewResponse(req.Query, req.Host)
 	if res.Body, err = ioutil.ReadAll(io.LimitReader(hres.Body, DefaultReadLimit)); err != nil {
 		logError(err)
-		return nil, err
+		return nil, &FetchError{err, req.Host}
 	}
 	res.DetectContentType(hres.Header.Get("Content-Type"))
 	return res, nil
