@@ -1,8 +1,10 @@
-# Whois [![GoDoc](https://godoc.org/github.com/domainr/whois?status.png)](https://godoc.org/github.com/domainr/whois) ![Project Status](http://img.shields.io/badge/status-development-red.svg)
+# Whois
+
+[![Project Status](https://img.shields.io/circleci/project/domainr/whois/master.svg)](https://circleci.com/gh/zonedb/zonedb) [![GoDoc](http://img.shields.io/badge/docs-GoDoc-blue.svg)](https://godoc.org/github.com/domainr/whois)
 
 `go get github.com/domainr/whois`
 
-Whois client for Go (golang), inspired by [Ruby Whois](https://github.com/weppos/whois).
+Whois client for Go (golang), inspired by [Ruby Whois](https://github.com/weppos/whois). Currently in production use at [Domainr](https://domainr.com).
 
 ## Design
 
@@ -36,3 +38,9 @@ if record.Refer != "" {
 - [X] Embed an http.Client in whois.Client to reuse state
 - [ ] Implementations for known HTTP-based whois servers
 - [ ] Parsers
+
+## Credits
+
+This code is made available under an MIT license. See LICENSE for more information.
+
+© 2014 nb.io, LLC
