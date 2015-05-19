@@ -1,3 +1,8 @@
+dependencies:
+  pre:
+    - rm -rf ~/.go_workspace/src/*/*
+    - go get -v -t -u -f github.com/cee-dub/go-junit-report
+
 test:
   override:
     - mkdir -p $CIRCLE_TEST_REPORTS/junit
