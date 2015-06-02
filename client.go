@@ -65,6 +65,7 @@ type FetchError struct {
 	Host string
 }
 
+// Error implements the error interface.
 func (f *FetchError) Error() string {
 	return f.Err.Error()
 }

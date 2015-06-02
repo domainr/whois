@@ -199,12 +199,12 @@ func ReadMIME(r io.Reader) (*Response, error) {
 	if res.FetchedAt, err = time.Parse(time.RFC3339, h.Get("Fetched-At")); err != nil {
 		return res, err
 	}
-	if mt, params, err := mime.ParseMediaType(h.Get("Content-Type")); err != nil {
+	mt, params, err := mime.ParseMediaType(h.Get("Content-Type"))
+	if err != nil {
 		return res, err
-	} else {
-		res.MediaType = mt
-		res.Charset = params["charset"]
 	}
+	res.MediaType = mt
+	res.Charset = params["charset"]
 	return res, nil
 }
 

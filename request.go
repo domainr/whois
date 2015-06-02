@@ -1,6 +1,7 @@
 package whois
 
 const (
+	// IANA is the default whois server for TLDs.
 	IANA = "whois.iana.org"
 )
 
