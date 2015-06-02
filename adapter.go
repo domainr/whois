@@ -1,6 +1,7 @@
 package whois
 
 import (
+	"errors"
 	"fmt"
 	"io/ioutil"
 )
@@ -21,9 +22,15 @@ var DefaultAdapter = &defaultAdapter{}
 // defaultAdapter represents the base Adapter type.
 type defaultAdapter struct{}
 
-// Resolve adapts a Request for a standard whois server.
+// ErrURLNotSupported is returned when an adapter cannot support a given request.
+var ErrURLNotSupported = errors.New("URL not supported")
+
+// Prepare prepares a Request for a standard whois server.
+// Returns an error for requests that use HTTP.
 func (a *defaultAdapter) Prepare(req *Request) error {
-	req.URL = ""
+	if req.URL != "" {
+		return ErrURLNotSupported
+	}
 	req.Body = []byte(fmt.Sprintf("%s\r\n", req.Query))
 	return nil
 }

@@ -29,7 +29,7 @@ func NewRequest(query string) (*Request, error) {
 func (req *Request) Prepare() error {
 	var err error
 	if req.Host == "" {
-		if req.Host, err = Server(req.Query); err != nil {
+		if req.Host, req.URL, err = Server(req.Query); err != nil {
 			return err
 		}
 	}

@@ -17,24 +17,25 @@ func Fetch(query string) (*Response, error) {
 	return DefaultClient.Fetch(req)
 }
 
-// Server returns the whois server for a given query.
+// Server returns the whois server and optional URL for a given query.
 // Returns an error if it cannot resolve query to any known host.
-func Server(query string) (string, error) {
+func Server(query string) (string, string, error) {
 	// Queries on TLDs always against IANA
 	if strings.Index(query, ".") < 0 {
-		return IANA, nil
+		return IANA, "", nil
 	}
 	z := zonedb.PublicZone(query)
 	if z == nil {
-		return "", fmt.Errorf("no public zone found for %s", query)
+		return "", "", fmt.Errorf("no public zone found for %s", query)
 	}
 	host := z.WhoisServer()
+	wu := z.WhoisURL()
 	if host != "" {
-		return host, nil
+		return host, wu, nil
 	}
-	u, err := url.Parse(z.WhoisURL())
+	u, err := url.Parse(wu)
 	if err == nil && u.Host != "" {
-		return u.Host, nil
+		return u.Host, wu, nil
 	}
-	return "", fmt.Errorf("no whois server found for %s", query)
+	return "", "", fmt.Errorf("no whois server found for %s", query)
 }
