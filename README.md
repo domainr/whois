@@ -13,7 +13,7 @@ func whois.Whois(query string) *whois.Record  // Fetches and returns a fully-par
 
 request = whois.NewRequest(query)             // Returns a prepared whois.Request
 response = whois.DefaultClient.Fetch(request) // Fetches the request, returns a whois.Response
-record = response.Parse()                     // Parses the response, returns a whois.Record
+record = response.Parse()                     // (not implemented yet) Parses the response, returns a whois.Record
 
 whois.Request — represents a qualified whois request, including server, URL, and request body
 whois.Response — intermediate record, raw response from a whois server for a given query
@@ -26,7 +26,7 @@ whois.Record — parsed whois response; structured data
 query := "domai.nr"
 request, err := whois.NewRequest(query)
 response, err := whois.DefaultClient.Fetch(request)
-record, err := response.Parse()
+record, err := response.Parse() // not implemented yet
 if record.Refer != "" {
   response = whois.FetchRefer(record)
 }
