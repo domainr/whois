@@ -1,6 +1,6 @@
 # Whois
 
-[![Project Status](https://img.shields.io/circleci/project/domainr/whois/master.svg)](https://circleci.com/gh/zonedb/zonedb) [![GoDoc](http://img.shields.io/badge/docs-GoDoc-blue.svg)](https://godoc.org/github.com/domainr/whois)
+[![Project Status](https://img.shields.io/circleci/project/domainr/whois/master.svg)](https://circleci.com/gh/domainr/whois) [![GoDoc](http://img.shields.io/badge/docs-GoDoc-blue.svg)](https://godoc.org/github.com/domainr/whois)
 
 `go get github.com/domainr/whois`
 
