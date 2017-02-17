@@ -8,7 +8,6 @@ import (
 	"net"
 	"net/http"
 	"os"
-	"syscall"
 	"time"
 )
 
@@ -137,8 +136,6 @@ func httpRequest(req *Request) (*http.Request, error) {
 
 func logError(err error) {
 	switch t := err.(type) {
-	case syscall.Errno:
-		fmt.Fprintf(os.Stderr, "syscall.Errno %d: %s\n", t, err.Error())
 	case net.Error:
 		fmt.Fprintf(os.Stderr, "net.Error timeout=%t, temp=%t: %s\n", t.Timeout(), t.Temporary(), err.Error())
 	default:
