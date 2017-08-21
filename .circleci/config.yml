@@ -1,0 +1,25 @@
+version: 2
+jobs:
+  build:
+    working_directory: /go/src/github.com/domainr/whois
+    docker:
+      - image: circleci/golang:1.8
+    steps:
+      - checkout
+      - run:
+          name: Install JUnit
+          command: go get -v -t -u -f github.com/cee-dub/go-junit-report
+      - run:
+          name: go get
+          command: go get -t -d -v ./...
+      - run:
+          name: go build
+          command: go build -v
+      - run: mkdir -p ~/junit
+      - run:
+          name: Run unit tests
+          command: (set -o pipefail && go test -v ./... -race | go-junit-report -dir ~/junit)
+      - store_test_results:
+          path: ~/junit
+      - store_artifacts:
+          path: ~/junit
