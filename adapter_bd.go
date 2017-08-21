@@ -6,7 +6,7 @@ import (
 )
 
 type bdAdapter struct {
-	DefaultAdapter
+	defaultAdapter
 }
 
 func (a *bdAdapter) Prepare(req *Request) error {

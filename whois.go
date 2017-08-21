@@ -1,18 +1,12 @@
 package whois
 
 import (
-	"errors"
+	"fmt"
+	"net/url"
 	"strings"
-)
 
-// Whois queries a whois server for query and returns the result.
-func Whois(query string) (string, error) {
-	res, err := Fetch(query)
-	if err != nil {
-		return "", err
-	}
-	return res.String(), nil
-}
+	"github.com/zonedb/zonedb"
+)
 
 // Fetch queries a whois server and returns a Response.
 func Fetch(query string) (*Response, error) {
@@ -20,25 +14,28 @@ func Fetch(query string) (*Response, error) {
 	if err != nil {
 		return nil, err
 	}
-	return req.Fetch()
+	return DefaultClient.Fetch(req)
 }
 
-// Resolve resolves query to an appropriate whois server.
+// Server returns the whois server and optional URL for a given query.
 // Returns an error if it cannot resolve query to any known host.
-func Resolve(query string) (string, error) {
-	labels := strings.Split(query, ".")
-
+func Server(query string) (string, string, error) {
 	// Queries on TLDs always against IANA
-	if len(labels) == 1 {
-		return IANA, nil
+	if strings.Index(query, ".") < 0 {
+		return IANA, "", nil
 	}
-
-	// Otherwise, query zones map
-	for i := 0; i < len(labels); i++ {
-		if host, ok := zones[strings.Join(labels[i:], ".")]; ok {
-			return host, nil
-		}
+	z := zonedb.PublicZone(query)
+	if z == nil {
+		return "", "", fmt.Errorf("no public zone found for %s", query)
 	}
-
-	return "", errors.New("No whois server found for " + query)
+	host := z.WhoisServer()
+	wu := z.WhoisURL()
+	if host != "" {
+		return host, wu, nil
+	}
+	u, err := url.Parse(wu)
+	if err == nil && u.Host != "" {
+		return u.Host, wu, nil
+	}
+	return "", "", fmt.Errorf("no whois server found for %s", query)
 }

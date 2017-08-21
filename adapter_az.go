@@ -5,7 +5,7 @@ import (
 )
 
 type azAdapter struct {
-	DefaultAdapter
+	defaultAdapter
 }
 
 func (a *azAdapter) Prepare(req *Request) error {

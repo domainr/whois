@@ -4,30 +4,38 @@ import (
 	"bytes"
 	"crypto/sha1"
 	"encoding/hex"
-	"errors"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"mime"
 	"net/http"
 	"net/mail"
+	"os"
 	"strconv"
 	"strings"
 	"time"
 
-	"code.google.com/p/go.net/html/charset"
-	"code.google.com/p/go.text/encoding"
-	"code.google.com/p/go.text/transform"
 	"github.com/saintfish/chardet"
+	"golang.org/x/net/html/charset"
+	"golang.org/x/text/encoding"
+	"golang.org/x/text/transform"
 )
 
 // Response represents a whois response from a server.
 type Response struct {
-	Query     string
-	Host      string
+	// Query and Host are copied from the Request.
+	Query string
+	Host  string
+
+	// FetchedAt is the date and time the response was fetched from the server.
 	FetchedAt time.Time
+
+	// MediaType and Charset hold the MIME-type and character set of the response body.
 	MediaType string
 	Charset   string
-	Body      []byte
+
+	// Body contains the raw bytes of the network response (minus HTTP headers).
+	Body []byte
 }
 
 // NewResponse initializes a new whois response.
@@ -40,17 +48,25 @@ func NewResponse(query, host string) *Response {
 	}
 }
 
-// String returns the response body.
+// Adapter returns an appropriate Adapter for the Response.
+func (res *Response) Adapter() Adapter {
+	return adapterFor(res.Host)
+}
+
+// String returns a string representation of the response text.
+// Returns an empty string if an error occurs.
 func (res *Response) String() string {
-	r, err := res.Reader()
+	text, err := res.Text()
 	if err != nil {
 		return ""
 	}
-	body, err := ioutil.ReadAll(r)
-	if err != nil {
-		return ""
-	}
-	return string(body)
+	return string(text)
+}
+
+// Text returns the UTF-8 text content from the response body
+// or any errors that occur while decoding.
+func (res *Response) Text() ([]byte, error) {
+	return res.Adapter().Text(res)
 }
 
 // Reader returns a new UTF-8 io.Reader for the response body.
@@ -66,7 +82,7 @@ func (res *Response) Reader() (io.Reader, error) {
 func (res *Response) Encoding() (encoding.Encoding, error) {
 	enc, _ := charset.Lookup(res.Charset)
 	if enc == nil {
-		return nil, errors.New("No encoding found for " + res.Charset)
+		return nil, fmt.Errorf("no encoding found for %s", res.Charset)
 	}
 	return enc, nil
 }
@@ -170,11 +186,22 @@ func ReadMIME(r io.Reader) (*Response, error) {
 	if res.FetchedAt, err = time.Parse(time.RFC3339, h.Get("Fetched-At")); err != nil {
 		return res, err
 	}
-	if mt, params, err := mime.ParseMediaType(h.Get("Content-Type")); err != nil {
+	mt, params, err := mime.ParseMediaType(h.Get("Content-Type"))
+	if err != nil {
 		return res, err
-	} else {
-		res.MediaType = mt
-		res.Charset = params["charset"]
 	}
+	res.MediaType = mt
+	res.Charset = params["charset"]
 	return res, nil
+}
+
+// ReadMIMEFile opens and reads a response MIME file at path.
+// Returns any errors.
+func ReadMIMEFile(path string) (*Response, error) {
+	f, err := os.Open(path)
+	if err != nil {
+		return nil, err
+	}
+	defer f.Close()
+	return ReadMIME(f)
 }
