@@ -3,7 +3,7 @@ jobs:
   build:
     working_directory: /go/src/github.com/domainr/whois
     docker:
-      - image: circleci/golang:1.8
+      - image: golang:1.8
     steps:
       - checkout
       - run:
