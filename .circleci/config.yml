@@ -8,7 +8,7 @@ jobs:
       - checkout
       - run:
           name: Install JUnit
-          command: go get -v -t -u -f github.com/cee-dub/go-junit-report
+          command: go get -v -t -u -f github.com/jstemmer/go-junit-report
       - run:
           name: go get
           command: go get -t -d -v ./...
@@ -18,7 +18,7 @@ jobs:
       - run: mkdir -p ~/junit
       - run:
           name: Run unit tests
-          command: (set -o pipefail && go test -v ./... -race | go-junit-report -dir ~/junit)
+          command: (set -o pipefail && go test -v ./... -race | go-junit-report > ~/junit/whois.xml)
       - store_test_results:
           path: ~/junit
       - store_artifacts:
