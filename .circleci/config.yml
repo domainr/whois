@@ -12,11 +12,18 @@ jobs:
       - run:
           name: go build
           command: go build -v
-      - run: mkdir -p ~/junit
+
+      # Run Tests
+      - run: mkdir -p /tmp/test-results
       - run:
-          name: Run unit tests
-          command: (set -o pipefail && go test -v ./... -race | go-junit-report > ~/junit/whois.xml)
+          name: Run Tests
+          command: |
+            trap "go-junit-report < ${TEST_RESULTS}/go-test.log > ${TEST_RESULTS}/go-test-report.xml" EXIT
+            go test -v -race ./... | tee ${TEST_RESULTS}/go-test.log
+
+      # Report
       - store_test_results:
-          path: ~/junit
+          path: /tmp/test-results
       - store_artifacts:
-          path: ~/junit
+          path: /tmp/test-results
+          destination: results
