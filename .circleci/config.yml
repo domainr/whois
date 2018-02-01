@@ -3,12 +3,9 @@ jobs:
   build:
     working_directory: /go/src/github.com/domainr/whois
     docker:
-      - image: circleci/golang:1.9
+      - image: domainr/ci:latest
     steps:
       - checkout
-      - run:
-          name: Install JUnit
-          command: go get -v -t -u -f github.com/jstemmer/go-junit-report
       - run:
           name: go get
           command: go get -t -d -v ./...
