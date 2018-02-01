@@ -14,16 +14,16 @@ jobs:
           command: go build -v
 
       # Run Tests
-      - run: mkdir -p /tmp/test-results
+      - run: mkdir -p test-results
       - run:
           name: Run Tests
           command: |
-            trap "go-junit-report < ${TEST_RESULTS}/go-test.log > ${TEST_RESULTS}/go-test-report.xml" EXIT
-            go test -v -race ./... | tee ${TEST_RESULTS}/go-test.log
+            trap "go-junit-report < test-results/go-test.log > test-results/go-test-report.xml" EXIT
+            go test -v -race ./... | tee test-results/go-test.log
 
       # Report
       - store_test_results:
-          path: /tmp/test-results
+          path: test-results
       - store_artifacts:
-          path: /tmp/test-results
+          path: test-results
           destination: results
