@@ -1,9 +1,9 @@
 version: 2
 jobs:
   build:
-    working_directory: /go/src/github.com/domainr/whois
+    working_directory: ~/go/src/github.com/domainr/whois
     docker:
-      - image: domainr/ci:latest
+      - image: domainr/ci:swan
     steps:
       - checkout
       - run:
