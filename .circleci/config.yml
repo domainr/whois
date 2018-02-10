@@ -6,14 +6,10 @@ jobs:
       - image: domainr/ci:swan
     steps:
       - checkout
-      - run:
-          name: go get
-          command: go get -t -d -v ./...
-      - run:
-          name: go build
-          command: go build -v
+      - run: go get -t -d -v ./...
+      - run: go build -v
 
-      # Run Tests
+      # Run tests
       - run: mkdir -p test-results
       - run:
           name: Run Tests
