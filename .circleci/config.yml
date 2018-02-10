@@ -11,11 +11,9 @@ jobs:
 
       # Run tests
       - run: mkdir -p test-results
-      - run:
-          name: Run Tests
-          command: |
-            trap "go-junit-report < test-results/go-test.log > test-results/go-test-report.xml" EXIT
-            go test -v -race ./... | tee test-results/go-test.log
+      - run: |
+          trap "go-junit-report < test-results/go-test.log > test-results/go-test-report.xml" EXIT
+          go test -v -race -bench . ./... | tee test-results/go-test.log
 
       # Report
       - store_test_results:
