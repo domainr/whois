@@ -44,6 +44,8 @@ func NewResponse(query, host string) *Response {
 		Query:     query,
 		Host:      host,
 		FetchedAt: time.Now().UTC(),
+		MediaType: "text/plain",
+		Charset:   "utf-8",
 	}
 }
 
@@ -88,10 +90,6 @@ func (res *Response) Encoding() (encoding.Encoding, error) {
 
 // DetectContentType detects and sets the response content type and charset.
 func (res *Response) DetectContentType(ct string) {
-	// Sensible defaults
-	res.MediaType = "text/plain"
-	res.Charset = ""
-
 	// Autodetect if not passed a Content-Type header
 	if ct == "" {
 		ct = http.DetectContentType(res.Body)
