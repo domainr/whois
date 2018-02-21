@@ -74,7 +74,8 @@ Some dummy legal disclaimer
 free text
 more free text
 `
-	rec, err := whois.DefaultParser(strings.NewReader(body))
+	parse := whois.DefaultMapping()(whois.DefaultParser)
+	rec, err := parse(strings.NewReader(body))
 	st.Assert(t, err, nil)
 
 	st.Expect(t, rec.Values.Get("Domain Name"), "EXAMPLE.TLD")

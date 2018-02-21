@@ -17,10 +17,184 @@ func parseTime(in time.Time, err error) time.Time {
 	return in
 }
 
+// ParserMiddleware transform a Parser into another Parser
+type ParserMiddleware func(inner Parser) Parser
+
+// Chain chains multiple ParserMiddleware into a single one
+func Chain(mwares ...ParserMiddleware) ParserMiddleware {
+	return func(inner Parser) Parser {
+		for i := len(mwares) - 1; i >= 0; i-- {
+			inner = mwares[i](inner)
+		}
+		return inner
+	}
+}
+
+// MapDomainInfo returns a ParserMiddleware that
+// map domain related fields specified in
+// ICANN's "2013 Registrar Accreditation Agreement"
+func MapDomainInfo() ParserMiddleware {
+	return func(inner Parser) Parser {
+		return func(r io.Reader) (rec *Record, err error) {
+			rec, err = inner(r)
+
+			// read common fields
+			rec.DomainName = rec.Values.Get("Domain Name")
+			rec.RegistryID = rec.Values.Get("Registry Domain ID")
+			rec.Reseller = rec.Values.Get("Reseller")
+			rec.Updated = parseTime(time.Parse("2006-01-02T15:04:05Z", rec.Values.Get("Updated Date")))
+			rec.Created = parseTime(time.Parse("2006-01-02T15:04:05Z", rec.Values.Get("Creation Date")))
+			rec.DNSSEC = ParseDNSSECState(rec.Values.Get("DNSSEC"))
+			return
+		}
+	}
+}
+
+// MapRegistrarInfo returns a ParserMiddleware that
+// maps Registrar related information
+func MapRegistrarInfo(name, expireField string) ParserMiddleware {
+	return func(inner Parser) Parser {
+		return func(r io.Reader) (rec *Record, err error) {
+			rec, err = inner(r)
+
+			// read Registrar information
+			rec.Registrar = Registrar{
+				Name:              rec.Values.Get(name),
+				IANAID:            rec.Values.Get(name + " IANA ID"),
+				WHOISServer:       rec.Values.Get(name + " WHOIS Server"),
+				URL:               rec.Values.Get(name + " URL"),
+				AbuseContactEmail: rec.Values.Get(name + " Abuse Contact Email"),
+				AbuseContactPhone: rec.Values.Get(name + " Abuse Contact Phone"),
+				RegistrationExpires: parseTime(time.Parse(
+					"2006-01-02T15:04:05Z",
+					rec.Values.Get(expireField),
+				)),
+			}
+			return
+		}
+	}
+}
+
+// ToRegistrant sets a given Contact to a record's Registrant field
+func ToRegistrant(rec *Record, c Contact) {
+	rec.Registrant = c
+}
+
+// ToAdmin sets a given Contact to a record's Tech field
+func ToAdmin(rec *Record, c Contact) {
+	rec.Admin = c
+}
+
+// ToTech sets a given Contact to a record's Tech field
+func ToTech(rec *Record, c Contact) {
+	rec.Tech = c
+}
+
+// MapContact returns a ParserMiddleware that
+// to map domain related fields specified in
+// ICANN's "2013 Registrar Accreditation Agreement"
+func MapContact(name string, mapper func(*Record, Contact)) ParserMiddleware {
+	return func(inner Parser) Parser {
+		return func(r io.Reader) (rec *Record, err error) {
+			rec, err = inner(r)
+
+			// set the contact to rec with mapper
+			mapper(
+				rec,
+				Contact{
+					RegistryID:    rec.Values.Get("Registry " + name + " ID"),
+					Name:          rec.Values.Get(name + " Name"),
+					Organization:  rec.Values.Get(name + " Organization"),
+					Street:        rec.Values.Get(name + " Street"),
+					City:          rec.Values.Get(name + " City"),
+					StateProvince: rec.Values.Get(name + " State/Province"),
+					PostalCode:    rec.Values.Get(name + " Postal Code"),
+					Country:       rec.Values.Get(name + " Country"),
+					Phone:         rec.Values.Get(name + " Phone"),
+					PhoneExt:      rec.Values.Get(name + " Phone Ext"),
+					Fax:           rec.Values.Get(name + " Fax"),
+					FaxExt:        rec.Values.Get(name + " Fax Ext"),
+					Email:         rec.Values.Get(name + " Email"),
+				},
+			)
+			// read name server
+			if nameServers, ok := rec.Values["Name Server"]; ok {
+				rec.NameServers = nameServers
+			}
+
+			// read domain status
+			if domainStatuses, ok := rec.Values["Domain Status"]; ok {
+				for _, status := range domainStatuses {
+					rec.DomainStatus |= ParseStatusString(status)
+				}
+			}
+
+			return
+		}
+	}
+}
+
+// MapNameServers maps the given key values to
+// NameServers field
+func MapNameServers(key string) ParserMiddleware {
+	return func(inner Parser) Parser {
+		return func(r io.Reader) (rec *Record, err error) {
+			rec, err = inner(r)
+
+			// read name server
+			if nameServers, ok := rec.Values[key]; ok {
+				rec.NameServers = nameServers
+			}
+			return
+		}
+	}
+}
+
+// MapDomainStatus maps the domain status in the given key to
+// DomainStatus field
+func MapDomainStatus(key string) ParserMiddleware {
+	return func(inner Parser) Parser {
+		return func(r io.Reader) (rec *Record, err error) {
+			rec, err = inner(r)
+
+			// read domain status
+			if domainStatuses, ok := rec.Values["Domain Status"]; ok {
+				for _, status := range domainStatuses {
+					rec.DomainStatus |= ParseStatusString(status)
+				}
+			}
+			return
+		}
+	}
+}
+
+// DefaultMapping implements ParserMiddleware for any
+// whois record compliants to ICANN's "2013 Registrar Accreditation Agreement"
+//
+// ref: https://www.icann.org/resources/pages/approved-with-specs-2013-09-17-en#whois
+//
+// Properly maps the rec.Values from inner into the Record fields.
+func DefaultMapping() ParserMiddleware {
+	return Chain(
+		MapDomainInfo(),
+		MapRegistrarInfo("Registrar", "Registrar Registration Expiration Date"),
+		MapContact("Registrant", ToRegistrant),
+		MapContact("Tech", ToTech),
+		MapContact("Admin", ToAdmin),
+		MapNameServers("Name Server"),
+		MapDomainStatus("Domain Status"),
+	)
+}
+
 // DefaultParser implements Parser for any whois record
 // compliants to ICANN's "2013 Registrar Accreditation Agreement"
 //
 // ref: https://www.icann.org/resources/pages/approved-with-specs-2013-09-17-en#whois
+//
+// Expect to receive a reader to text with 3 parts:
+// 1. Key-value pairs separated by colon (":")
+// 2. A line `>>> Last update of WHOIS database: [date]<<<`
+// 3. Follow by an empty line, then free text of the legal disclaimers.
 func DefaultParser(r io.Reader) (rec *Record, err error) {
 	rec = &Record{
 		Values: make(url.Values),
@@ -79,83 +253,5 @@ func DefaultParser(r io.Reader) (rec *Record, err error) {
 		rec.Disclaimer += strings.Trim(s.Text(), " \n\r\t") + "\n"
 	}
 	rec.Disclaimer = strings.Trim(rec.Disclaimer, " \n\r\t")
-
-	// read common fields
-	rec.DomainName = rec.Values.Get("Domain Name")
-	rec.RegistryID = rec.Values.Get("Registry Domain ID")
-	rec.Reseller = rec.Values.Get("Reseller")
-	rec.Updated = parseTime(time.Parse("2006-01-02T15:04:05Z", rec.Values.Get("Updated Date")))
-	rec.Created = parseTime(time.Parse("2006-01-02T15:04:05Z", rec.Values.Get("Creation Date")))
-	rec.DNSSEC = ParseDNSSECState(rec.Values.Get("DNSSEC"))
-	rec.Registrar = Registrar{
-		Name:              rec.Values.Get("Registrar"),
-		IANAID:            rec.Values.Get("Registrar IANA ID"),
-		WHOISServer:       rec.Values.Get("Registrar WHOIS Server"),
-		URL:               rec.Values.Get("Registrar URL"),
-		AbuseContactEmail: rec.Values.Get("Registrar Abuse Contact Email"),
-		AbuseContactPhone: rec.Values.Get("Registrar Abuse Contact Phone"),
-		RegistrationExpires: parseTime(time.Parse(
-			"2006-01-02T15:04:05Z",
-			rec.Values.Get("Registrar Registration Expiration Date"),
-		)),
-	}
-	rec.Registrant = Contact{
-		RegistryID:    rec.Values.Get("Registry Registrant ID"),
-		Name:          rec.Values.Get("Registrant Name"),
-		Organization:  rec.Values.Get("Registrant Organization"),
-		Street:        rec.Values.Get("Registrant Street"),
-		City:          rec.Values.Get("Registrant City"),
-		StateProvince: rec.Values.Get("Registrant State/Province"),
-		PostalCode:    rec.Values.Get("Registrant Postal Code"),
-		Country:       rec.Values.Get("Registrant Country"),
-		Phone:         rec.Values.Get("Registrant Phone"),
-		PhoneExt:      rec.Values.Get("Registrant Phone Ext"),
-		Fax:           rec.Values.Get("Registrant Fax"),
-		FaxExt:        rec.Values.Get("Registrant Fax Ext"),
-		Email:         rec.Values.Get("Registrant Email"),
-	}
-	rec.Admin = Contact{
-		RegistryID:    rec.Values.Get("Registry Admin ID"),
-		Name:          rec.Values.Get("Admin Name"),
-		Organization:  rec.Values.Get("Admin Organization"),
-		Street:        rec.Values.Get("Admin Street"),
-		City:          rec.Values.Get("Admin City"),
-		StateProvince: rec.Values.Get("Admin State/Province"),
-		PostalCode:    rec.Values.Get("Admin Postal Code"),
-		Country:       rec.Values.Get("Admin Country"),
-		Phone:         rec.Values.Get("Admin Phone"),
-		PhoneExt:      rec.Values.Get("Admin Phone Ext"),
-		Fax:           rec.Values.Get("Admin Fax"),
-		FaxExt:        rec.Values.Get("Admin Fax Ext"),
-		Email:         rec.Values.Get("Admin Email"),
-	}
-	rec.Tech = Contact{
-		RegistryID:    rec.Values.Get("Registry Tech ID"),
-		Name:          rec.Values.Get("Tech Name"),
-		Organization:  rec.Values.Get("Tech Organization"),
-		Street:        rec.Values.Get("Tech Street"),
-		City:          rec.Values.Get("Tech City"),
-		StateProvince: rec.Values.Get("Tech State/Province"),
-		PostalCode:    rec.Values.Get("Tech Postal Code"),
-		Country:       rec.Values.Get("Tech Country"),
-		Phone:         rec.Values.Get("Tech Phone"),
-		PhoneExt:      rec.Values.Get("Tech Phone Ext"),
-		Fax:           rec.Values.Get("Tech Fax"),
-		FaxExt:        rec.Values.Get("Tech Fax Ext"),
-		Email:         rec.Values.Get("Tech Email"),
-	}
-
-	// read name server
-	if nameServers, ok := rec.Values["Name Server"]; ok {
-		rec.NameServers = nameServers
-	}
-
-	// read domain status
-	if domainStatuses, ok := rec.Values["Domain Status"]; ok {
-		for _, status := range domainStatuses {
-			rec.DomainStatus |= ParseStatusString(status)
-		}
-	}
-
 	return
 }
