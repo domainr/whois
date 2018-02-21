@@ -8,21 +8,21 @@ Whois client for Go (golang), inspired by [Ruby Whois](https://github.com/weppos
 
 ## Design
 
-```
+```go
 func whois.Whois(query string) *whois.Record  // Fetches and returns a fully-parsed whois.Record
 
 request = whois.NewRequest(query)             // Returns a prepared whois.Request
 response = whois.DefaultClient.Fetch(request) // Fetches the request, returns a whois.Response
 record = response.Parse()                     // (not implemented yet) Parses the response, returns a whois.Record
 
-whois.Request — represents a qualified whois request, including server, URL, and request body
-whois.Response — intermediate record, raw response from a whois server for a given query
-whois.Record — parsed whois response; structured data
+whois.Request  // represents a qualified whois request, including server, URL, and request body
+whois.Response // intermediate record, raw response from a whois server for a given query
+whois.Record   // parsed whois response; structured data
 ```
 
 ### Logic
 
-```
+```go
 query := "domai.nr"
 request, err := whois.NewRequest(query)
 response, err := whois.DefaultClient.Fetch(request)
