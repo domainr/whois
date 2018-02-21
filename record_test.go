@@ -89,3 +89,20 @@ func TestStatus_GoString(t *testing.T) {
 		st.Expect(t, fmt.Sprintf("whois.Status(%s)", str), gostr)
 	}
 }
+
+func TestDNSSECState(t *testing.T) {
+
+	// test on String()
+	st.Expect(t, whois.DNSSECSignedDelegation.String(), "signedDelegation")
+	st.Expect(t, whois.DNSSECUnsigned.String(), "unsigned")
+	st.Expect(t, whois.DNSSECState(0).String(), "invalid")
+	st.Expect(t, (whois.DNSSECUnsigned + 1).String(), "invalid")
+
+	// test on GoString()
+	st.Expect(t, whois.DNSSECSignedDelegation.GoString(), "whois.DNSSECState(signedDelegation)")
+	st.Expect(t, whois.DNSSECUnsigned.GoString(), "whois.DNSSECState(unsigned)")
+
+	// test on ParseDNSSECState()
+	st.Expect(t, whois.ParseDNSSECState("signedDelegation").String(), "signedDelegation")
+	st.Expect(t, whois.ParseDNSSECState("unsigned").String(), "unsigned")
+}

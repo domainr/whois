@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/url"
 	"strings"
+	"time"
 )
 
 // Status represents ICANN EPP status code that are
@@ -197,10 +198,92 @@ const (
 	StatusUnknown
 )
 
+// DNSSECState represents possible values in DNSSEC field
+type DNSSECState int
+
+// ParseDNSSECState parse the given string into DNSSECState
+func ParseDNSSECState(str string) (s DNSSECState) {
+	if str == "signedDelegation" {
+		return DNSSECSignedDelegation
+	}
+	if str == "unsigned" {
+		return DNSSECUnsigned
+	}
+	return
+}
+
+// String implements fmt.Stringer
+func (s DNSSECState) String() string {
+	switch s {
+	case DNSSECSignedDelegation:
+		return "signedDelegation"
+	case DNSSECUnsigned:
+		return "unsigned"
+	}
+	return "invalid"
+}
+
+// GoString implements fmt.GoStringer
+func (s DNSSECState) GoString() string {
+	return fmt.Sprintf("whois.DNSSECState(%s)", s.String())
+}
+
+// possible DNSSECState values
+const (
+	_ DNSSECState = iota
+	DNSSECSignedDelegation
+	DNSSECUnsigned
+)
+
+// Contact represents information about Registrant, Admin or
+// Tech information entry
+type Contact struct {
+	RegistryID    string
+	Name          string
+	Organization  string
+	Street        string
+	City          string
+	StateProvince string
+	PostalCode    string
+	Country       string
+	Phone         string
+	PhoneExt      string
+	Fax           string
+	FaxExt        string
+	Email         string
+}
+
+// Registrar represents the information
+// about a domain registrar
+type Registrar struct {
+	Name                string
+	WHOISServer         string
+	URL                 string
+	RegistrationExpires time.Time
+	IANAID              string
+	AbuseContactEmail   string
+	AbuseContactPhone   string
+}
+
 // Record represents a parsed whois response.
 type Record struct {
-	Values       url.Values
-	Disclaimer   string
+	// raw parsed key-value pairs
+	Values url.Values
+
+	// parsed values from key-value pairs
+	DomainName   string
+	RegistryID   string
+	Registrar    Registrar
+	Reseller     string
+	Updated      time.Time
+	Created      time.Time
 	NameServers  []string
 	DomainStatus Status
+	Registrant   Contact
+	Admin        Contact
+	Tech         Contact
+	DNSSEC       DNSSECState
+
+	// legal disclaimer string at the end of record
+	Disclaimer string
 }
