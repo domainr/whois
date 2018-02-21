@@ -1,11 +1,11 @@
-package whois_test
+package parser_test
 
 import (
 	"strings"
 	"testing"
 	"time"
 
-	"github.com/domainr/whois"
+	parser "github.com/domainr/whois/whois-parser"
 	"github.com/nbio/st"
 )
 
@@ -74,7 +74,7 @@ Some dummy legal disclaimer
 free text
 more free text
 `
-	parse := whois.DefaultMapping()(whois.DefaultParser)
+	parse := parser.DefaultMapping()(parser.DefaultParser)
 	rec, err := parse(strings.NewReader(body))
 	st.Assert(t, err, nil)
 
@@ -166,9 +166,9 @@ more free text`)
 	st.Expect(t, rec.Registrar.AbuseContactPhone, "+1.1235551234")
 	st.Expect(t, rec.Reseller, "EXAMPLE RESELLER1")
 	st.Expect(t, true, rec.DomainStatus.Has(
-		whois.StatusClientDeleteProhibited|
-			whois.StatusClientRenewProhibited|
-			whois.StatusClientTransferProhibited,
+		parser.StatusClientDeleteProhibited|
+			parser.StatusClientRenewProhibited|
+			parser.StatusClientTransferProhibited,
 	))
 	st.Expect(t, rec.Registrant.RegistryID, "5372808-ERL")
 	st.Expect(t, rec.Registrant.Name, "EXAMPLE REGISTRANT")
@@ -213,7 +213,7 @@ more free text`)
 		"NS01.EXAMPLE-REGISTRAR.TLD10",
 		"NS02.EXAMPLE-REGISTRAR.TLD",
 	})
-	st.Expect(t, rec.DNSSEC, whois.ParseDNSSECState("signedDelegation"))
+	st.Expect(t, rec.DNSSEC, parser.ParseDNSSECState("signedDelegation"))
 	st.Expect(t, rec.Values.Get("URL of the ICANN WHOIS Data Problem Reporting System"), "http://wdprs.internic.net/")
 
 	st.Expect(t, rec.Disclaimer, `Some dummy legal disclaimer
@@ -221,13 +221,13 @@ free text
 more free text`)
 
 	// validate parsed domain status
-	st.Expect(t, true, rec.DomainStatus.Has(whois.StatusClientDeleteProhibited))
-	st.Expect(t, true, rec.DomainStatus.Has(whois.StatusClientRenewProhibited))
-	st.Expect(t, true, rec.DomainStatus.Has(whois.StatusClientTransferProhibited))
-	st.Expect(t, false, rec.DomainStatus.Has(whois.StatusOK))
+	st.Expect(t, true, rec.DomainStatus.Has(parser.StatusClientDeleteProhibited))
+	st.Expect(t, true, rec.DomainStatus.Has(parser.StatusClientRenewProhibited))
+	st.Expect(t, true, rec.DomainStatus.Has(parser.StatusClientTransferProhibited))
+	st.Expect(t, false, rec.DomainStatus.Has(parser.StatusOK))
 	st.Expect(t, false, rec.DomainStatus.Has(
-		whois.StatusOK|
-			whois.StatusClientTransferProhibited,
+		parser.StatusOK|
+			parser.StatusClientTransferProhibited,
 	))
 }
 
@@ -236,7 +236,7 @@ func TestDefaultParser_err(t *testing.T) {
 	var err error
 
 	// nil reader
-	_, err = whois.DefaultParser(nil)
+	_, err = parser.DefaultParser(nil)
 	if err == nil {
 		t.Error("expecting err but got nil")
 	} else {
@@ -244,7 +244,7 @@ func TestDefaultParser_err(t *testing.T) {
 	}
 
 	// invalid key-value pair lines
-	_, err = whois.DefaultParser(strings.NewReader("Some text with no colon 1\nSome text with no colon 2"))
+	_, err = parser.DefaultParser(strings.NewReader("Some text with no colon 1\nSome text with no colon 2"))
 	if err == nil {
 		t.Error("expecting err but got nil")
 	} else {
@@ -252,7 +252,7 @@ func TestDefaultParser_err(t *testing.T) {
 	}
 
 	// no empty line after "Last update of WHOIS database"
-	_, err = whois.DefaultParser(strings.NewReader(`Some Field: hello
+	_, err = parser.DefaultParser(strings.NewReader(`Some Field: hello
 >>> Last update of WHOIS database: 2009-05-29T20:15:00Z <<<
 Some unexpected line
 Some unexpected line`))
@@ -263,7 +263,7 @@ Some unexpected line`))
 	}
 
 	// nothing before an empty line
-	_, err = whois.DefaultParser(strings.NewReader(`
+	_, err = parser.DefaultParser(strings.NewReader(`
 		Some unexpected line
 		Some unexpected line`))
 	if err == nil {
@@ -273,7 +273,7 @@ Some unexpected line`))
 	}
 
 	// empty body
-	_, err = whois.DefaultParser(strings.NewReader(""))
+	_, err = parser.DefaultParser(strings.NewReader(""))
 	if err == nil {
 		t.Error("expecting err but got nil")
 	} else {

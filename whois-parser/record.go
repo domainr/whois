@@ -1,4 +1,4 @@
-package whois
+package parser
 
 import (
 	"fmt"
@@ -153,7 +153,7 @@ func (c Status) String() string {
 
 // GoString implements fmt.GoStringer
 func (c Status) GoString() string {
-	return fmt.Sprintf("whois.Status(%s)", c.String())
+	return fmt.Sprintf("Status(%s)", c.String())
 }
 
 // Has test if this status includes the given status(s)
@@ -231,7 +231,7 @@ func (s DNSSECState) String() string {
 
 // GoString implements fmt.GoStringer
 func (s DNSSECState) GoString() string {
-	return fmt.Sprintf("whois.DNSSECState(%s)", s.String())
+	return fmt.Sprintf("DNSSEC(%s)", s.String())
 }
 
 // possible DNSSECState values
