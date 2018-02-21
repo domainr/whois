@@ -17,6 +17,11 @@ func TestParseStatusString(t *testing.T) {
 		}
 		st.Expect(t, whois.ParseStatusString(str), status)
 	}
+	st.Expect(
+		t,
+		whois.ParseStatusString("clientTransferProhibited https://icann.org/epp#clientTransferProhibited"),
+		whois.StatusClientTransferProhibited,
+	)
 }
 
 func TestStatus_String(t *testing.T) {

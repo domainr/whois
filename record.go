@@ -13,6 +13,12 @@ type Status uint32
 
 // ParseStatusString returns Status of the given string
 func ParseStatusString(name string) Status {
+
+	// improve cross compatibility for "[name] [url]" format
+	if spacePos := strings.Index(name, " "); spacePos > 0 {
+		name = name[:spacePos]
+	}
+
 	switch name {
 
 	// Server Status Codes are Set by Your Domain's Registry
