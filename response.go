@@ -15,11 +15,19 @@ import (
 	"strings"
 	"time"
 
+	parser "github.com/domainr/whois/whois-parser"
 	"github.com/saintfish/chardet"
 	"golang.org/x/net/html/charset"
 	"golang.org/x/text/encoding"
 	"golang.org/x/text/transform"
 )
+
+// defaultParserMux stores parser map for Response.Parse to use
+var defaultParserMux *parser.Mux
+
+func init() {
+	defaultParserMux = parser.DefaultMux()
+}
 
 // Response represents a whois response from a server.
 type Response struct {
@@ -181,6 +189,20 @@ func (res *Response) WriteMIME(w io.Writer) error {
 		return err
 	}
 	return nil
+}
+
+// Parse parses the Response and return *parser.Record or parse error
+func (res *Response) Parse() (rec *parser.Record, err error) {
+	r, err := res.Reader()
+	if err != nil {
+		return
+	}
+	p := defaultParserMux.ParserOf(res.Host, parser.TypeDomain)
+	if p == nil {
+		err = fmt.Errorf("parser not found")
+		return
+	}
+	return p(r)
 }
 
 // ReadMIME reads a MIME-formatted representation of the response into a Response.
