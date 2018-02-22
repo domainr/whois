@@ -9,7 +9,7 @@ import (
 	"github.com/nbio/st"
 )
 
-func TestDefaultParser(t *testing.T) {
+func TestParseCommonDomainRecord_record(t *testing.T) {
 	body := `Domain Name: EXAMPLE.TLD
 Registry Domain ID: D1234567-TLD
 Registrar WHOIS Server: whois.example-registrar.tld
@@ -74,9 +74,10 @@ Some dummy legal disclaimer
 free text
 more free text
 `
-	parse := parser.DefaultMapping()(parser.DefaultParser)
+	parse := parser.CommonDomainRecordMapping()(parser.ParseCommonDomainRecord)
 	rec, err := parse(strings.NewReader(body))
 	st.Assert(t, err, nil)
+	st.Assert(t, rec.Type, parser.TypeDomain)
 
 	st.Expect(t, rec.Values.Get("Domain Name"), "EXAMPLE.TLD")
 	st.Expect(t, rec.Values.Get("Registry Domain ID"), "D1234567-TLD")
@@ -141,7 +142,7 @@ more free text
 	st.Expect(t, rec.Values.Get("DNSSEC"), "signedDelegation")
 	st.Expect(t, rec.Values.Get("URL of the ICANN WHOIS Data Problem Reporting System"), "http://wdprs.internic.net/")
 
-	st.Expect(t, rec.Disclaimer, `Some dummy legal disclaimer
+	st.Expect(t, rec.DomainRecord.Disclaimer, `Some dummy legal disclaimer
 free text
 more free text`)
 
@@ -153,90 +154,90 @@ more free text`)
 	}
 
 	// validate parsed name server
-	st.Expect(t, rec.DomainName, "EXAMPLE.TLD")
-	st.Expect(t, rec.RegistryID, "D1234567-TLD")
-	st.Expect(t, rec.Registrar.WHOISServer, "whois.example-registrar.tld")
-	st.Expect(t, rec.Registrar.URL, "http://www.example-registrar.tld")
-	st.Expect(t, rec.Updated, mustTime(time.Parse("2006-01-02T15:04:05Z", "2009-05-29T20:13:00Z")))
-	st.Expect(t, rec.Created, mustTime(time.Parse("2006-01-02T15:04:05Z", "2000-10-08T00:45:00Z")))
-	st.Expect(t, rec.Registrar.RegistrationExpires, mustTime(time.Parse("2006-01-02T15:04:05Z", "2010-10-08T00:44:59Z")))
-	st.Expect(t, rec.Registrar.Name, "EXAMPLE REGISTRAR LLC")
-	st.Expect(t, rec.Registrar.IANAID, "5555555")
-	st.Expect(t, rec.Registrar.AbuseContactEmail, "email@registrar.tld")
-	st.Expect(t, rec.Registrar.AbuseContactPhone, "+1.1235551234")
-	st.Expect(t, rec.Reseller, "EXAMPLE RESELLER1")
-	st.Expect(t, true, rec.DomainStatus.Has(
+	st.Expect(t, rec.DomainRecord.DomainName, "EXAMPLE.TLD")
+	st.Expect(t, rec.DomainRecord.RegistryID, "D1234567-TLD")
+	st.Expect(t, rec.DomainRecord.Registrar.WHOISServer, "whois.example-registrar.tld")
+	st.Expect(t, rec.DomainRecord.Registrar.URL, "http://www.example-registrar.tld")
+	st.Expect(t, rec.DomainRecord.Updated, mustTime(time.Parse("2006-01-02T15:04:05Z", "2009-05-29T20:13:00Z")))
+	st.Expect(t, rec.DomainRecord.Created, mustTime(time.Parse("2006-01-02T15:04:05Z", "2000-10-08T00:45:00Z")))
+	st.Expect(t, rec.DomainRecord.Registrar.RegistrationExpires, mustTime(time.Parse("2006-01-02T15:04:05Z", "2010-10-08T00:44:59Z")))
+	st.Expect(t, rec.DomainRecord.Registrar.Name, "EXAMPLE REGISTRAR LLC")
+	st.Expect(t, rec.DomainRecord.Registrar.IANAID, "5555555")
+	st.Expect(t, rec.DomainRecord.Registrar.AbuseContactEmail, "email@registrar.tld")
+	st.Expect(t, rec.DomainRecord.Registrar.AbuseContactPhone, "+1.1235551234")
+	st.Expect(t, rec.DomainRecord.Reseller, "EXAMPLE RESELLER1")
+	st.Expect(t, true, rec.DomainRecord.DomainStatus.Has(
 		parser.StatusClientDeleteProhibited|
 			parser.StatusClientRenewProhibited|
 			parser.StatusClientTransferProhibited,
 	))
-	st.Expect(t, rec.Registrant.RegistryID, "5372808-ERL")
-	st.Expect(t, rec.Registrant.Name, "EXAMPLE REGISTRANT")
-	st.Expect(t, rec.Registrant.Organization, "EXAMPLE ORGANIZATION")
-	st.Expect(t, rec.Registrant.Street, "123 EXAMPLE STREET")
-	st.Expect(t, rec.Registrant.City, "ANYTOWN")
-	st.Expect(t, rec.Registrant.StateProvince, "AP")
-	st.Expect(t, rec.Registrant.PostalCode, "A1A1A1")
-	st.Expect(t, rec.Registrant.Country, "AA")
-	st.Expect(t, rec.Registrant.Phone, "+1.5555551212")
-	st.Expect(t, rec.Registrant.PhoneExt, "1234")
-	st.Expect(t, rec.Registrant.Fax, "+1.5555551213")
-	st.Expect(t, rec.Registrant.FaxExt, "4321")
-	st.Expect(t, rec.Registrant.Email, "EMAIL@EXAMPLE.TLD")
-	st.Expect(t, rec.Admin.RegistryID, "5372809-ERL")
-	st.Expect(t, rec.Admin.Name, "EXAMPLE REGISTRANT ADMINISTRATIVE")
-	st.Expect(t, rec.Admin.Organization, "EXAMPLE REGISTRANT ORGANIZATION")
-	st.Expect(t, rec.Admin.Street, "123 EXAMPLE STREET")
-	st.Expect(t, rec.Admin.City, "ANYTOWN")
-	st.Expect(t, rec.Admin.StateProvince, "AP")
-	st.Expect(t, rec.Admin.PostalCode, "A1A1A1")
-	st.Expect(t, rec.Admin.Country, "AA")
-	st.Expect(t, rec.Admin.Phone, "+1.5555551212")
-	st.Expect(t, rec.Admin.PhoneExt, "1234")
-	st.Expect(t, rec.Admin.Fax, "+1.5555551213")
-	st.Expect(t, rec.Admin.FaxExt, "1234")
-	st.Expect(t, rec.Admin.Email, "EMAIL@EXAMPLE.TLD")
-	st.Expect(t, rec.Tech.RegistryID, "5372811-ERL")
-	st.Expect(t, rec.Tech.Name, "EXAMPLE REGISTRANT TECHNICAL")
-	st.Expect(t, rec.Tech.Organization, "EXAMPLE REGISTRANT LLC")
-	st.Expect(t, rec.Tech.Street, "123 EXAMPLE STREET")
-	st.Expect(t, rec.Tech.City, "ANYTOWN")
-	st.Expect(t, rec.Tech.StateProvince, "AP")
-	st.Expect(t, rec.Tech.PostalCode, "A1A1A1")
-	st.Expect(t, rec.Tech.Country, "AA")
-	st.Expect(t, rec.Tech.Phone, "+1.1235551234")
-	st.Expect(t, rec.Tech.PhoneExt, "1234")
-	st.Expect(t, rec.Tech.Fax, "+1.5555551213")
-	st.Expect(t, rec.Tech.FaxExt, "93")
-	st.Expect(t, rec.Tech.Email, "EMAIL@EXAMPLE.TLD")
-	st.Assert(t, rec.NameServers, []string{
+	st.Expect(t, rec.DomainRecord.Registrant.RegistryID, "5372808-ERL")
+	st.Expect(t, rec.DomainRecord.Registrant.Name, "EXAMPLE REGISTRANT")
+	st.Expect(t, rec.DomainRecord.Registrant.Organization, "EXAMPLE ORGANIZATION")
+	st.Expect(t, rec.DomainRecord.Registrant.Street, "123 EXAMPLE STREET")
+	st.Expect(t, rec.DomainRecord.Registrant.City, "ANYTOWN")
+	st.Expect(t, rec.DomainRecord.Registrant.StateProvince, "AP")
+	st.Expect(t, rec.DomainRecord.Registrant.PostalCode, "A1A1A1")
+	st.Expect(t, rec.DomainRecord.Registrant.Country, "AA")
+	st.Expect(t, rec.DomainRecord.Registrant.Phone, "+1.5555551212")
+	st.Expect(t, rec.DomainRecord.Registrant.PhoneExt, "1234")
+	st.Expect(t, rec.DomainRecord.Registrant.Fax, "+1.5555551213")
+	st.Expect(t, rec.DomainRecord.Registrant.FaxExt, "4321")
+	st.Expect(t, rec.DomainRecord.Registrant.Email, "EMAIL@EXAMPLE.TLD")
+	st.Expect(t, rec.DomainRecord.Admin.RegistryID, "5372809-ERL")
+	st.Expect(t, rec.DomainRecord.Admin.Name, "EXAMPLE REGISTRANT ADMINISTRATIVE")
+	st.Expect(t, rec.DomainRecord.Admin.Organization, "EXAMPLE REGISTRANT ORGANIZATION")
+	st.Expect(t, rec.DomainRecord.Admin.Street, "123 EXAMPLE STREET")
+	st.Expect(t, rec.DomainRecord.Admin.City, "ANYTOWN")
+	st.Expect(t, rec.DomainRecord.Admin.StateProvince, "AP")
+	st.Expect(t, rec.DomainRecord.Admin.PostalCode, "A1A1A1")
+	st.Expect(t, rec.DomainRecord.Admin.Country, "AA")
+	st.Expect(t, rec.DomainRecord.Admin.Phone, "+1.5555551212")
+	st.Expect(t, rec.DomainRecord.Admin.PhoneExt, "1234")
+	st.Expect(t, rec.DomainRecord.Admin.Fax, "+1.5555551213")
+	st.Expect(t, rec.DomainRecord.Admin.FaxExt, "1234")
+	st.Expect(t, rec.DomainRecord.Admin.Email, "EMAIL@EXAMPLE.TLD")
+	st.Expect(t, rec.DomainRecord.Tech.RegistryID, "5372811-ERL")
+	st.Expect(t, rec.DomainRecord.Tech.Name, "EXAMPLE REGISTRANT TECHNICAL")
+	st.Expect(t, rec.DomainRecord.Tech.Organization, "EXAMPLE REGISTRANT LLC")
+	st.Expect(t, rec.DomainRecord.Tech.Street, "123 EXAMPLE STREET")
+	st.Expect(t, rec.DomainRecord.Tech.City, "ANYTOWN")
+	st.Expect(t, rec.DomainRecord.Tech.StateProvince, "AP")
+	st.Expect(t, rec.DomainRecord.Tech.PostalCode, "A1A1A1")
+	st.Expect(t, rec.DomainRecord.Tech.Country, "AA")
+	st.Expect(t, rec.DomainRecord.Tech.Phone, "+1.1235551234")
+	st.Expect(t, rec.DomainRecord.Tech.PhoneExt, "1234")
+	st.Expect(t, rec.DomainRecord.Tech.Fax, "+1.5555551213")
+	st.Expect(t, rec.DomainRecord.Tech.FaxExt, "93")
+	st.Expect(t, rec.DomainRecord.Tech.Email, "EMAIL@EXAMPLE.TLD")
+	st.Assert(t, rec.DomainRecord.NameServers, []string{
 		"NS01.EXAMPLE-REGISTRAR.TLD10",
 		"NS02.EXAMPLE-REGISTRAR.TLD",
 	})
-	st.Expect(t, rec.DNSSEC, parser.ParseDNSSECState("signedDelegation"))
+	st.Expect(t, rec.DomainRecord.DNSSEC, parser.ParseDNSSECState("signedDelegation"))
 	st.Expect(t, rec.Values.Get("URL of the ICANN WHOIS Data Problem Reporting System"), "http://wdprs.internic.net/")
 
-	st.Expect(t, rec.Disclaimer, `Some dummy legal disclaimer
+	st.Expect(t, rec.DomainRecord.Disclaimer, `Some dummy legal disclaimer
 free text
 more free text`)
 
 	// validate parsed domain status
-	st.Expect(t, true, rec.DomainStatus.Has(parser.StatusClientDeleteProhibited))
-	st.Expect(t, true, rec.DomainStatus.Has(parser.StatusClientRenewProhibited))
-	st.Expect(t, true, rec.DomainStatus.Has(parser.StatusClientTransferProhibited))
-	st.Expect(t, false, rec.DomainStatus.Has(parser.StatusOK))
-	st.Expect(t, false, rec.DomainStatus.Has(
+	st.Expect(t, true, rec.DomainRecord.DomainStatus.Has(parser.StatusClientDeleteProhibited))
+	st.Expect(t, true, rec.DomainRecord.DomainStatus.Has(parser.StatusClientRenewProhibited))
+	st.Expect(t, true, rec.DomainRecord.DomainStatus.Has(parser.StatusClientTransferProhibited))
+	st.Expect(t, false, rec.DomainRecord.DomainStatus.Has(parser.StatusOK))
+	st.Expect(t, false, rec.DomainRecord.DomainStatus.Has(
 		parser.StatusOK|
 			parser.StatusClientTransferProhibited,
 	))
 }
 
-func TestDefaultParser_err(t *testing.T) {
+func TestParseCommonDomainRecord_err(t *testing.T) {
 
 	var err error
 
 	// nil reader
-	_, err = parser.DefaultParser(nil)
+	_, err = parser.ParseCommonDomainRecord(nil)
 	if err == nil {
 		t.Error("expecting err but got nil")
 	} else {
@@ -244,7 +245,7 @@ func TestDefaultParser_err(t *testing.T) {
 	}
 
 	// invalid key-value pair lines
-	_, err = parser.DefaultParser(strings.NewReader("Some text with no colon 1\nSome text with no colon 2"))
+	_, err = parser.ParseCommonDomainRecord(strings.NewReader("Some text with no colon 1\nSome text with no colon 2"))
 	if err == nil {
 		t.Error("expecting err but got nil")
 	} else {
@@ -252,7 +253,7 @@ func TestDefaultParser_err(t *testing.T) {
 	}
 
 	// no empty line after "Last update of WHOIS database"
-	_, err = parser.DefaultParser(strings.NewReader(`Some Field: hello
+	_, err = parser.ParseCommonDomainRecord(strings.NewReader(`Some Field: hello
 >>> Last update of WHOIS database: 2009-05-29T20:15:00Z <<<
 Some unexpected line
 Some unexpected line`))
@@ -263,7 +264,7 @@ Some unexpected line`))
 	}
 
 	// nothing before an empty line
-	_, err = parser.DefaultParser(strings.NewReader(`
+	_, err = parser.ParseCommonDomainRecord(strings.NewReader(`
 		Some unexpected line
 		Some unexpected line`))
 	if err == nil {
@@ -273,7 +274,7 @@ Some unexpected line`))
 	}
 
 	// empty body
-	_, err = parser.DefaultParser(strings.NewReader(""))
+	_, err = parser.ParseCommonDomainRecord(strings.NewReader(""))
 	if err == nil {
 		t.Error("expecting err but got nil")
 	} else {

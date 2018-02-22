@@ -35,7 +35,7 @@ func (m Mux) ParserOf(host string, queryType QueryType) (parser Parser) {
 
 // DefaultMux returns a Mux with all default parser implementations
 func DefaultMux() *Mux {
-	defaultParser := DefaultMapping()(DefaultParser)
+	defaultParser := CommonDomainRecordMapping()(ParseCommonDomainRecord)
 	return &Mux{
 		"":                       defaultParser,
 		"whois.pir.org":          defaultParser,

@@ -271,10 +271,20 @@ type Registrar struct {
 	AbuseContactPhone   string
 }
 
-// Record represents a parsed whois response.
+// Record stores the parsed WHOIS response
 type Record struct {
+	// Type of query as well as the record
+	Type QueryType
+
 	// raw parsed key-value pairs
 	Values url.Values
+
+	// DoaminRecord stores the parsed values of a domain record
+	DomainRecord *DomainRecord
+}
+
+// DomainRecord represents a parsed whois response.
+type DomainRecord struct {
 
 	// parsed values from key-value pairs
 	DomainName   string
