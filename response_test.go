@@ -1,9 +1,12 @@
 package whois_test
 
 import (
+	"fmt"
+	"strings"
 	"testing"
 
 	"github.com/domainr/whois"
+	parser "github.com/domainr/whois/whois-parser"
 	"github.com/domainr/whoistest"
 	"github.com/nbio/st"
 )
@@ -54,6 +57,7 @@ func TestPIRRateLimitText(t *testing.T) {
 func TestResponse_Parse(t *testing.T) {
 	fns, err := whoistest.ResponseFiles()
 	st.Assert(t, err, nil)
+	errTpl := "\n== Record not handled ==\nFile:\t%s\nQuery:\t%s\nHost:\t%s\nError:\t%s"
 	for _, fn := range fns {
 		res, err := whois.ReadMIMEFile(fn)
 		st.Refute(t, res, nil)
@@ -62,21 +66,63 @@ func TestResponse_Parse(t *testing.T) {
 			continue
 		}
 
-		// basic information
-		t.Logf("File:  %s", fn)
-		t.Logf("Query: %s", res.Query)
-		t.Logf("Host:  %s", res.Host)
-
-		// test parsing
+		// test if records are parsing without error
 		rec, err := res.Parse()
 		if err != nil {
-			t.Logf("[Not Handled] parse error: %s", err.Error())
-			t.Logf("\n")
+			t.Errorf(
+				errTpl,
+				fn,
+				res.Query,
+				res.Host,
+				err.Error(),
+			)
 			continue
 		}
 
-		// show parse record
-		t.Logf("Record: %#v", rec)
-		t.Logf("\n")
+		// checks for TypeDomain record
+		if rec.Type == parser.TypeDomain {
+			if rec.DomainRecord == nil {
+				t.Errorf(
+					errTpl,
+					fn,
+					res.Query,
+					res.Host,
+					"rec.DomainRecord is nil",
+				)
+				continue
+			}
+
+			errs := make([]string, 0, 10)
+
+			// Check Domain Name
+			if have, want := strings.ToLower(rec.DomainRecord.DomainName), strings.ToLower(res.Query); want != have {
+				errs = append(
+					errs,
+					fmt.Sprintf("rec.DomainRecord.DomainName is wrong. expected: %#v, got: %#v.", want, have),
+				)
+			}
+
+			// Check Registry Domain ID
+			if have := rec.DomainRecord.RegistryID; have == "" {
+				errs = append(
+					errs,
+					"rec.DomainRecord.RegistryID is empty.",
+				)
+			}
+
+			// if there is any parse error
+			if len(errs) != 0 {
+				t.Errorf(
+					errTpl,
+					fn,
+					res.Query,
+					res.Host,
+					strings.Join(errs, "\n\t"),
+				)
+				t.Logf("Domain Name: %#v", rec.Values.Get("Domain Name"))
+				t.Logf("raw:\n%s", res.Body)
+				return
+			}
+		}
 	}
 }
