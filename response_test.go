@@ -69,13 +69,21 @@ func TestResponse_Parse(t *testing.T) {
 		// test if records are parsing without error
 		rec, err := res.Parse()
 		if err != nil {
-			t.Errorf(
-				errTpl,
-				fn,
-				res.Query,
-				res.Host,
-				err.Error(),
-			)
+
+			switch err {
+			case parser.ErrorDomainNotFound:
+				fallthrough
+			case parser.ErrorDomainReserved:
+				// do nothing
+			default:
+				t.Errorf(
+					errTpl,
+					fn,
+					res.Query,
+					res.Host,
+					err.Error(),
+				)
+			}
 			continue
 		}
 

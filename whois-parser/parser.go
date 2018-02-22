@@ -9,6 +9,27 @@ import (
 	"time"
 )
 
+// Error represents error
+type Error int
+
+// Error implements error interface
+func (err Error) Error() string {
+	switch err {
+	case ErrorDomainReserved:
+		return "domain is reserved and not available for registration"
+	case ErrorDomainNotFound:
+		return "domain not found"
+	}
+	return "unknown error"
+}
+
+// Different Error in parsing the response
+const (
+	_ Error = iota
+	ErrorDomainReserved
+	ErrorDomainNotFound
+)
+
 // Parser is the abstraction for WHOIS response body parser
 // that parses a given response body to a *Record, or return parse error
 type Parser func(body io.Reader) (rec *Record, err error)

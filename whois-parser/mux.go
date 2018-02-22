@@ -40,5 +40,6 @@ func DefaultMux() *Mux {
 		"":                       defaultParser,
 		"whois.pir.org":          defaultParser,
 		"whois.verisign-grs.com": defaultParser,
+		"whois.cnnic.cn":         CNNICMapping()(ParseCNNICDomainRecord),
 	}
 }
