@@ -156,9 +156,10 @@ func MapNameServers(key string) Middleware {
 				rec.DomainRecord.NameServers = make([]string, 0, len(nameServers))
 				for i := range nameServers {
 					if nameServers[i] != "" {
+						parts := strings.SplitN(nameServers[i], " ", 2)
 						rec.DomainRecord.NameServers = append(
 							rec.DomainRecord.NameServers,
-							nameServers[i],
+							parts[0],
 						)
 					}
 				}

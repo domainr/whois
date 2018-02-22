@@ -257,6 +257,8 @@ type Contact struct {
 	Fax           string
 	FaxExt        string
 	Email         string
+	Remarks       string
+	Updated       time.Time
 }
 
 // Registrar represents the information

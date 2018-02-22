@@ -111,7 +111,9 @@ func TestResponse_Parse(t *testing.T) {
 			}
 
 			// Check Registry Domain ID
-			if have := rec.DomainRecord.RegistryID; have == "" {
+			if res.Host == "whois.denic.de" {
+				// do nothing
+			} else if have := rec.DomainRecord.RegistryID; have == "" {
 				errs = append(
 					errs,
 					"rec.DomainRecord.RegistryID is empty.",
