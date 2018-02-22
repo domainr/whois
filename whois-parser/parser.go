@@ -129,9 +129,17 @@ func MapNameServers(key string) Middleware {
 		return func(r io.Reader) (rec *Record, err error) {
 			rec, err = inner(r)
 
-			// read name server
+			// read name servers, set to DomainRecord if it is not empty
 			if nameServers, ok := rec.Values[key]; ok {
-				rec.DomainRecord.NameServers = nameServers
+				rec.DomainRecord.NameServers = make([]string, 0, len(nameServers))
+				for i := range nameServers {
+					if nameServers[i] != "" {
+						rec.DomainRecord.NameServers = append(
+							rec.DomainRecord.NameServers,
+							nameServers[i],
+						)
+					}
+				}
 			}
 			return
 		}
