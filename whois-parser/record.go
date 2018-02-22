@@ -262,13 +262,12 @@ type Contact struct {
 // Registrar represents the information
 // about a domain registrar
 type Registrar struct {
-	Name                string
-	WHOISServer         string
-	URL                 string
-	RegistrationExpires time.Time
-	IANAID              string
-	AbuseContactEmail   string
-	AbuseContactPhone   string
+	Name              string
+	WHOISServer       string
+	URL               string
+	IANAID            string
+	AbuseContactEmail string
+	AbuseContactPhone string
 }
 
 // Record stores the parsed WHOIS response
@@ -293,6 +292,7 @@ type DomainRecord struct {
 	Reseller     string
 	Updated      time.Time
 	Created      time.Time
+	Expires      time.Time
 	NameServers  []string
 	DomainStatus Status
 	Registrant   Contact

@@ -45,6 +45,11 @@ func MapDomainInfo() Middleware {
 			rec.DomainRecord.Updated = parseTime(time.Parse("2006-01-02T15:04:05Z", rec.Values.Get("Updated Date")))
 			rec.DomainRecord.Created = parseTime(time.Parse("2006-01-02T15:04:05Z", rec.Values.Get("Creation Date")))
 			rec.DomainRecord.DNSSEC = ParseDNSSECState(rec.Values.Get("DNSSEC"))
+			rec.DomainRecord.Expires = parseTime(time.Parse(
+				"2006-01-02T15:04:05Z",
+				rec.Values.Get("Registrar Registration Expiration Date"),
+			))
+
 			return
 		}
 	}
@@ -52,7 +57,7 @@ func MapDomainInfo() Middleware {
 
 // MapRegistrarInfo returns a Middleware that
 // maps Registrar related information
-func MapRegistrarInfo(name, expireField string) Middleware {
+func MapRegistrarInfo(name string) Middleware {
 	return func(inner Parser) Parser {
 		return func(r io.Reader) (rec *Record, err error) {
 			rec, err = inner(r)
@@ -65,10 +70,6 @@ func MapRegistrarInfo(name, expireField string) Middleware {
 				URL:               rec.Values.Get(name + " URL"),
 				AbuseContactEmail: rec.Values.Get(name + " Abuse Contact Email"),
 				AbuseContactPhone: rec.Values.Get(name + " Abuse Contact Phone"),
-				RegistrationExpires: parseTime(time.Parse(
-					"2006-01-02T15:04:05Z",
-					rec.Values.Get(expireField),
-				)),
 			}
 			return
 		}
@@ -173,7 +174,7 @@ func MapDomainStatus(key string) Middleware {
 func CommonDomainRecordMapping() Middleware {
 	return Chain(
 		MapDomainInfo(),
-		MapRegistrarInfo("Registrar", "Registrar Registration Expiration Date"),
+		MapRegistrarInfo("Registrar"),
 		MapContact("Registrant", ToDomainRegistrant),
 		MapContact("Tech", ToDomainTech),
 		MapContact("Admin", ToDomainAdmin),
