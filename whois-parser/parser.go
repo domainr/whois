@@ -177,7 +177,7 @@ func MapDomainStatus(key string) Middleware {
 			rec, err = inner(r)
 
 			// read domain status
-			if domainStatuses, ok := rec.Values["Domain Status"]; ok {
+			if domainStatuses, ok := rec.Values[key]; ok {
 				for _, status := range domainStatuses {
 					rec.DomainRecord.DomainStatus |= ParseStatusString(status)
 				}

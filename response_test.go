@@ -128,7 +128,7 @@ func TestResponse_Parse(t *testing.T) {
 			}
 
 			// Check Registry Domain ID
-			if res.Host == "whois.denic.de" {
+			if res.Host == "whois.denic.de" || res.Host == "whois.dns.be" {
 				// do nothing
 			} else if have := rec.DomainRecord.RegistryID; have == "" {
 				errs = append(
@@ -148,6 +148,7 @@ func TestResponse_Parse(t *testing.T) {
 				)
 				t.Logf("Domain Name: %#v", rec.Values.Get("Domain Name"))
 				t.Logf("raw:\n%s", res.Body)
+				t.Logf("rec.Values: %#v", rec.Values)
 				return
 			}
 		}

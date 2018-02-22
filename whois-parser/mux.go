@@ -42,5 +42,6 @@ func DefaultMux() *Mux {
 		"whois.verisign-grs.com": defaultParser,
 		"whois.cnnic.cn":         CNNICMapping()(ParseCNNICDomainRecord),
 		"whois.denic.de":         DENICMapping()(ParseDENICDomainRecord),
+		"whois.dns.be":           BeMapping()(ParseBeDomainRecord),
 	}
 }

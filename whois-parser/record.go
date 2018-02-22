@@ -265,11 +265,15 @@ type Contact struct {
 // about a domain registrar
 type Registrar struct {
 	Name              string
+	Organization      string
 	WHOISServer       string
 	URL               string
 	IANAID            string
 	AbuseContactEmail string
 	AbuseContactPhone string
+	Phone             string
+	Fax               string
+	Email             string
 }
 
 // Record stores the parsed WHOIS response
