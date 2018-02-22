@@ -2,6 +2,7 @@ package whois_test
 
 import (
 	"fmt"
+	"runtime/debug"
 	"strings"
 	"testing"
 
@@ -55,11 +56,27 @@ func TestPIRRateLimitText(t *testing.T) {
 }
 
 func TestResponse_Parse(t *testing.T) {
+	var fn string
+	var res *whois.Response
+
 	fns, err := whoistest.ResponseFiles()
 	st.Assert(t, err, nil)
 	errTpl := "\n== Record not handled ==\nFile:\t%s\nQuery:\t%s\nHost:\t%s\nError:\t%s"
-	for _, fn := range fns {
-		res, err := whois.ReadMIMEFile(fn)
+
+	defer func() {
+		if r := recover(); r != nil {
+			t.Errorf(
+				errTpl,
+				fn,
+				res.Query,
+				res.Host,
+				fmt.Sprintf("%#v\n%s", r, debug.Stack()),
+			)
+		}
+	}()
+
+	for _, fn = range fns {
+		res, err = whois.ReadMIMEFile(fn)
 		st.Refute(t, res, nil)
 		st.Assert(t, err, nil)
 		if res.MediaType != "text/plain" {
