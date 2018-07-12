@@ -83,7 +83,7 @@ func (c *Client) Fetch(req *Request) (*Response, error) {
 func (c *Client) FetchContext(ctx context.Context, req *Request) (*Response, error) {
 	if c.Timeout > 0 {
 		var cancel context.CancelFunc
-		ctx, cancel = context.WithTimeout(context.Background(), c.Timeout)
+		ctx, cancel = context.WithTimeout(ctx, c.Timeout)
 		defer cancel()
 	}
 	if req.URL != "" {
