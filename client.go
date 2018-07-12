@@ -47,9 +47,6 @@ func (c *Client) dialContext(ctx context.Context, network, address string) (net.
 	case c.DialContext != nil:
 		conn, err = c.DialContext(ctx, network, address)
 	case c.Dial != nil:
-		if c.Timeout > 0 {
-			ctx, _ = context.WithTimeout(ctx, c.Timeout) // FIXME: does this potentially leak a timeout?
-		}
 		conn, err = c.Dial(network, address)
 	default:
 		conn, err = defaultDialer.DialContext(ctx, network, address)
