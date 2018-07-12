@@ -1,6 +1,8 @@
 package whois
 
 import (
+	"io"
+	"strings"
 	"testing"
 
 	"github.com/domainr/whoistest"
@@ -35,13 +37,19 @@ func TestReadMIME(t *testing.T) {
 	}
 }
 
+func TestReadMIMEEmpty(t *testing.T) {
+	res, err := ReadMIME(strings.NewReader(""))
+	st.Reject(t, res, nil)
+	st.Expect(t, err, io.EOF)
+}
+
 func TestPIRRateLimitText(t *testing.T) {
 	req, err := NewRequest("google.org")
 	st.Assert(t, err, nil)
 	res, err := DefaultClient.Fetch(req)
 	st.Assert(t, err, nil)
 	st.Expect(t, res.MediaType, "text/plain")
-	st.Expect(t, res.Charset, "windows-1252")
+	st.Expect(t, res.Charset, "iso-8859-1")
 	res.Body = []byte("WHOIS LIMIT EXCEEDED - SEE WWW.PIR.ORG/WHOIS FOR DETAILS\n")
 	res.DetectContentType("")
 	st.Expect(t, res.MediaType, "text/plain")
