@@ -23,10 +23,10 @@ const (
 // Client represents a whois client. It contains an http.Client, for executing
 // some whois Requests.
 type Client struct {
-	Dial        func(string, string) (net.Conn, error) // Deprecated, use DialContext instead
-	DialContext func(context.Context, string, string) (net.Conn, error)
-	HTTPClient  *http.Client
-	Timeout     time.Duration // Deprecated (use a Context instead)
+	Dial        func(string, string) (net.Conn, error)                  // Deprecated, use DialContext instead
+	DialContext func(context.Context, string, string) (net.Conn, error) // Only used for port 43 (whois) requests, not HTTP(S)
+	HTTPClient  *http.Client                                            // If nil, http.DefaultClient will be used
+	Timeout     time.Duration                                           // Deprecated (use a Context instead)
 }
 
 // DefaultClient represents a shared whois client with a default timeout, HTTP
