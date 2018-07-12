@@ -75,14 +75,17 @@ func (f *FetchError) Error() string {
 
 // Fetch sends the Request to a whois server.
 func (c *Client) Fetch(req *Request) (*Response, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), c.Timeout)
-	defer cancel()
-	return c.FetchContext(ctx, req)
+	return c.FetchContext(context.Background(), req)
 }
 
 // FetchContext sends the Request to a whois server.
 // If ctx cancels or times out before the request completes, it will return an error.
 func (c *Client) FetchContext(ctx context.Context, req *Request) (*Response, error) {
+	if c.Timeout > 0 {
+		var cancel context.CancelFunc
+		ctx, cancel = context.WithTimeout(context.Background(), c.Timeout)
+		defer cancel()
+	}
 	if req.URL != "" {
 		return c.fetchHTTP(ctx, req)
 	}
