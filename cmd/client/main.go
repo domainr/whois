@@ -3,10 +3,12 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"fmt"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/domainr/whois"
 	"github.com/domainr/whoistest"
@@ -14,6 +16,7 @@ import (
 
 func main() {
 	test := flag.Bool("t", false, "load from whois test data instead of the network")
+	timeout := flag.Duration("timeout", 5*time.Second, "timeout")
 	flag.Usage = func() {
 		fmt.Fprintf(os.Stderr, "Usage: %s [arguments] <domain>\n\nAvailable arguments:\n", os.Args[0])
 		flag.PrintDefaults()
@@ -27,6 +30,9 @@ func main() {
 		flag.Usage()
 	}
 
+	c := whois.NewClient(0)
+	ctx, cancel := context.WithTimeout(context.Background(), *timeout)
+	defer cancel()
 	req, err := whois.NewRequest(query)
 	FatalIf(err)
 
@@ -47,7 +53,7 @@ func main() {
 			}
 		}
 	} else {
-		res, err = whois.DefaultClient.Fetch(req)
+		res, err = c.FetchContext(ctx, req)
 		FatalIf(err)
 	}
 
