@@ -2,6 +2,7 @@ package whois
 
 import (
 	"bytes"
+	"context"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -22,8 +23,10 @@ const (
 // Client represents a whois client. It contains an http.Client, for executing
 // some whois Requests.
 type Client struct {
-	Dial       func(string, string) (net.Conn, error)
-	HTTPClient *http.Client
+	Dial        func(string, string) (net.Conn, error) // Deprecated, use DialContext instead
+	DialContext func(context.Context, string, string) (net.Conn, error)
+	HTTPClient  *http.Client
+	Timeout     time.Duration // Deprecated (use a Context instead)
 }
 
 // DefaultClient represents a shared whois client with a default timeout, HTTP
@@ -32,31 +35,35 @@ var DefaultClient = NewClient(DefaultTimeout)
 
 // NewClient creates and initializes a new Client with the specified timeout.
 func NewClient(timeout time.Duration) *Client {
-	dial := func(network, address string) (net.Conn, error) {
-		deadline := time.Now().Add(timeout)
-		conn, err := net.DialTimeout(network, address, timeout)
-		if err != nil {
-			return nil, err
-		}
-		conn.SetDeadline(deadline)
-		return conn, nil
+	return &Client{
+		Timeout: timeout,
 	}
-	c := &Client{
-		Dial:       dial,
-		HTTPClient: &http.Client{},
-	}
-	c.HTTPClient.Transport = &http.Transport{
-		Dial:                  c.dial,
-		Proxy:                 http.ProxyFromEnvironment,
-		TLSHandshakeTimeout:   timeout,
-		ResponseHeaderTimeout: timeout,
-	}
-	return c
 }
 
-func (c *Client) dial(network, address string) (net.Conn, error) {
-	return c.Dial(network, address)
+func (c *Client) dialContext(ctx context.Context, network, address string) (net.Conn, error) {
+	var conn net.Conn
+	var err error
+	switch {
+	case c.DialContext != nil:
+		conn, err = c.DialContext(ctx, network, address)
+	case c.Dial != nil:
+		if c.Timeout > 0 {
+			ctx, _ = context.WithTimeout(ctx, c.Timeout) // FIXME: does this potentially leak a timeout?
+		}
+		conn, err = c.Dial(network, address)
+	default:
+		conn, err = defaultDialer.DialContext(ctx, network, address)
+	}
+	if err != nil {
+		return nil, err
+	}
+	if deadline, ok := ctx.Deadline(); ok {
+		err = conn.SetDeadline(deadline)
+	}
+	return conn, err
 }
+
+var defaultDialer = &net.Dialer{}
 
 // FetchError reports the underlying error and includes the target host of the fetch operation.
 type FetchError struct {
@@ -71,17 +78,25 @@ func (f *FetchError) Error() string {
 
 // Fetch sends the Request to a whois server.
 func (c *Client) Fetch(req *Request) (*Response, error) {
-	if req.URL != "" {
-		return c.fetchHTTP(req)
-	}
-	return c.fetchWhois(req)
+	ctx, cancel := context.WithTimeout(context.Background(), c.Timeout)
+	defer cancel()
+	return c.FetchContext(ctx, req)
 }
 
-func (c *Client) fetchWhois(req *Request) (*Response, error) {
+// FetchContext sends the Request to a whois server.
+// If ctx cancels or times out before the request completes, it will return an error.
+func (c *Client) FetchContext(ctx context.Context, req *Request) (*Response, error) {
+	if req.URL != "" {
+		return c.fetchHTTP(ctx, req)
+	}
+	return c.fetchWhois(ctx, req)
+}
+
+func (c *Client) fetchWhois(ctx context.Context, req *Request) (*Response, error) {
 	if req.Host == "" {
 		return nil, &FetchError{fmt.Errorf("no request host for %s", req.Query), "unknown"}
 	}
-	conn, err := c.Dial("tcp", req.Host+":43")
+	conn, err := c.dialContext(ctx, "tcp", req.Host+":43")
 	if err != nil {
 		return nil, &FetchError{err, req.Host}
 	}
@@ -99,12 +114,16 @@ func (c *Client) fetchWhois(req *Request) (*Response, error) {
 	return res, nil
 }
 
-func (c *Client) fetchHTTP(req *Request) (*Response, error) {
-	hreq, err := httpRequest(req)
+func (c *Client) fetchHTTP(ctx context.Context, req *Request) (*Response, error) {
+	hreq, err := httpRequest(ctx, req)
 	if err != nil {
 		return nil, &FetchError{err, req.Host}
 	}
-	hres, err := c.HTTPClient.Do(hreq)
+	hc := c.HTTPClient
+	if hc == nil {
+		hc = http.DefaultClient
+	}
+	hres, err := hc.Do(hreq)
 	if err != nil {
 		return nil, &FetchError{err, req.Host}
 	}
@@ -117,7 +136,7 @@ func (c *Client) fetchHTTP(req *Request) (*Response, error) {
 	return res, nil
 }
 
-func httpRequest(req *Request) (*http.Request, error) {
+func httpRequest(ctx context.Context, req *Request) (*http.Request, error) {
 	var hreq *http.Request
 	var err error
 	// POST if non-zero Request.Body
@@ -131,7 +150,7 @@ func httpRequest(req *Request) (*http.Request, error) {
 	}
 	// Some web whois servers require a Referer header
 	hreq.Header.Add("Referer", req.URL)
-	return hreq, nil
+	return hreq.WithContext(ctx), nil
 }
 
 func logError(err error) {
