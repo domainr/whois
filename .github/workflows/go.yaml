@@ -1,0 +1,32 @@
+name: Go
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+jobs:
+  test:
+    name: Test Go
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: ^1
+
+      - name: Vet Go code
+        run: go vet ./...
+
+      - name: Run Go tests
+        run: go test -mod=readonly -v -race ./...
+
+      - name: Verify repo is unchanged
+        run: git diff --exit-code HEAD
