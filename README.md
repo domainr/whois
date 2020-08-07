@@ -43,4 +43,4 @@ if record.Refer != "" {
 
 This code is made available under an MIT license. See LICENSE for more information.
 
-© 2014 nb.io, LLC
+© nb.io, LLC
