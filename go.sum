@@ -33,6 +33,8 @@ github.com/zonedb/zonedb v1.0.2782 h1:S0JdgMbdIVaCn57QRv9QW1SeJ9g3HBkoCxOvC764Po
 github.com/zonedb/zonedb v1.0.2782/go.mod h1:bhR3M4yTaeYFi8gXx84qwo2s29HLWzPgwPd/m/RRbyA=
 github.com/zonedb/zonedb v1.0.2783 h1:xBpRZD0AHKHXcggtshnAwsNKCf4dJDBsSJBoCp/6fzM=
 github.com/zonedb/zonedb v1.0.2783/go.mod h1:bhR3M4yTaeYFi8gXx84qwo2s29HLWzPgwPd/m/RRbyA=
+github.com/zonedb/zonedb v1.0.2786 h1:g9qhUcF66vBwjkPS6we8TZTJou3CxiVk2yTVbxFaKKY=
+github.com/zonedb/zonedb v1.0.2786/go.mod h1:bhR3M4yTaeYFi8gXx84qwo2s29HLWzPgwPd/m/RRbyA=
 golang.org/x/crypto v0.0.0-20190308221718-c2843e01d9a2/go.mod h1:djNgcEr1/C05ACkg1iLfiJU5Ep61QUkGW8qpdssI0+w=
 golang.org/x/crypto v0.0.0-20191011191535-87dc89f01550/go.mod h1:yigFU9vqHzYiE8UmvKecakEJjdnWj3jj499lnFckfCI=
 golang.org/x/crypto v0.0.0-20200622213623-75b288015ac9/go.mod h1:LzIPMQfyMNhhGPhUkYOs5KpL4U8rLKemX1yGLhDgUto=
