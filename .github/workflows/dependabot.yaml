@@ -6,7 +6,7 @@ on:
 jobs:
   go:
     name: Check Dependabot Go updates
-    if: github.event.pull_request.sender.login == 'dependabot-bot'
+    if: github.actor == 'dependabot[bot]'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
