@@ -23,7 +23,6 @@ jobs:
 
       - name: Download Go modules
         run: |
-          go mod download
           go mod tidy
           go test -i -mod=readonly -race ./...
 

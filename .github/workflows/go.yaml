@@ -3,7 +3,7 @@ name: Go
 on:
   push:
     branches:
-      - master
+      - main
   pull_request:
 
 jobs:
@@ -30,3 +30,27 @@ jobs:
 
       - name: Verify repo is unchanged
         run: git diff --exit-code HEAD
+
+  # Via: https://github.com/dependabot/dependabot-core/issues/1973#issuecomment-701889737
+  automerge:
+    name: Automerge
+    needs: test
+    if: github.event_name == 'pull_request' && github.event.pull_request.sender.login == 'dependabot'
+    runs-on: ubuntu-latest
+    steps:
+      - name: automerge
+        uses: actions/github-script@v3
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            github.pulls.createReview({
+              owner: context.payload.repository.owner.login,
+              repo: context.payload.repository.name,
+              pull_number: context.payload.pull_request.number,
+              event: 'APPROVE'
+            })
+            github.pulls.merge({
+              owner: context.payload.repository.owner.login,
+              repo: context.payload.repository.name,
+              pull_number: context.payload.pull_request.number
+            })
