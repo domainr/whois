@@ -41,7 +41,7 @@ jobs:
       - name: automerge
         uses: actions/github-script@v3
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.DOMAINRBOT_RW_GITHUB_ACCESS_TOKEN }}
           script: |
             github.pulls.createReview({
               owner: context.payload.repository.owner.login,
