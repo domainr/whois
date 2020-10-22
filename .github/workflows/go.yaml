@@ -35,7 +35,7 @@ jobs:
         if: startsWith(github.head_ref, 'dependabot/go_modules/github.com/zonedb/zonedb')
         env:
           GITHUB_TOKEN: ${{ secrets.DOMAINRBOT_RW_GITHUB_ACCESS_TOKEN }}
-        run: gh pr review --approve
+        run: gh pr review --approve ${{ github.head_ref }}
 
   # Via: https://github.com/dependabot/dependabot-core/issues/1973#issuecomment-701889737
   # automerge:
