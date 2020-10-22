@@ -34,7 +34,9 @@ jobs:
   approve:
     name: Approve pull request
     needs: test
-    if: startsWith(github.head_ref, 'dependabot/go_modules/github.com/zonedb/zonedb') # Only run on pull request
+    if: |
+      startsWith(github.head_ref, 'dependabot/go_modules/github.com/zonedb/') ||
+      startsWith(github.head_ref, 'dependabot/go_modules/github.com/domainr/')
     runs-on: ubuntu-latest
     env:
       GITHUB_TOKEN: ${{ secrets.DOMAINRBOT_RW_GITHUB_ACCESS_TOKEN }}
