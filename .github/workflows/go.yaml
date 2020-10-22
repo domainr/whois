@@ -31,17 +31,11 @@ jobs:
       - name: Verify repo is unchanged
         run: git diff --exit-code HEAD
 
-  approve:
-    name: Approve pull request
-    needs: test
-    if: |
-      startsWith(github.head_ref, 'dependabot/go_modules/github.com/zonedb/') ||
-      startsWith(github.head_ref, 'dependabot/go_modules/github.com/domainr/')
-    runs-on: ubuntu-latest
-    env:
-      GITHUB_TOKEN: ${{ secrets.DOMAINRBOT_RW_GITHUB_ACCESS_TOKEN }}
-    steps:
-      - run: gh pr review --approve ${{ github.head_ref }}
+      - name: Approve pull request
+        if: startsWith(github.head_ref, 'dependabot/go_modules/github.com/zonedb/zonedb')
+        env:
+          GITHUB_TOKEN: ${{ secrets.DOMAINRBOT_RW_GITHUB_ACCESS_TOKEN }}
+        run: gh pr review --approve
 
   # Via: https://github.com/dependabot/dependabot-core/issues/1973#issuecomment-701889737
   # automerge:
