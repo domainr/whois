@@ -1,4 +1,4 @@
-name: Automerge
+name: Merge
 
 on:
   pull_request_review:
@@ -10,7 +10,7 @@ jobs:
     name: Merge pull request
     if: |
       github.event.review.state == 'approved' &&
-      startsWith(github.ref, 'refs/heads/dependabot/')
+      startsWith(github.head_ref, 'dependabot/')
     runs-on: ubuntu-latest
     steps:
       - name: Merge
