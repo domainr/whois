@@ -1,0 +1,26 @@
+name: Automerge
+
+on:
+  pull_request_review:
+    types:
+      - submitted
+
+jobs:
+  merge:
+    name: Merge pull request
+    if: |
+      github.event.review.state == 'approved' &&
+      startsWith(github.ref, 'refs/heads/dependabot/')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Merge
+        uses: actions/github-script@v3
+        with:
+          github-token: ${{ secrets.DOMAINRBOT_RW_GITHUB_ACCESS_TOKEN }}
+          script: |
+            github.pulls.merge({
+              owner: context.payload.repository.owner.login,
+              repo: context.payload.repository.name,
+              pull_number: context.payload.pull_request.number,
+              merge_method: 'merge'
+            })
