@@ -31,32 +31,32 @@ jobs:
       - name: Verify repo is unchanged
         run: git diff --exit-code HEAD
 
-      - name: Approve pull request
-        if: startsWith(github.head_ref, 'dependabot/go_modules/github.com/zonedb/zonedb')
-        env:
-          GITHUB_TOKEN: ${{ secrets.DOMAINRBOT_RW_GITHUB_ACCESS_TOKEN }}
-        run: gh pr review --approve ${{ github.head_ref }}
+      # - name: Approve pull request
+      #   if: startsWith(github.head_ref, 'dependabot/go_modules/github.com/zonedb/zonedb')
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.DOMAINRBOT_RW_GITHUB_ACCESS_TOKEN }}
+      #   run: gh pr review --approve ${{ github.head_ref }}
 
-  # Via: https://github.com/dependabot/dependabot-core/issues/1973#issuecomment-701889737
-  # automerge:
-  #   name: Automerge
-  #   needs: test
-  #   if: github.actor == 'dependabot[bot]'
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Automerge
-  #       uses: actions/github-script@v3
-  #       with:
-  #         github-token: ${{ secrets.DOMAINRBOT_RW_GITHUB_ACCESS_TOKEN }}
-  #         script: |
-  #           github.pulls.createReview({
-  #             owner: context.payload.repository.owner.login,
-  #             repo: context.payload.repository.name,
-  #             pull_number: context.payload.pull_request.number,
-  #             event: 'APPROVE'
-  #           })
-  #           github.pulls.merge({
-  #             owner: context.payload.repository.owner.login,
-  #             repo: context.payload.repository.name,
-  #             pull_number: context.payload.pull_request.number
-  #           })
+  review:
+    name: Review pull request
+    needs: test
+    if: startsWith(github.head_ref, 'dependabot/go_modules/github.com/zonedb/zonedb')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Approve pull request
+        uses: actions/github-script@v3
+        with:
+          github-token: ${{ secrets.DOMAINRBOT_RW_GITHUB_ACCESS_TOKEN }}
+          script: |
+            github.pulls.createReview({
+              owner: context.payload.repository.owner.login,
+              repo: context.payload.repository.name,
+              pull_number: context.payload.pull_request.number,
+              event: 'APPROVE'
+            })
+
+# github.pulls.merge({
+#   owner: context.payload.repository.owner.login,
+#   repo: context.payload.repository.name,
+#   pull_number: context.payload.pull_request.number
+# })
