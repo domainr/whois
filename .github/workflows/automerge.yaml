@@ -10,13 +10,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: echo ${{ github.event.review.state }}
-      - run: echo ${{ github.event.review.pull_request }}
+      - run: echo ${{ github.event.pull_request }}
+      - run: echo ${{ github.event.pull_request.user.login }}
 
   merge:
     name: Merge pull request
     if: |
       github.event.review.state == 'approved' &&
-      github.event.review.pull_request.user.login == 'dependabot[bot]'
+      github.event.pull_request.user.login == 'dependabot[bot]'
     runs-on: ubuntu-latest
     steps:
       - run: echo ${{ github.event.review.state }}
