@@ -6,6 +6,11 @@ on:
       - submitted
 
 jobs:
+  debug:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "hi there"
+
   merge:
     name: Merge pull request
     if: |
