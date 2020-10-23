@@ -9,7 +9,9 @@ jobs:
   debug:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "hi there"
+      - run: echo ${{ github.event.review.state }}
+      - run: echo ${{ github.head_ref }}
+      - run: echo ${{ github.ref }}
 
   merge:
     name: Merge pull request
