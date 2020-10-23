@@ -10,24 +10,25 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: echo ${{ github.event.review.state }}
-      - run: echo ${{ github.head_ref }}
-      - run: echo ${{ github.ref }}
+      - run: echo ${{ github.event.review.pull_request }}
 
   merge:
     name: Merge pull request
     if: |
       github.event.review.state == 'approved' &&
-      startsWith(github.head_ref, 'dependabot/')
+      github.event.review.pull_request.user.login == 'dependabot[bot]'
     runs-on: ubuntu-latest
     steps:
-      - name: Merge
-        uses: actions/github-script@v3
-        with:
-          github-token: ${{ secrets.DOMAINRBOT_RW_GITHUB_ACCESS_TOKEN }}
-          script: |
-            github.pulls.merge({
-              owner: context.payload.repository.owner.login,
-              repo: context.payload.repository.name,
-              pull_number: context.payload.pull_request.number,
-              merge_method: 'merge'
-            })
+      - run: echo ${{ github.event.review.state }}
+      - run: echo ${{ github.event.review.pull_request }}
+      # - name: Merge
+      #   uses: actions/github-script@v3
+      #   with:
+      #     github-token: ${{ secrets.DOMAINRBOT_RW_GITHUB_ACCESS_TOKEN }}
+      #     script: |
+      #       github.pulls.merge({
+      #         owner: context.payload.repository.owner.login,
+      #         repo: context.payload.repository.name,
+      #         pull_number: context.payload.pull_request.number,
+      #         merge_method: 'merge'
+      #       })
