@@ -8,7 +8,7 @@ on:
 
 jobs:
   test:
-    name: Test Go
+    name: Test
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -30,12 +30,6 @@ jobs:
 
       - name: Verify repo is unchanged
         run: git diff --exit-code HEAD
-
-      # - name: Approve pull request
-      #   if: startsWith(github.head_ref, 'dependabot/go_modules/github.com/zonedb/zonedb')
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.DOMAINRBOT_RW_GITHUB_ACCESS_TOKEN }}
-      #   run: gh pr review --approve ${{ github.head_ref }}
 
   review:
     name: Review pull request
