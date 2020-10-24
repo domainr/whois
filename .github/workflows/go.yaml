@@ -36,7 +36,7 @@ jobs:
     needs: test
     if: |
       github.event.pull_request.user.login == 'dependabot[bot]' &&
-      contains(github.ref, 'dependabot/go_modules/github.com/zonedb/zonedb')
+      contains(github.head_ref, 'dependabot/go_modules/github.com/zonedb/zonedb')
     runs-on: ubuntu-latest
     steps:
       - name: Approve pull request
