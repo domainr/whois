@@ -34,7 +34,9 @@ jobs:
   review:
     name: Review pull request
     needs: test
-    if: startsWith(github.head_ref, 'dependabot/go_modules/github.com/zonedb/zonedb')
+    if: |
+      github.event.pull_request.user.login == 'dependabot[bot]' &&
+      contains(github.ref, 'dependabot/go_modules/github.com/zonedb/zonedb')
     runs-on: ubuntu-latest
     steps:
       - name: Approve pull request
