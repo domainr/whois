@@ -9,6 +9,6 @@ updates:
   - package-ecosystem: gomod
     directory: "/"
     schedule:
-      interval: daily
+      interval: weekly
       time: "11:00" # After github.com/domainr/whoistest
     open-pull-requests-limit: 10
