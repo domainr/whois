@@ -28,14 +28,21 @@ func Server(query string) (string, string, error) {
 	if z == nil {
 		return "", "", fmt.Errorf("no public zone found for %s", query)
 	}
-	host := z.WhoisServer()
+
+	// Try whois URL first (these are relatively rare)
 	wu := z.WhoisURL()
-	if host != "" {
-		return host, wu, nil
+	if wu != "" {
+		u, err := url.Parse(wu)
+		if err == nil && u.Host != "" {
+			return u.Host, wu, nil
+		}
 	}
-	u, err := url.Parse(wu)
-	if err == nil && u.Host != "" {
-		return u.Host, wu, nil
+
+	// Then try host (more common)
+	h := z.WhoisServer()
+	if h != "" {
+		return h, "", nil
 	}
+
 	return "", "", fmt.Errorf("no whois server found for %s", query)
 }
