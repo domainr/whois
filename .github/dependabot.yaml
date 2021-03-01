@@ -10,5 +10,5 @@ updates:
     directory: "/"
     schedule:
       interval: weekly
-      time: "11:00" # After github.com/domainr/whoistest
+      time: "11:00" # 3am Pacific, after github.com/domainr/whoistest
     open-pull-requests-limit: 10
