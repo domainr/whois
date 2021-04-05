@@ -10,5 +10,5 @@ require (
 	github.com/saintfish/chardet v0.0.0-20120816061221-3af4cd4741ca
 	github.com/zonedb/zonedb v1.0.3060
 	golang.org/x/net v0.0.0-20210226172049-e18ecbb05110
-	golang.org/x/text v0.3.5
+	golang.org/x/text v0.3.6
 )
