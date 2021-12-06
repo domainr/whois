@@ -10,8 +10,8 @@ github.com/nbio/st v0.0.0-20140626010706-e9e8d9816f32/go.mod h1:9wM+0iRr9ahx58uY
 github.com/saintfish/chardet v0.0.0-20120816061221-3af4cd4741ca h1:NugYot0LIVPxTvN8n+Kvkn6TrbMyxQiuvKdEwFdR9vI=
 github.com/saintfish/chardet v0.0.0-20120816061221-3af4cd4741ca/go.mod h1:uugorj2VCxiV1x+LzaIdVa9b4S4qGAcH6cbhh4qVxOU=
 github.com/wsxiaoys/terminal v0.0.0-20160513160801-0940f3fc43a0/go.mod h1:IXCdmsXIht47RaVFLEdVnh1t+pgYtTAhQGj73kz+2DM=
-github.com/zonedb/zonedb v1.0.3460 h1:29SjLt5AFV3Dw6Q3vX+P8kY/WL6IDHp0KawXpXqsjvo=
-github.com/zonedb/zonedb v1.0.3460/go.mod h1:m8YJPhGLXQlvr7v7FD6Ptz7r/GsfCOLwOo5VRlekKEM=
+github.com/zonedb/zonedb v1.0.3467 h1:Tbk/nmYn8h5uluQ6VDzu7D2ZU5lOVDtVtrAYPslx2qc=
+github.com/zonedb/zonedb v1.0.3467/go.mod h1:m8YJPhGLXQlvr7v7FD6Ptz7r/GsfCOLwOo5VRlekKEM=
 golang.org/x/net v0.0.0-20210226172049-e18ecbb05110/go.mod h1:m0MpNAwzfU5UDzcl9v0D8zg8gWTRqZa9RBIspLL5mdg=
 golang.org/x/net v0.0.0-20210916014120-12bc252f5db8 h1:/6y1LfuqNuQdHAm0jjtPtgRcxIxjVZgm5OTu8/QhZvk=
 golang.org/x/net v0.0.0-20210916014120-12bc252f5db8/go.mod h1:9nx3DQGgdP8bBQD5qxJ1jj9UTztislL4KSBs9R2vV5Y=
