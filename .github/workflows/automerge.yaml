@@ -11,10 +11,10 @@ jobs:
     if: |
       github.event.review.state == 'approved' &&
       github.event.pull_request.user.login == 'dependabot[bot]'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: Merge
-        uses: actions/github-script@v6
+        uses: actions/github-script@v6.2.0
         with:
           github-token: ${{ secrets.DOMAINRBOT_RW_GITHUB_ACCESS_TOKEN }}
           script: |
