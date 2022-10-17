@@ -40,7 +40,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Approve pull request
-        uses: actions/github-script@v6.3.1
+        uses: actions/github-script@v6.3.3
         with:
           github-token: ${{ secrets.DOMAINRBOT_RW_GITHUB_ACCESS_TOKEN }}
           script: |
