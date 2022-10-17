@@ -9,6 +9,6 @@ require (
 	github.com/nbio/st v0.0.0-20140626010706-e9e8d9816f32
 	github.com/saintfish/chardet v0.0.0-20120816061221-3af4cd4741ca
 	github.com/zonedb/zonedb v1.0.3810
-	golang.org/x/net v0.0.0-20220708220712-1185a9018129
-	golang.org/x/text v0.3.7
+	golang.org/x/net v0.0.0-20220722155237-a158d28d115b
+	golang.org/x/text v0.3.8
 )
