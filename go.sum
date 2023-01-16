@@ -12,8 +12,8 @@ github.com/saintfish/chardet v0.0.0-20120816061221-3af4cd4741ca/go.mod h1:uugorj
 github.com/wsxiaoys/terminal v0.0.0-20160513160801-0940f3fc43a0/go.mod h1:IXCdmsXIht47RaVFLEdVnh1t+pgYtTAhQGj73kz+2DM=
 github.com/yuin/goldmark v1.3.5/go.mod h1:mwnBkeHKe2W/ZEtQ+71ViKU8L12m81fl3OWwC1Zlc8k=
 github.com/yuin/goldmark v1.4.13/go.mod h1:6yULJ656Px+3vBD8DxQVa3kxgyrAnzto9xy5taEt/CY=
-github.com/zonedb/zonedb v1.0.3950 h1:oEHLFF5IBawuFTWNxzFF4suSHHzwRjD2vkP31f/Yaus=
-github.com/zonedb/zonedb v1.0.3950/go.mod h1:an3heKHNZfM9aoXmuhhIUw7iiGec5WbHLUX/p5NxmMA=
+github.com/zonedb/zonedb v1.0.3959 h1:UiksGvNVKnOhgb9wMfcH+ckfYjN8IwhC8QpNqf7+I9Q=
+github.com/zonedb/zonedb v1.0.3959/go.mod h1:an3heKHNZfM9aoXmuhhIUw7iiGec5WbHLUX/p5NxmMA=
 golang.org/x/crypto v0.0.0-20190308221718-c2843e01d9a2/go.mod h1:djNgcEr1/C05ACkg1iLfiJU5Ep61QUkGW8qpdssI0+w=
 golang.org/x/crypto v0.0.0-20191011191535-87dc89f01550/go.mod h1:yigFU9vqHzYiE8UmvKecakEJjdnWj3jj499lnFckfCI=
 golang.org/x/crypto v0.0.0-20210921155107-089bfa567519/go.mod h1:GvvjBRRGRdwPK5ydBHafDWAxML/pGHZbMvKqRZ5+Abc=
