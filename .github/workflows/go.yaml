@@ -13,7 +13,7 @@ jobs:
     timeout-minutes: 15
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v3.6.0
+        uses: actions/checkout@v4.0.0
         with:
           submodules: recursive
 
