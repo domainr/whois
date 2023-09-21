@@ -7,9 +7,6 @@ on:
   pull_request:
   workflow_dispatch: # Enables the web UI manual trigger
 
-permissions:
-  pull-requests: write
-
 jobs:
   test:
     name: Test
@@ -34,18 +31,3 @@ jobs:
 
       - name: Verify repo is unchanged
         run: git diff --exit-code HEAD
-
-  approve:
-    runs-on: ubuntu-22.04
-    if: ${{ github.actor == 'dependabot[bot]' }}
-    steps:
-      - name: Dependabot metadata
-        id: metadata
-        uses: dependabot/fetch-metadata@v1.6.0
-        with:
-          github-token: "${{ secrets.GITHUB_TOKEN }}"
-      - name: Approve PR
-        run: gh pr review --approve "$PR_URL"
-        env:
-          PR_URL: ${{github.event.pull_request.html_url}}
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
