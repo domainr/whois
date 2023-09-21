@@ -31,23 +31,3 @@ jobs:
 
       - name: Verify repo is unchanged
         run: git diff --exit-code HEAD
-
-  review:
-    name: Review pull request
-    needs: test
-    if: |
-      github.event.pull_request.user.login == 'dependabot[bot]' &&
-      contains(github.head_ref, 'dependabot/go_modules/github.com/zonedb/zonedb')
-    runs-on: ubuntu-latest
-    steps:
-      - name: Approve pull request
-        uses: actions/github-script@v6.4.1
-        with:
-          github-token: ${{ secrets.DOMAINRBOT_RW_GITHUB_ACCESS_TOKEN }}
-          script: |
-            github.pulls.createReview({
-              owner: context.payload.repository.owner.login,
-              repo: context.payload.repository.name,
-              pull_number: context.payload.pull_request.number,
-              event: 'APPROVE'
-            })
