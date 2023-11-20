@@ -10,8 +10,8 @@ github.com/nbio/st v0.0.0-20140626010706-e9e8d9816f32/go.mod h1:9wM+0iRr9ahx58uY
 github.com/saintfish/chardet v0.0.0-20230101081208-5e3ef4b5456d h1:hrujxIzL1woJ7AwssoOcM/tq5JjjG2yYOc8odClEiXA=
 github.com/saintfish/chardet v0.0.0-20230101081208-5e3ef4b5456d/go.mod h1:uugorj2VCxiV1x+LzaIdVa9b4S4qGAcH6cbhh4qVxOU=
 github.com/yuin/goldmark v1.4.13/go.mod h1:6yULJ656Px+3vBD8DxQVa3kxgyrAnzto9xy5taEt/CY=
-github.com/zonedb/zonedb v1.0.4410 h1:fgBy3JPmfzDukD5G0tjeWfXjMTijltJsMUhwouYk9uE=
-github.com/zonedb/zonedb v1.0.4410/go.mod h1:HxkK7drFHt9B4CsAq2Wg/zXsmlud9UCkB8UoECsRU8E=
+github.com/zonedb/zonedb v1.0.4419 h1:AfPIAJCKZ4FNttDrH+7hq5CGb1DWLdqcVihN2V8V6FQ=
+github.com/zonedb/zonedb v1.0.4419/go.mod h1:kr4WJOan7moARKshbjLuOKV/nfQAVDnhLn0Qz4NqbUU=
 golang.org/x/crypto v0.0.0-20190308221718-c2843e01d9a2/go.mod h1:djNgcEr1/C05ACkg1iLfiJU5Ep61QUkGW8qpdssI0+w=
 golang.org/x/crypto v0.0.0-20210921155107-089bfa567519/go.mod h1:GvvjBRRGRdwPK5ydBHafDWAxML/pGHZbMvKqRZ5+Abc=
 golang.org/x/mod v0.6.0-dev.0.20220419223038-86c51ed26bb4/go.mod h1:jJ57K6gSWd91VN4djpZkiMVwK6gcyfeH4XE8wZrZaV4=
