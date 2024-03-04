@@ -5,7 +5,7 @@ go 1.21.0
 toolchain go1.21.1
 
 require (
-	github.com/PuerkitoBio/goquery v1.9.0
+	github.com/PuerkitoBio/goquery v1.9.1
 	github.com/andybalholm/cascadia v1.3.2
 	github.com/domainr/whoistest v0.0.0-20180714175718-26cad4b7c941
 	github.com/nbio/st v0.0.0-20140626010706-e9e8d9816f32
