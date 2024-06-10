@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: govulncheck
-        uses: golang/govulncheck-action@v1.0.2
+        uses: golang/govulncheck-action@v1.0.3
         with:
           go-version-file: go.mod
           
