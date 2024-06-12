@@ -7,17 +7,7 @@ on:
   pull_request:
   workflow_dispatch: # Enables the web UI manual trigger
 
-jobs:
-  # Go vulnerability check
-  vuln:
-    name: govulncheck
-    runs-on: ubuntu-latest
-    steps:
-      - name: govulncheck
-        uses: golang/govulncheck-action@v1.0.2
-        with:
-          go-version-file: go.mod
-          
+jobs:         
   test:
     name: Test
     runs-on: ubuntu-22.04
@@ -35,6 +25,12 @@ jobs:
 
       - name: Vet Go code
         run: go vet ./...
+
+      - name: govulncheck
+        uses: golang/govulncheck-action@v1.0.3
+        with:
+          cache: false
+          repo-checkout: false
 
       - name: Run Go tests
         run: go test -mod=readonly -v -race ./...
