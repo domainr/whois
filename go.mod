@@ -1,6 +1,6 @@
 module github.com/domainr/whois
 
-go 1.22
+go 1.21
 
 require (
 	github.com/PuerkitoBio/goquery v1.9.2
