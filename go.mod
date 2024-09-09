@@ -1,9 +1,10 @@
 module github.com/domainr/whois
 
 go 1.21
+toolchain go1.23.1
 
 require (
-	github.com/PuerkitoBio/goquery v1.9.2
+	github.com/PuerkitoBio/goquery v1.10.0
 	github.com/andybalholm/cascadia v1.3.2
 	github.com/domainr/whoistest v0.0.0-20180714175718-26cad4b7c941
 	github.com/nbio/st v0.0.0-20140626010706-e9e8d9816f32
