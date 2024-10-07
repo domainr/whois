@@ -27,7 +27,7 @@ jobs:
         run: go vet ./...
 
       - name: govulncheck
-        uses: golang/govulncheck-action@v1.0.3
+        uses: golang/govulncheck-action@v1.0.4
         with:
           cache: false
           repo-checkout: false
