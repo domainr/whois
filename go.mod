@@ -1,6 +1,6 @@
 module github.com/domainr/whois
 
-go 1.23.8
+go 1.24.0
 
 require (
 	github.com/PuerkitoBio/goquery v1.10.3
@@ -10,5 +10,5 @@ require (
 	github.com/saintfish/chardet v0.0.0-20230101081208-5e3ef4b5456d
 	github.com/zonedb/zonedb v1.0.5313
 	golang.org/x/net v0.43.0
-	golang.org/x/text v0.28.0
+	golang.org/x/text v0.29.0
 )
