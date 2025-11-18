@@ -102,12 +102,10 @@ func (c *Client) fetchWhois(ctx context.Context, req *Request) (*Response, error
 	}
 	defer conn.Close()
 	if _, err = conn.Write(req.Body); err != nil {
-		logError(err)
 		return nil, &FetchError{err, req.Host}
 	}
 	res := NewResponse(req.Query, req.Host)
 	if res.Body, err = ioutil.ReadAll(io.LimitReader(conn, DefaultReadLimit)); err != nil {
-		logError(err)
 		return nil, &FetchError{err, req.Host}
 	}
 	res.DetectContentType("")
@@ -129,7 +127,6 @@ func (c *Client) fetchHTTP(ctx context.Context, req *Request) (*Response, error)
 	}
 	res := NewResponse(req.Query, req.Host)
 	if res.Body, err = ioutil.ReadAll(io.LimitReader(hres.Body, DefaultReadLimit)); err != nil {
-		logError(err)
 		return nil, &FetchError{err, req.Host}
 	}
 	res.DetectContentType(hres.Header.Get("Content-Type"))
@@ -151,13 +148,4 @@ func httpRequest(ctx context.Context, req *Request) (*http.Request, error) {
 	// Some web whois servers require a Referer header
 	hreq.Header.Add("Referer", req.URL)
 	return hreq.WithContext(ctx), nil
-}
-
-func logError(err error) {
-	switch t := err.(type) {
-	case net.Error:
-		fmt.Fprintf(os.Stderr, "net.Error timeout=%t, temp=%t: %s\n", t.Timeout(), t.Temporary(), err.Error())
-	default:
-		fmt.Fprintf(os.Stderr, "Unknown error %v: %s\n", t, err.Error())
-	}
 }
