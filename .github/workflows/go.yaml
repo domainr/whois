@@ -14,12 +14,12 @@ jobs:
     timeout-minutes: 15
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v6.0.1
+        uses: actions/checkout@v6
         with:
           submodules: recursive
 
       - name: Set up Go
-        uses: actions/setup-go@v6.2.0
+        uses: actions/setup-go@v6
         with:
           go-version: ^1
 
@@ -27,7 +27,7 @@ jobs:
         run: go vet ./...
 
       - name: govulncheck
-        uses: golang/govulncheck-action@v1.0.4
+        uses: golang/govulncheck-action@v1
         with:
           cache: false
           repo-checkout: false
