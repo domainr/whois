@@ -24,3 +24,23 @@ func TestNewClient(t *testing.T) {
 		})
 	}
 }
+
+func TestClientReadLimit(t *testing.T) {
+	tests := []struct {
+		name      string
+		readLimit int64
+		want      int64
+	}{
+		{"zero uses default", 0, DefaultReadLimit},
+		{"negative uses default", -1, DefaultReadLimit},
+		{"custom value", 2 << 20, 2 << 20},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c := &Client{ReadLimit: tt.readLimit}
+			if got := c.readLimit(); got != tt.want {
+				t.Errorf("readLimit() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
