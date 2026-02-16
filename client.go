@@ -26,6 +26,7 @@ type Client struct {
 	DialContext func(context.Context, string, string) (net.Conn, error) // Only used for port 43 (whois) requests, not HTTP(S)
 	HTTPClient  *http.Client                                            // If nil, http.DefaultClient will be used
 	Timeout     time.Duration                                           // Deprecated (use a Context instead)
+	ReadLimit   int64                                                    // If 0, DefaultReadLimit will be used
 }
 
 // DefaultClient represents a shared whois client with a default timeout, HTTP
@@ -60,6 +61,13 @@ func (c *Client) dialContext(ctx context.Context, network, address string) (net.
 }
 
 var defaultDialer = &net.Dialer{}
+
+func (c *Client) readLimit() int64 {
+	if c.ReadLimit > 0 {
+		return c.ReadLimit
+	}
+	return DefaultReadLimit
+}
 
 // FetchError reports the underlying error and includes the target host of the fetch operation.
 type FetchError struct {
@@ -104,7 +112,7 @@ func (c *Client) fetchWhois(ctx context.Context, req *Request) (*Response, error
 		return nil, &FetchError{err, req.Host}
 	}
 	res := NewResponse(req.Query, req.Host)
-	if res.Body, err = ioutil.ReadAll(io.LimitReader(conn, DefaultReadLimit)); err != nil {
+	if res.Body, err = ioutil.ReadAll(io.LimitReader(conn, c.readLimit())); err != nil {
 		return nil, &FetchError{err, req.Host}
 	}
 	res.DetectContentType("")
@@ -125,7 +133,7 @@ func (c *Client) fetchHTTP(ctx context.Context, req *Request) (*Response, error)
 		return nil, &FetchError{err, req.Host}
 	}
 	res := NewResponse(req.Query, req.Host)
-	if res.Body, err = ioutil.ReadAll(io.LimitReader(hres.Body, DefaultReadLimit)); err != nil {
+	if res.Body, err = ioutil.ReadAll(io.LimitReader(hres.Body, c.readLimit())); err != nil {
 		return nil, &FetchError{err, req.Host}
 	}
 	res.DetectContentType(hres.Header.Get("Content-Type"))
