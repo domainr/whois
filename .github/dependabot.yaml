@@ -5,6 +5,11 @@ updates:
     schedule:
       interval: weekly
     open-pull-requests-limit: 10
+    groups:
+      github-actions-minor-patch:
+        update-types:
+          - minor
+          - patch
 
   - package-ecosystem: gomod
     directory: "/"
@@ -12,3 +17,11 @@ updates:
       interval: weekly
       time: "11:00" # 3am Pacific, after github.com/domainr/whoistest
     open-pull-requests-limit: 10
+    groups:
+      golang-x:
+        patterns:
+          - "golang.org/x/*"
+      goquery:
+        patterns:
+          - "github.com/PuerkitoBio/goquery"
+          - "github.com/andybalholm/cascadia"
