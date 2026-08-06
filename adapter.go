@@ -3,7 +3,7 @@ package whois
 import (
 	"errors"
 	"fmt"
-	"io/ioutil"
+	"io"
 )
 
 // Adapter contains server-specific code for retrieving and parsing whois data.
@@ -41,7 +41,7 @@ func (a *defaultAdapter) Text(res *Response) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	text, err := ioutil.ReadAll(r)
+	text, err := io.ReadAll(r)
 	if err != nil {
 		return nil, err
 	}

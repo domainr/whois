@@ -5,7 +5,6 @@ import (
 	"context"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net"
 	"net/http"
 	"time"
@@ -26,7 +25,7 @@ type Client struct {
 	DialContext func(context.Context, string, string) (net.Conn, error) // Only used for port 43 (whois) requests, not HTTP(S)
 	HTTPClient  *http.Client                                            // If nil, http.DefaultClient will be used
 	Timeout     time.Duration                                           // Deprecated (use a Context instead)
-	ReadLimit   int64                                                    // If 0, DefaultReadLimit will be used
+	ReadLimit   int64                                                   // If 0, DefaultReadLimit will be used
 }
 
 // DefaultClient represents a shared whois client with a default timeout, HTTP
@@ -80,6 +79,12 @@ func (f *FetchError) Error() string {
 	return f.Err.Error()
 }
 
+// Unwrap returns the underlying error, enabling errors.Is and errors.As to
+// see through FetchError.
+func (f *FetchError) Unwrap() error {
+	return f.Err
+}
+
 // Fetch sends the Request to a whois server.
 func (c *Client) Fetch(req *Request) (*Response, error) {
 	return c.FetchContext(context.Background(), req)
@@ -112,7 +117,7 @@ func (c *Client) fetchWhois(ctx context.Context, req *Request) (*Response, error
 		return nil, &FetchError{err, req.Host}
 	}
 	res := NewResponse(req.Query, req.Host)
-	if res.Body, err = ioutil.ReadAll(io.LimitReader(conn, c.readLimit())); err != nil {
+	if res.Body, err = io.ReadAll(io.LimitReader(conn, c.readLimit())); err != nil {
 		return nil, &FetchError{err, req.Host}
 	}
 	res.DetectContentType("")
@@ -132,8 +137,11 @@ func (c *Client) fetchHTTP(ctx context.Context, req *Request) (*Response, error)
 	if err != nil {
 		return nil, &FetchError{err, req.Host}
 	}
+	// Close the response body so the underlying connection can be
+	// returned to the transport's keep-alive pool.
+	defer hres.Body.Close()
 	res := NewResponse(req.Query, req.Host)
-	if res.Body, err = ioutil.ReadAll(io.LimitReader(hres.Body, c.readLimit())); err != nil {
+	if res.Body, err = io.ReadAll(io.LimitReader(hres.Body, c.readLimit())); err != nil {
 		return nil, &FetchError{err, req.Host}
 	}
 	res.DetectContentType(hres.Header.Get("Content-Type"))

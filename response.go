@@ -6,7 +6,6 @@ import (
 	"encoding/hex"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"mime"
 	"net/http"
 	"net/mail"
@@ -191,7 +190,7 @@ func ReadMIME(r io.Reader) (*Response, error) {
 	}
 	h := msg.Header
 	res := NewResponse(h.Get("Query"), h.Get("Host"))
-	if res.Body, err = ioutil.ReadAll(msg.Body); err != nil {
+	if res.Body, err = io.ReadAll(msg.Body); err != nil {
 		return res, err
 	}
 	if res.FetchedAt, err = time.Parse(time.RFC3339, h.Get("Fetched-At")); err != nil {

@@ -21,7 +21,7 @@ func Fetch(query string) (*Response, error) {
 // Returns an error if it cannot resolve query to any known host.
 func Server(query string) (string, string, error) {
 	// Queries on TLDs always against IANA
-	if strings.Index(query, ".") < 0 {
+	if !strings.Contains(query, ".") {
 		return IANA, "", nil
 	}
 	z := zonedb.PublicZone(query)
